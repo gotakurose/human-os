@@ -1,0 +1,14 @@
+{
+  "id": "business-skills",
+  "title": "社会人能力値診断",
+  "description": "5問で5つの能力軸をスコアリングし、あなたの社会人タイプを4種類から判定します。（MVP版：将来的に20問・16タイプに拡張予定）",
+  "category": "キャリア",
+  "tags": ["社会人", "スキル", "キャリア"],
+  "questionCount": 5,
+  "estimatedMinutes": 2,
+  "engineType": "radar",
+  "axes": ["logic", "execution", "sales", "creativity", "management"],
+  "typeCount": 4,
+  "published": true,
+  "createdAt": "2026-06-29"
+}

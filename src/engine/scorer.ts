@@ -1,21 +1,58 @@
-// Phase 1 implementation: radar engine scoring
-// Aggregates per-axis scores from answers and normalizes to 0–100.
+import type { Question } from "@/schemas/diagnosis";
 
 export type AxisScoreMap = Record<string, number>;
 
 export function aggregateScores(
-  _answers: Record<string, string>,
-  _questions: unknown[]
+  answers: Record<string, string>,
+  questions: Question[]
 ): AxisScoreMap {
-  // TODO: implement in Phase 1 engine work
-  throw new Error("scorer.ts: not yet implemented");
+  const raw: AxisScoreMap = {};
+
+  for (const question of questions) {
+    const selectedOptionId = answers[question.id];
+    if (!selectedOptionId) continue;
+
+    const option = question.options.find((o) => o.id === selectedOptionId);
+    if (!option) continue;
+
+    for (const [axis, pts] of Object.entries(option.scores)) {
+      raw[axis] = (raw[axis] ?? 0) + pts;
+    }
+  }
+
+  return raw;
 }
 
-export function normalize(raw: AxisScoreMap, maxPerAxis: number): AxisScoreMap {
+// Compute maximum possible score per axis across all questions
+// (sum of the best option score for each axis in each question)
+export function computeMaxScores(questions: Question[]): AxisScoreMap {
+  const max: AxisScoreMap = {};
+
+  for (const question of questions) {
+    const questionMax: AxisScoreMap = {};
+
+    for (const option of question.options) {
+      for (const [axis, pts] of Object.entries(option.scores)) {
+        questionMax[axis] = Math.max(questionMax[axis] ?? 0, pts);
+      }
+    }
+
+    for (const [axis, pts] of Object.entries(questionMax)) {
+      max[axis] = (max[axis] ?? 0) + pts;
+    }
+  }
+
+  return max;
+}
+
+export function normalize(
+  raw: AxisScoreMap,
+  maxScores: AxisScoreMap
+): AxisScoreMap {
   return Object.fromEntries(
-    Object.entries(raw).map(([axis, score]) => [
+    Object.entries(maxScores).map(([axis, maxPts]) => [
       axis,
-      Math.round((score / maxPerAxis) * 100),
+      maxPts > 0 ? Math.round(((raw[axis] ?? 0) / maxPts) * 100) : 0,
     ])
   );
 }

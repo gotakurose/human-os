@@ -1,0 +1,166 @@
+[
+  {
+    "id": "strategist",
+    "name": "戦略家",
+    "character": {
+      "name": "設計士のカイ",
+      "imageUrl": "/images/characters/strategist.png",
+      "color": "#1a1a2e"
+    },
+    "representativeScores": {
+      "logic": 85,
+      "execution": 60,
+      "sales": 50,
+      "creativity": 60,
+      "management": 80
+    },
+    "summary": "論理と管理力を武器に、長期的な視点で物事を設計する戦略家。",
+    "detail": "あなたはデータと構造で動くタイプです。感情に流されず、根拠に基づいた判断ができます。複雑な問題を整理し、先を見据えた計画を立てることが得意です。",
+    "strengths": [
+      "論理的に課題を整理できる",
+      "長期視点で計画を立てられる",
+      "リスクを事前に把握できる"
+    ],
+    "weaknesses": [
+      "分析に時間をかけすぎることがある",
+      "直感的な意思決定が苦手なことがある"
+    ],
+    "compatibleTypes": ["operator", "creator"],
+    "recommendedRoles": ["戦略コンサルタント", "プロジェクトマネージャー", "経営企画"],
+    "idealEnvironments": ["データドリブンな組織", "中長期計画を重視するチーム"],
+    "growthTips": [
+      "分析をほどほどにして行動に移す練習をする",
+      "現場の声に耳を傾ける機会を増やす"
+    ],
+    "sarcasticComments": [
+      "計画書は完璧。あとは動くだけ。なぜまだ動いていない？",
+      "分析のための分析になっていないか、確認してほしい。"
+    ],
+    "affiliateLinks": [
+      { "label": "戦略思考を鍛える一冊", "url": "#" }
+    ]
+  },
+  {
+    "id": "salesMonster",
+    "name": "営業モンスター",
+    "character": {
+      "name": "突破口のケン",
+      "imageUrl": "/images/characters/sales-monster.png",
+      "color": "#c0392b"
+    },
+    "representativeScores": {
+      "logic": 55,
+      "execution": 80,
+      "sales": 90,
+      "creativity": 55,
+      "management": 55
+    },
+    "summary": "人を動かすことに圧倒的な才能を持つ、生まれながらの交渉人。",
+    "detail": "あなたは行動と言葉で空気を変えられるタイプです。人との関係構築が得意で、交渉・説得・巻き込みに力を発揮します。逆境でも前を向いて動ける強さがあります。",
+    "strengths": [
+      "人を巻き込む力が抜群",
+      "結果にコミットできる",
+      "逆境でも前進できる"
+    ],
+    "weaknesses": [
+      "細かいプロセス管理が苦手なことがある",
+      "熱意が空回りすることがある"
+    ],
+    "compatibleTypes": ["strategist", "operator"],
+    "recommendedRoles": ["営業", "事業開発", "マーケター"],
+    "idealEnvironments": ["成果主義の組織", "外部との接点が多い業務"],
+    "growthTips": [
+      "論理的な提案資料の作成を練習する",
+      "数字で語る習慣を身につける"
+    ],
+    "sarcasticComments": [
+      "話が長い。結論から言え。",
+      "熱意は武器だが、相手の話も聞こう。"
+    ],
+    "affiliateLinks": [
+      { "label": "営業力を高める一冊", "url": "#" }
+    ]
+  },
+  {
+    "id": "creator",
+    "name": "天才肌クリエイター",
+    "character": {
+      "name": "閃きのハル",
+      "imageUrl": "/images/characters/creator.png",
+      "color": "#8e44ad"
+    },
+    "representativeScores": {
+      "logic": 60,
+      "execution": 55,
+      "sales": 50,
+      "creativity": 90,
+      "management": 45
+    },
+    "summary": "型にはまらない発想で、誰も考えなかった解決策を生み出す異才。",
+    "detail": "あなたは新しい視点と独創的なアイデアで周囲を驚かせるタイプです。既存の枠組みを疑い、問題を別の角度から捉え直すことができます。",
+    "strengths": [
+      "ゼロから新しいアイデアを出せる",
+      "既存の枠組みを疑える",
+      "問題を別の角度から見られる"
+    ],
+    "weaknesses": [
+      "アイデアが実行に移らないことがある",
+      "ルーティン作業に飽きやすい"
+    ],
+    "compatibleTypes": ["operator", "strategist"],
+    "recommendedRoles": ["クリエイティブディレクター", "商品企画", "スタートアップ創業者"],
+    "idealEnvironments": ["裁量が大きい環境", "新規事業の立ち上げフェーズ"],
+    "growthTips": [
+      "アイデアを1つ選んで最後までやり切る練習をする",
+      "実行役のパートナーを見つける"
+    ],
+    "sarcasticComments": [
+      "アイデアは10個出た。昨日、何を完成させた？",
+      "天才の閃きより、凡人の継続のほうが世界を変えることもある。"
+    ],
+    "affiliateLinks": [
+      { "label": "発想力を鍛える一冊", "url": "#" }
+    ]
+  },
+  {
+    "id": "operator",
+    "name": "堅実オペレーター",
+    "character": {
+      "name": "縁の下のジン",
+      "imageUrl": "/images/characters/operator.png",
+      "color": "#27ae60"
+    },
+    "representativeScores": {
+      "logic": 70,
+      "execution": 75,
+      "sales": 45,
+      "creativity": 45,
+      "management": 85
+    },
+    "summary": "確実に物事を前進させる、組織の縁の下の力持ち。",
+    "detail": "あなたはプロセスと実行力で組織を支えるタイプです。計画通りにタスクをこなし、チームの安定を維持する力があります。信頼されやすく、長期的な仕事に強さを発揮します。",
+    "strengths": [
+      "確実にタスクをこなせる",
+      "プロセスを整備できる",
+      "チームの安定を支えられる"
+    ],
+    "weaknesses": [
+      "変化への対応に時間がかかることがある",
+      "大胆な提案が苦手なことがある"
+    ],
+    "compatibleTypes": ["creator", "salesMonster"],
+    "recommendedRoles": ["オペレーションマネージャー", "品質管理", "バックオフィス"],
+    "idealEnvironments": ["安定した業務基盤がある組織", "長期プロジェクト"],
+    "growthTips": [
+      "現状維持より改善提案を積極的に行う",
+      "他チームとの連携を増やして視野を広げる"
+    ],
+    "sarcasticComments": [
+      "あなたがいないと回らない。でもあなた不在でも回るように設計してほしい。",
+      "完璧なオペレーション。ところで新しいことは何かした？"
+    ],
+    "affiliateLinks": [
+      { "label": "業務効率化の一冊", "url": "#" }
+    ]
+  }
+]

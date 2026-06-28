@@ -1,0 +1,34 @@
+{
+  "method": "dominant-axis",
+  "rules": [
+    {
+      "typeId": "strategist",
+      "condition": {
+        "dominant": ["logic", "management"],
+        "minScore": { "logic": 50 }
+      }
+    },
+    {
+      "typeId": "salesMonster",
+      "condition": {
+        "dominant": ["sales"],
+        "minScore": { "sales": 50 }
+      }
+    },
+    {
+      "typeId": "creator",
+      "condition": {
+        "dominant": ["creativity"],
+        "minScore": { "creativity": 50 }
+      }
+    },
+    {
+      "typeId": "operator",
+      "condition": {
+        "dominant": ["management", "execution"],
+        "minScore": { "management": 40 }
+      }
+    }
+  ],
+  "fallback": "operator"
+}

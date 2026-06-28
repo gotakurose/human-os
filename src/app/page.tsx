@@ -33,10 +33,11 @@ export default function HomePage() {
         <div className="flex flex-col gap-4">
           <DiagnosisCard
             title="社会人能力値診断"
-            description="20問で5つの能力軸をスコアリング。あなたの社会人タイプを16種類から判定します。"
+            description="5問で5つの能力軸をスコアリング。あなたの社会人タイプを判定します。"
             category="キャリア"
-            estimatedMinutes={3}
-            status="coming_soon"
+            estimatedMinutes={2}
+            status="available"
+            href="/diagnoses/business-skills"
           />
         </div>
 

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "q01",
+    "text": "締め切りが近いとき、あなたはどう行動しますか？",
+    "options": [
+      { "id": "a", "text": "優先順位を整理してすぐに取りかかる", "scores": { "execution": 3, "logic": 1 } },
+      { "id": "b", "text": "まず全体の計画を立て直す", "scores": { "logic": 3, "management": 1 } },
+      { "id": "c", "text": "チームメンバーに声をかけて分担を決める", "scores": { "management": 3, "sales": 1 } },
+      { "id": "d", "text": "自分だけの突破口を探して動く", "scores": { "creativity": 2, "execution": 2 } }
+    ]
+  },
+  {
+    "id": "q02",
+    "text": "会議でチームの意見が割れたとき、あなたはどうしますか？",
+    "options": [
+      { "id": "a", "text": "データや根拠を集めて論理的に整理する", "scores": { "logic": 3, "management": 1 } },
+      { "id": "b", "text": "積極的に話し合いをリードして結論を出す", "scores": { "sales": 3, "execution": 1 } },
+      { "id": "c", "text": "全員の意見をまとめて合意形成を図る", "scores": { "management": 3, "sales": 1 } },
+      { "id": "d", "text": "誰も思いつかなかった第三の案を提案する", "scores": { "creativity": 3, "logic": 1 } }
+    ]
+  },
+  {
+    "id": "q03",
+    "text": "新しいプロジェクトが始まるとき、あなたはまず何をしますか？",
+    "options": [
+      { "id": "a", "text": "過去の事例や数字を調べてから考える", "scores": { "logic": 3, "management": 1 } },
+      { "id": "b", "text": "とにかく手を動かして試してみる", "scores": { "execution": 3, "creativity": 1 } },
+      { "id": "c", "text": "関係者に声をかけて協力を取り付ける", "scores": { "sales": 3, "management": 1 } },
+      { "id": "d", "text": "自由にアイデアを出しまくる", "scores": { "creativity": 3, "execution": 1 } }
+    ]
+  },
+  {
+    "id": "q04",
+    "text": "担当業務でミスが発生したとき、あなたはどうしますか？",
+    "options": [
+      { "id": "a", "text": "すぐに原因を分析して報告する", "scores": { "logic": 2, "execution": 2 } },
+      { "id": "b", "text": "上司や関係者へ即座に連絡して対応する", "scores": { "sales": 2, "management": 2 } },
+      { "id": "c", "text": "再発防止の仕組みをすぐに考える", "scores": { "management": 3, "logic": 1 } },
+      { "id": "d", "text": "自分で解決策を考えてすぐ行動する", "scores": { "execution": 3, "creativity": 1 } }
+    ]
+  },
+  {
+    "id": "q05",
+    "text": "自分のアイデアや提案を通したいとき、あなたはどうしますか？",
+    "options": [
+      { "id": "a", "text": "データと根拠を揃えて論理的に説明する", "scores": { "logic": 3, "sales": 1 } },
+      { "id": "b", "text": "熱意と言葉の力で相手を巻き込む", "scores": { "sales": 3, "execution": 1 } },
+      { "id": "c", "text": "先に根回しして支持者を増やす", "scores": { "management": 3, "sales": 1 } },
+      { "id": "d", "text": "プロトタイプや図で見える形にして見せる", "scores": { "creativity": 3, "execution": 1 } }
+    ]
+  }
+]
