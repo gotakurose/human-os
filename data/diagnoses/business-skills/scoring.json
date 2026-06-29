@@ -2,33 +2,91 @@
   "method": "dominant-axis",
   "rules": [
     {
-      "typeId": "strategist",
+      "typeId": "vision-architect",
       "condition": {
-        "dominant": ["logic", "management"],
-        "minScore": { "logic": 50 }
+        "dominant": ["logic"],
+        "minScore": { "creativity": 60 }
       }
     },
     {
-      "typeId": "salesMonster",
+      "typeId": "precision-sniper",
       "condition": {
-        "dominant": ["sales"],
-        "minScore": { "sales": 50 }
+        "dominant": ["logic"],
+        "minScore": { "execution": 65 }
       }
     },
     {
-      "typeId": "creator",
+      "typeId": "siege-advisor",
+      "condition": {
+        "dominant": ["logic"]
+      }
+    },
+    {
+      "typeId": "producer",
       "condition": {
         "dominant": ["creativity"],
-        "minScore": { "creativity": 50 }
+        "minScore": { "sales": 60 }
       }
     },
     {
-      "typeId": "operator",
+      "typeId": "solo-inventor",
       "condition": {
-        "dominant": ["management", "execution"],
-        "minScore": { "management": 40 }
+        "dominant": ["creativity"],
+        "minScore": { "logic": 60 }
+      }
+    },
+    {
+      "typeId": "assault-creator",
+      "condition": {
+        "dominant": ["creativity"]
+      }
+    },
+    {
+      "typeId": "producer",
+      "condition": {
+        "dominant": ["sales"],
+        "minScore": { "creativity": 60 }
+      }
+    },
+    {
+      "typeId": "sales-monster",
+      "condition": {
+        "dominant": ["sales"],
+        "minScore": { "execution": 60 }
+      }
+    },
+    {
+      "typeId": "win-hunter",
+      "condition": {
+        "dominant": ["sales"]
+      }
+    },
+    {
+      "typeId": "last-fortress",
+      "condition": {
+        "dominant": ["management"],
+        "minScore": { "execution": 55 }
+      }
+    },
+    {
+      "typeId": "team-conductor",
+      "condition": {
+        "dominant": ["management"]
+      }
+    },
+    {
+      "typeId": "frontline-commander",
+      "condition": {
+        "dominant": ["execution"],
+        "minScore": { "sales": 55 }
+      }
+    },
+    {
+      "typeId": "closer",
+      "condition": {
+        "dominant": ["execution"]
       }
     }
   ],
-  "fallback": "operator"
+  "fallback": "closer"
 }

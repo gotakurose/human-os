@@ -35,13 +35,23 @@ export const QuestionSchema = z.object({
 export const QuestionsSchema = z.array(QuestionSchema);
 
 // ── types.json ──────────────────────────────────────────────
+
+// 4スタイル軸（各軸 1〜4 の整数: 1=左極, 4=右極）
+const StyleAxesSchema = z.object({
+  thinkingAction: z.number().int().min(1).max(4),
+  offensiveStable: z.number().int().min(1).max(4),
+  soloTeam: z.number().int().min(1).max(4),
+  divergentConvergent: z.number().int().min(1).max(4),
+});
+
 export const DiagnosisTypeSchema = z.object({
+  // ── 必須（後方互換）──────────────────────────────────────
   id: z.string().min(1),
   name: z.string().min(1),
   character: z.object({
-    name: z.string(),
-    imageUrl: z.string(),
-    color: z.string(),
+    name: z.string().optional(),
+    imageUrl: z.string().optional(),
+    color: z.string(), // ResultClient で使用するため必須維持
   }),
   representativeScores: z.record(z.string(), z.number()),
   summary: z.string(),
@@ -50,12 +60,25 @@ export const DiagnosisTypeSchema = z.object({
   weaknesses: z.array(z.string()),
   compatibleTypes: z.array(z.string()),
   recommendedRoles: z.array(z.string()),
-  idealEnvironments: z.array(z.string()),
-  growthTips: z.array(z.string()),
   sarcasticComments: z.array(z.string()),
+
+  // ── 任意（旧フィールド・後方互換）──────────────────────
+  idealEnvironments: z.array(z.string()).optional(),
+  growthTips: z.array(z.string()).optional(),
   affiliateLinks: z
     .array(z.object({ label: z.string(), url: z.string() }))
     .optional(),
+
+  // ── 任意（新フィールド・将来の結果画面向け）─────────────
+  englishName: z.string().optional(),
+  axes: StyleAxesSchema.optional(),
+  catchCopy: z.string().optional(),
+  shortDescription: z.string().optional(),
+  fatalWeakness: z.string().optional(),
+  badEnvironments: z.array(z.string()).optional(),
+  characterConcept: z.string().optional(),
+  characterImage: z.string().optional(),
+  accentColorKey: z.string().optional(),
 });
 
 export const TypesSchema = z.array(DiagnosisTypeSchema);
