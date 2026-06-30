@@ -107,6 +107,17 @@ export const DiagnosisTypeSchema = z.object({
   characterConcept: z.string().optional(),
   characterImage: z.string().optional(),
   accentColorKey: z.string().optional(),
+
+  // ── 任意（結果ページ拡充用・v2コンテンツ）──────────────────
+  oneLine: z.string().optional(),
+  osDescription: z.string().optional(),
+  humanOsComment: z.string().optional(),
+  brokenEnvironment: z.string().optional(),
+  recommendedCareers: z.array(z.string()).optional(),
+  recommendedTasks: z.array(z.string()).optional(),
+  notRecommendedWork: z.string().optional(),
+  conflictTypes: z.array(z.string()).optional(),
+  teamRole: z.string().optional(),
 });
 
 export const TypesSchema = z.array(DiagnosisTypeSchema);
