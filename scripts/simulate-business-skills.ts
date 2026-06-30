@@ -10,7 +10,7 @@
 
 import { readFileSync } from "fs";
 import { join } from "path";
-import { calculateStyleAxisScores, resolveStyleAxisType } from "@/engine/style-axis-scorer";
+import { calculateStyleAxisScores, resolveStyleAxisType, deriveAbilityScores } from "@/engine/style-axis-scorer";
 import type { DiagnosisType } from "@/schemas/diagnosis";
 
 // ── スクリプトローカル型定義 ──────────────────────────────────────────────
@@ -58,6 +58,9 @@ const AXIS_KEYS: StyleAxisName[] = [
   "solo_team",
   "divergent_convergent",
 ];
+
+const ABILITY_KEYS = ["logic", "execution", "sales", "creativity", "management"] as const;
+type AbilityKey = (typeof ABILITY_KEYS)[number];
 
 // ── 回答生成 ──────────────────────────────────────────────────────────────
 function generateRandomAnswers(questions: SimQuestion[]): Record<string, string> {
@@ -128,6 +131,14 @@ function runRandomMode(questions: SimQuestion[], types: SimType[], runs: number)
     divergent_convergent: [],
   };
 
+  const abilityHistory: Record<AbilityKey, number[]> = {
+    logic: [], execution: [], sales: [], creativity: [], management: [],
+  };
+  const typeAbilityHistory: Record<string, Record<AbilityKey, number[]>> = {};
+  for (const t of types) {
+    typeAbilityHistory[t.id] = { logic: [], execution: [], sales: [], creativity: [], management: [] };
+  }
+
   for (let i = 0; i < runs; i++) {
     const answers = generateRandomAnswers(questions);
     const scores = calculateStyleAxisScores(answers, questions, MAX_SCORE_PER_AXIS);
@@ -136,10 +147,15 @@ function runRandomMode(questions: SimQuestion[], types: SimType[], runs: number)
       types as unknown as DiagnosisType[],
       FALLBACK_TYPE
     );
+    const abilities = deriveAbilityScores(scores);
 
     typeCounts[typeId] = (typeCounts[typeId] ?? 0) + 1;
     for (const key of AXIS_KEYS) {
       axisHistory[key].push(scores[key]);
+    }
+    for (const key of ABILITY_KEYS) {
+      abilityHistory[key].push(abilities[key]);
+      (typeAbilityHistory[typeId] ?? typeAbilityHistory["closer"])[key].push(abilities[key]);
     }
   }
 
@@ -203,6 +219,51 @@ function runRandomMode(questions: SimQuestion[], types: SimType[], runs: number)
     const warn = pct > 35 ? "  ⚠ HIGH BORDERLINE" : "";
     console.log(`  ${key.padEnd(30)} borderline: ${pct.toFixed(1)}%${warn}`);
   }
+
+  // ─── 5能力値統計 ───────────────────────────────────────────────────────
+  console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("  5能力値統計 (25〜95 の整数)");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log(
+    `  ${"能力値".padEnd(16)} ${"平均".padStart(6)} ${"SD".padStart(6)} ${"最小".padStart(5)} ${"最大".padStart(5)} ${"床(25)".padStart(8)} ${"天(95)".padStart(8)}`
+  );
+  console.log("  " + "─".repeat(68));
+
+  for (const key of ABILITY_KEYS) {
+    const s = abilityHistory[key];
+    const avg = mean(s);
+    const sd = stddev(s);
+    const mn = arrayMin(s);
+    const mx = arrayMax(s);
+    const floorPct = (s.filter((v) => v <= 25).length / runs) * 100;
+    const ceilPct  = (s.filter((v) => v >= 95).length / runs) * 100;
+    const warn = floorPct > 10 || ceilPct > 10 ? " ⚠" : "";
+    console.log(
+      `  ${key.padEnd(16)} ${avg.toFixed(1).padStart(6)} ${sd.toFixed(1).padStart(6)} ${mn
+        .toString().padStart(5)} ${mx.toString().padStart(5)} ${(floorPct.toFixed(1) + "%").padStart(7)} ${(ceilPct.toFixed(1) + "%").padStart(7)}${warn}`
+    );
+  }
+
+  // ─── タイプ別平均能力値 ─────────────────────────────────────────────────
+  console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("  タイプ別平均能力値 (ランダム回答平均)");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  const header = ["logic", "exec", "sales", "creat", "mgmt"].map((h) => h.padStart(6)).join(" ");
+  console.log(`  ${"タイプID".padEnd(26)} ${header}  件数`);
+  console.log("  " + "─".repeat(70));
+
+  const sortedTypes = [...types].sort((a, b) =>
+    (typeCounts[b.id] ?? 0) - (typeCounts[a.id] ?? 0)
+  );
+  for (const t of sortedTypes) {
+    const hist = typeAbilityHistory[t.id];
+    const n = typeCounts[t.id] ?? 0;
+    const row = ABILITY_KEYS.map((k) => {
+      const vals = hist[k];
+      return vals.length > 0 ? mean(vals).toFixed(0).padStart(6) : "   N/A";
+    }).join(" ");
+    console.log(`  ${t.id.padEnd(26)} ${row}  ${n}`);
+  }
 }
 
 // ── ペルソナモード ────────────────────────────────────────────────────────
@@ -246,6 +307,37 @@ function runPersonaMode(questions: SimQuestion[], types: SimType[], runs: number
   );
 }
 
+// ── 理論タイプ別プロファイル ──────────────────────────────────────────────
+/**
+ * 各タイプの axes (1 or 4) を ±1.0 の normalized スコアに変換して
+ * deriveAbilityScores を適用。タイプ固有の"純粋極"での能力値を示す。
+ */
+function showTypeProfiles(types: SimType[]): void {
+  console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("  理論タイプ別プロファイル (axes を ±1.0 に投影して算出)");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  const header = ["logic", "exec", "sales", "creat", "mgmt"].map((h) => h.padStart(6)).join(" ");
+  console.log(`  ${"タイプID".padEnd(26)} ${header}`);
+  console.log("  " + "─".repeat(60));
+
+  for (const t of types) {
+    if (!t.axes) {
+      console.log(`  ${t.id.padEnd(26)} (axes なし)`);
+      continue;
+    }
+    // axes 値 1 → 正極 (+1.0), 4 → 負極 (-1.0)
+    const axisScores = {
+      thinking_action:     t.axes.thinkingAction     === 1 ? 1.0 : -1.0,
+      offensive_stable:    t.axes.offensiveStable    === 1 ? 1.0 : -1.0,
+      solo_team:           t.axes.soloTeam           === 1 ? 1.0 : -1.0,
+      divergent_convergent: t.axes.divergentConvergent === 1 ? 1.0 : -1.0,
+    };
+    const profile = deriveAbilityScores(axisScores);
+    const row = ABILITY_KEYS.map((k) => String(profile[k]).padStart(6)).join(" ");
+    console.log(`  ${t.id.padEnd(26)} ${row}`);
+  }
+}
+
 // ── エントリーポイント ────────────────────────────────────────────────────
 function main(): void {
   const args = process.argv.slice(2);
@@ -277,6 +369,7 @@ function main(): void {
     runRandomMode(questions, types, runs);
   }
 
+  showTypeProfiles(types);
   console.log("\n  シミュレーション完了\n");
 }
 

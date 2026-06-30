@@ -2,7 +2,7 @@ import type { EngineType, DiagnosisResult } from "./types";
 import type { Question, Scoring, StyleAxisQuestion, DiagnosisType } from "@/schemas/diagnosis";
 import { aggregateScores, computeMaxScores, normalize } from "./scorer";
 import { resolveType } from "./resolver";
-import { calculateStyleAxisScores, resolveStyleAxisType } from "./style-axis-scorer";
+import { calculateStyleAxisScores, resolveStyleAxisType, deriveAbilityScores } from "./style-axis-scorer";
 
 export interface RawAnswers {
   [questionId: string]: string;
@@ -65,13 +65,12 @@ export function dispatch(
       // 符号マッチングでタイプ確定
       const typeId = resolveStyleAxisType(axisScores, types, scoring.fallback);
 
-      // 5能力値: 判定タイプの代表スコアを使用（土台版）
-      const matchedType = types.find((t) => t.id === typeId);
-      const repScores = matchedType?.representativeScores ?? {};
+      // 5能力値: 4軸スコアから算出（abilityWeights による bilateral 加重和）
+      const abilityScores = deriveAbilityScores(axisScores);
 
       return {
         typeId,
-        scores: Object.entries(repScores).map(([axisId, score]) => ({
+        scores: Object.entries(abilityScores).map(([axisId, score]) => ({
           axisId,
           score,
         })),
