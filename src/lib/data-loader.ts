@@ -3,10 +3,12 @@ import fs from "fs";
 import {
   MetaSchema,
   QuestionsSchema,
+  StyleAxisQuestionsSchema,
   TypesSchema,
   ScoringSchema,
   type Meta,
   type Question,
+  type StyleAxisQuestion,
   type DiagnosisType,
   type Scoring,
 } from "@/schemas/diagnosis";
@@ -26,6 +28,11 @@ export function loadMeta(diagnosisId: string): Meta {
 export function loadQuestions(diagnosisId: string): Question[] {
   const file = path.join(DATA_ROOT, diagnosisId, "questions.json");
   return QuestionsSchema.parse(readJson(file));
+}
+
+export function loadStyleAxisQuestions(diagnosisId: string): StyleAxisQuestion[] {
+  const file = path.join(DATA_ROOT, diagnosisId, "questions.json");
+  return StyleAxisQuestionsSchema.parse(readJson(file));
 }
 
 export function loadTypes(diagnosisId: string): DiagnosisType[] {

@@ -1,52 +1,402 @@
 [
   {
     "id": "q01",
-    "text": "締め切りが近いとき、あなたはどう行動しますか？",
-    "options": [
-      { "id": "a", "text": "優先順位を整理してすぐに取りかかる", "scores": { "execution": 3, "logic": 1 } },
-      { "id": "b", "text": "まず全体の計画を立て直す", "scores": { "logic": 3, "management": 1 } },
-      { "id": "c", "text": "チームメンバーに声をかけて分担を決める", "scores": { "management": 3, "sales": 1 } },
-      { "id": "d", "text": "自分だけの突破口を探して動く", "scores": { "creativity": 2, "execution": 2 } }
-    ]
+    "order": 1,
+    "axis": "thinking_action",
+    "prompt": "初めて担当する案件で、まだ全体像が見えていない時、あなたはどちらに近いですか？",
+    "optionA": "まず目的・前提・関係者を整理して、全体像を掴んでから動く",
+    "optionB": "まず小さく動いて、現場の情報を拾いながら全体像を掴む",
+    "optionASide": "thinking",
+    "optionBSide": "action"
+  },
+  {
+    "id": "q11",
+    "order": 2,
+    "axis": "offensive_stable",
+    "prompt": "新規の仕事や役割が舞い込んできた時、あなたはどちらに近いですか？",
+    "optionA": "積極的に受けて、チャンスとして活かしたい",
+    "optionB": "今の仕事との兼ね合いを慎重に考えてから判断したい",
+    "optionASide": "offensive",
+    "optionBSide": "stable"
+  },
+  {
+    "id": "q21",
+    "order": 3,
+    "axis": "solo_team",
+    "prompt": "集中して作業できる環境として、あなたはどちらに近いですか？",
+    "optionA": "一人で黙々と取り組める状況が一番はかどる",
+    "optionB": "仲間と会話しながら進める方がエネルギーが出る",
+    "optionASide": "solo",
+    "optionBSide": "team"
+  },
+  {
+    "id": "q31",
+    "order": 4,
+    "axis": "divergent_convergent",
+    "prompt": "企画やアイデアを出す場面で、あなたはどちらに近いですか？",
+    "optionA": "まず量を出す。制約は後で考える",
+    "optionB": "最初から実現可能なものを絞って考える",
+    "optionASide": "divergent",
+    "optionBSide": "convergent"
   },
   {
     "id": "q02",
-    "text": "会議でチームの意見が割れたとき、あなたはどうしますか？",
-    "options": [
-      { "id": "a", "text": "データや根拠を集めて論理的に整理する", "scores": { "logic": 3, "management": 1 } },
-      { "id": "b", "text": "積極的に話し合いをリードして結論を出す", "scores": { "sales": 3, "execution": 1 } },
-      { "id": "c", "text": "全員の意見をまとめて合意形成を図る", "scores": { "management": 3, "sales": 1 } },
-      { "id": "d", "text": "誰も思いつかなかった第三の案を提案する", "scores": { "creativity": 3, "logic": 1 } }
-    ]
+    "order": 5,
+    "axis": "thinking_action",
+    "prompt": "上司やクライアントから「資料を作ってほしい」と依頼された時、あなたはどちらに近いですか？",
+    "optionA": "まず簡単なラフやたたき台を作り、相手に見せながらすり合わせる",
+    "optionB": "先に目的や条件を確認し、要件を明確にしてから作業に入る",
+    "optionASide": "action",
+    "optionBSide": "thinking"
+  },
+  {
+    "id": "q12",
+    "order": 6,
+    "axis": "offensive_stable",
+    "prompt": "仕事で数字を持つ（売上・KPIなど）場合、あなたはどちらに近いですか？",
+    "optionA": "目標は高めに設定して、がんがん攻めたい",
+    "optionB": "達成可能な確実な水準を積み上げていきたい",
+    "optionASide": "offensive",
+    "optionBSide": "stable"
+  },
+  {
+    "id": "q22",
+    "order": 7,
+    "axis": "solo_team",
+    "prompt": "プロジェクトで重要な意思決定をする時、あなたはどちらに近いですか？",
+    "optionA": "関係者と議論しながら合意形成を取って決めたい",
+    "optionB": "自分の判断軸で決め、後からチームに共有・巻き込む",
+    "optionASide": "team",
+    "optionBSide": "solo"
+  },
+  {
+    "id": "q32",
+    "order": 8,
+    "axis": "divergent_convergent",
+    "prompt": "チームで方針を議論する時、あなたはどちらに近いですか？",
+    "optionA": "みんなの意見を聞いて統合し、最善の落としどころを探る",
+    "optionB": "自分の考えを軸に、なぜそれが正しいかを説明して合意を取る",
+    "optionASide": "convergent",
+    "optionBSide": "divergent"
   },
   {
     "id": "q03",
-    "text": "新しいプロジェクトが始まるとき、あなたはまず何をしますか？",
-    "options": [
-      { "id": "a", "text": "過去の事例や数字を調べてから考える", "scores": { "logic": 3, "management": 1 } },
-      { "id": "b", "text": "とにかく手を動かして試してみる", "scores": { "execution": 3, "creativity": 1 } },
-      { "id": "c", "text": "関係者に声をかけて協力を取り付ける", "scores": { "sales": 3, "management": 1 } },
-      { "id": "d", "text": "自由にアイデアを出しまくる", "scores": { "creativity": 3, "execution": 1 } }
-    ]
+    "order": 9,
+    "axis": "thinking_action",
+    "prompt": "複雑な問題に取り組む時、あなたはどちらに近いですか？",
+    "optionA": "原因や構造を深く分析してから、解決策を考える",
+    "optionB": "まず試して反応を見ながら、解決策を探っていく",
+    "optionASide": "thinking",
+    "optionBSide": "action"
+  },
+  {
+    "id": "q13",
+    "order": 10,
+    "axis": "offensive_stable",
+    "prompt": "チームの仕事の進め方について、あなたはどちらに近いですか？",
+    "optionA": "課題があれば積極的に提案し、変えていきたい",
+    "optionB": "今のやり方が機能しているなら、安定を維持することを重視する",
+    "optionASide": "offensive",
+    "optionBSide": "stable"
+  },
+  {
+    "id": "q23",
+    "order": 11,
+    "axis": "solo_team",
+    "prompt": "成果を出した時の満足感として、あなたはどちらに近いですか？",
+    "optionA": "自分の力で達成した、という手応えが一番嬉しい",
+    "optionB": "チームで一緒に勝った、という一体感が一番嬉しい",
+    "optionASide": "solo",
+    "optionBSide": "team"
+  },
+  {
+    "id": "q33",
+    "order": 12,
+    "axis": "divergent_convergent",
+    "prompt": "問題解決のアプローチとして、あなたはどちらに近いですか？",
+    "optionA": "まず多角的な視点から可能性を洗い出してから絞り込む",
+    "optionB": "まずゴールから逆算し、最短ルートを絞ってから動く",
+    "optionASide": "divergent",
+    "optionBSide": "convergent"
   },
   {
     "id": "q04",
-    "text": "担当業務でミスが発生したとき、あなたはどうしますか？",
-    "options": [
-      { "id": "a", "text": "すぐに原因を分析して報告する", "scores": { "logic": 2, "execution": 2 } },
-      { "id": "b", "text": "上司や関係者へ即座に連絡して対応する", "scores": { "sales": 2, "management": 2 } },
-      { "id": "c", "text": "再発防止の仕組みをすぐに考える", "scores": { "management": 3, "logic": 1 } },
-      { "id": "d", "text": "自分で解決策を考えてすぐ行動する", "scores": { "execution": 3, "creativity": 1 } }
-    ]
+    "order": 13,
+    "axis": "thinking_action",
+    "prompt": "長い文章や報告書を書く時、あなたはどちらに近いですか？",
+    "optionA": "まず頭にあることを書き出し、後から構成を整える",
+    "optionB": "先に骨子や目次を作り、流れを固めてから中身を書く",
+    "optionASide": "action",
+    "optionBSide": "thinking"
+  },
+  {
+    "id": "q14",
+    "order": 14,
+    "axis": "offensive_stable",
+    "prompt": "顧客や上司と交渉する時、あなたはどちらに近いですか？",
+    "optionA": "多少強引でも、こちらの要求を通すことを優先する",
+    "optionB": "相手の事情も尊重しながら、長期的に良い関係を保てる落としどころを探る",
+    "optionASide": "offensive",
+    "optionBSide": "stable"
+  },
+  {
+    "id": "q24",
+    "order": 15,
+    "axis": "solo_team",
+    "prompt": "仕事の責任の取り方として、あなたはどちらに近いですか？",
+    "optionA": "チームで協力し合い、助け合いながら責任を担いたい",
+    "optionB": "自分の担当範囲は明確にし、自分で責任を持ちきりたい",
+    "optionASide": "team",
+    "optionBSide": "solo"
+  },
+  {
+    "id": "q34",
+    "order": 16,
+    "axis": "divergent_convergent",
+    "prompt": "新しいプロジェクトの立ち上げ時、あなたはどちらに近いですか？",
+    "optionA": "まず方向性・スコープ・優先順位を決め切ってから動き出す",
+    "optionB": "まずやってみながら、必要なことを随時見極めていく",
+    "optionASide": "convergent",
+    "optionBSide": "divergent"
   },
   {
     "id": "q05",
-    "text": "自分のアイデアや提案を通したいとき、あなたはどうしますか？",
-    "options": [
-      { "id": "a", "text": "データと根拠を揃えて論理的に説明する", "scores": { "logic": 3, "sales": 1 } },
-      { "id": "b", "text": "熱意と言葉の力で相手を巻き込む", "scores": { "sales": 3, "execution": 1 } },
-      { "id": "c", "text": "先に根回しして支持者を増やす", "scores": { "management": 3, "sales": 1 } },
-      { "id": "d", "text": "プロトタイプや図で見える形にして見せる", "scores": { "creativity": 3, "execution": 1 } }
-    ]
+    "order": 17,
+    "axis": "thinking_action",
+    "prompt": "会議やディスカッションでの自分のスタイルとして、あなたはどちらに近いですか？",
+    "optionA": "事前に自分の意見を整理してから発言する",
+    "optionB": "話しながら考えをまとめ、発言の中でアイデアを発展させる",
+    "optionASide": "thinking",
+    "optionBSide": "action"
+  },
+  {
+    "id": "q15",
+    "order": 18,
+    "axis": "offensive_stable",
+    "prompt": "リスクのある挑戦について、あなたはどちらに近いですか？",
+    "optionA": "リスクがあっても、可能性があるなら挑戦する方が後悔しない",
+    "optionB": "リスクが大きいなら、まずリスクを下げてから挑戦したい",
+    "optionASide": "offensive",
+    "optionBSide": "stable"
+  },
+  {
+    "id": "q25",
+    "order": 19,
+    "axis": "solo_team",
+    "prompt": "チームで仕事をする時に感じるストレスとして、あなたはどちらに近いですか？",
+    "optionA": "メンバーのペースや考えに合わせなければならない場面が多いと疲れる",
+    "optionB": "情報共有や連携が少なく、一人で孤立して仕事している感じが続くと疲れる",
+    "optionASide": "solo",
+    "optionBSide": "team"
+  },
+  {
+    "id": "q35",
+    "order": 20,
+    "axis": "divergent_convergent",
+    "prompt": "提案書や企画の完成度について、あなたはどちらに近いですか？",
+    "optionA": "まず形にして出し、フィードバックを受けながら磨いていく",
+    "optionB": "出す前に徹底的に練り込み、完成度の高いものを出す",
+    "optionASide": "divergent",
+    "optionBSide": "convergent"
+  },
+  {
+    "id": "q06",
+    "order": 21,
+    "axis": "thinking_action",
+    "prompt": "プロジェクトの方向性がまだ曖昧な段階での行動として、あなたはどちらに近いですか？",
+    "optionA": "方向性が曖昧でも、まず動き出して修正しながら進める",
+    "optionB": "少し時間をかけても、方向性を固めてから一気に進める",
+    "optionASide": "action",
+    "optionBSide": "thinking"
+  },
+  {
+    "id": "q16",
+    "order": 22,
+    "axis": "offensive_stable",
+    "prompt": "自分の評価や報酬について、あなたはどちらに近いですか？",
+    "optionA": "高いパフォーマンスに見合った、大きなリターンを得たい",
+    "optionB": "安定した評価基準の中で、着実に積み上げていきたい",
+    "optionASide": "offensive",
+    "optionBSide": "stable"
+  },
+  {
+    "id": "q26",
+    "order": 23,
+    "axis": "solo_team",
+    "prompt": "成長実感を得やすいのはどちらの環境ですか？",
+    "optionA": "自分一人で深く考えて、難しい問題をクリアした時",
+    "optionB": "チームで協力して、自分一人ではできなかったことを成し遂げた時",
+    "optionASide": "solo",
+    "optionBSide": "team"
+  },
+  {
+    "id": "q36",
+    "order": 24,
+    "axis": "divergent_convergent",
+    "prompt": "アイデアや意見が出揃った段階で、あなたはどちらに近いですか？",
+    "optionA": "ある程度出たら、決めるべきことを整理して前に進めたい",
+    "optionB": "まだ広げる余地があるなら、もう少し可能性を見たい",
+    "optionASide": "convergent",
+    "optionBSide": "divergent"
+  },
+  {
+    "id": "q07",
+    "order": 25,
+    "axis": "thinking_action",
+    "prompt": "重要な仕事の優先順位を決める時、あなたはどちらに近いですか？",
+    "optionA": "やることとやらないことを明確に整理してから動く",
+    "optionB": "まず着手して、途中で優先順位を柔軟に判断しながら進める",
+    "optionASide": "thinking",
+    "optionBSide": "action"
+  },
+  {
+    "id": "q17",
+    "order": 26,
+    "axis": "offensive_stable",
+    "prompt": "競合や他チームとの競争場面で、あなたはどちらに近いですか？",
+    "optionA": "相手を意識して積極的に差別化し、勝ちに行く",
+    "optionB": "焦らず自分たちのペースを守り、着実に前進する",
+    "optionASide": "offensive",
+    "optionBSide": "stable"
+  },
+  {
+    "id": "q27",
+    "order": 27,
+    "axis": "solo_team",
+    "prompt": "リーダー的な役割を担う時、あなたはどちらに近いですか？",
+    "optionA": "メンバーを束ね、チームとして動かしていく司令塔が向いている",
+    "optionB": "自分が率先して動き、背中で引っ張るプレイングタイプが向いている",
+    "optionASide": "team",
+    "optionBSide": "solo"
+  },
+  {
+    "id": "q37",
+    "order": 28,
+    "axis": "divergent_convergent",
+    "prompt": "ブレインストーミングの場で、あなたはどちらに近いですか？",
+    "optionA": "突拍子もないアイデアでも、どんどん出して場を盛り上げたい",
+    "optionB": "実現性のあるアイデアを選んで深掘りしたい",
+    "optionASide": "divergent",
+    "optionBSide": "convergent"
+  },
+  {
+    "id": "q08",
+    "order": 29,
+    "axis": "thinking_action",
+    "prompt": "慣れていない業務や分野を任された時、あなたはどちらに近いですか？",
+    "optionA": "まず触ってみて、失敗や修正を通じて覚える",
+    "optionB": "先に流れや注意点を理解し、ミスしやすい箇所を把握してから進める",
+    "optionASide": "action",
+    "optionBSide": "thinking"
+  },
+  {
+    "id": "q18",
+    "order": 30,
+    "axis": "offensive_stable",
+    "prompt": "仕事の計画を立てる時、あなたはどちらに近いですか？",
+    "optionA": "多少ストレッチでも、挑戦的な計画を好む",
+    "optionB": "余裕を持たせて、確実に達成できる計画を好む",
+    "optionASide": "offensive",
+    "optionBSide": "stable"
+  },
+  {
+    "id": "q28",
+    "order": 31,
+    "axis": "solo_team",
+    "prompt": "自分の強みが最も発揮されるのはどちらの場面ですか？",
+    "optionA": "一人でじっくり考え、深い洞察や精度の高い仕事を出す場面",
+    "optionB": "チームを動かし、みんなの力を引き出して大きな成果を出す場面",
+    "optionASide": "solo",
+    "optionBSide": "team"
+  },
+  {
+    "id": "q38",
+    "order": 32,
+    "axis": "divergent_convergent",
+    "prompt": "意見が割れた議論で、あなたはどちらに近いですか？",
+    "optionA": "多様な意見の共通点を見つけ、統合的な結論を目指す",
+    "optionB": "各意見のどこが正しくどこが違うかを整理し、最善の一手を選ぶ",
+    "optionASide": "convergent",
+    "optionBSide": "divergent"
+  },
+  {
+    "id": "q09",
+    "order": 33,
+    "axis": "thinking_action",
+    "prompt": "不確実な状況の中で判断を求められた時、あなたはどちらに近いですか？",
+    "optionA": "今ある情報を整理し、できる限り根拠を揃えてから判断する",
+    "optionB": "完全な情報がなくても、状況の流れで判断して進める",
+    "optionASide": "thinking",
+    "optionBSide": "action"
+  },
+  {
+    "id": "q19",
+    "order": 34,
+    "axis": "offensive_stable",
+    "prompt": "既存のやり方やルールに対して、あなたはどちらに近いですか？",
+    "optionA": "もっと良いやり方があると思えば、積極的に変えていきたい",
+    "optionB": "運用が安定していることが大事で、むやみに変えないことを重視する",
+    "optionASide": "offensive",
+    "optionBSide": "stable"
+  },
+  {
+    "id": "q29",
+    "order": 35,
+    "axis": "solo_team",
+    "prompt": "仕事において「信頼できる」と感じるのはどちらのタイプですか？",
+    "optionA": "自分の担当を確実にやり切る、個人の専門性が高いタイプ",
+    "optionB": "チームのために動き、周囲と連携して全体を前に進めるタイプ",
+    "optionASide": "solo",
+    "optionBSide": "team"
+  },
+  {
+    "id": "q39",
+    "order": 36,
+    "axis": "divergent_convergent",
+    "prompt": "締め切りが近い状況での対処として、あなたはどちらに近いですか？",
+    "optionA": "まず今の方向を決め切り、出せる形にまとめる",
+    "optionB": "可能性があるなら、最後まで別案も検討してみる",
+    "optionASide": "convergent",
+    "optionBSide": "divergent"
+  },
+  {
+    "id": "q10",
+    "order": 37,
+    "axis": "thinking_action",
+    "prompt": "仕事でミスや失敗をした後、あなたはどちらに近いですか？",
+    "optionA": "すぐ次の動きに反映し、行動の中で修正していく",
+    "optionB": "何が原因だったかを整理し、再発しない形にしてから次へ進む",
+    "optionASide": "action",
+    "optionBSide": "thinking"
+  },
+  {
+    "id": "q20",
+    "order": 38,
+    "axis": "offensive_stable",
+    "prompt": "仕事で一番避けたい失敗はどちらですか？",
+    "optionA": "失敗を恐れて無難な選択をし、大きなチャンスを逃すこと",
+    "optionB": "無理な勝負に出て、積み上げた信頼や基盤を壊すこと",
+    "optionASide": "offensive",
+    "optionBSide": "stable"
+  },
+  {
+    "id": "q30",
+    "order": 39,
+    "axis": "solo_team",
+    "prompt": "最高のパフォーマンスが出せる仕事環境として、あなたはどちらに近いですか？",
+    "optionA": "役割と責任が明確に分かれた、個人の専門性が活かせる場",
+    "optionB": "情報をオープンに共有し、チームで協力しながら動ける場",
+    "optionASide": "solo",
+    "optionBSide": "team"
+  },
+  {
+    "id": "q40",
+    "order": 40,
+    "axis": "divergent_convergent",
+    "prompt": "仕事の上で一番もったいないと思う失敗はどちらですか？",
+    "optionA": "可能性を狭めすぎて、もっと良い案があったのに逃すこと",
+    "optionB": "広げすぎて、着地点を見失うこと",
+    "optionASide": "divergent",
+    "optionBSide": "convergent"
   }
 ]

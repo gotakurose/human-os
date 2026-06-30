@@ -7,7 +7,7 @@ export function resolveType(scores: AxisScoreMap, scoring: Scoring): string {
 
   if (!topAxis) return scoring.fallback;
 
-  for (const rule of scoring.rules) {
+  for (const rule of (scoring.rules ?? [])) {
     // Top axis must be in the dominant list for this rule
     if (!rule.condition.dominant.includes(topAxis)) continue;
 

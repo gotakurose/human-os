@@ -1,7 +1,8 @@
 import type { EngineType, DiagnosisResult } from "./types";
-import type { Question, Scoring } from "@/schemas/diagnosis";
+import type { Question, Scoring, StyleAxisQuestion, DiagnosisType } from "@/schemas/diagnosis";
 import { aggregateScores, computeMaxScores, normalize } from "./scorer";
 import { resolveType } from "./resolver";
+import { calculateStyleAxisScores, resolveStyleAxisType } from "./style-axis-scorer";
 
 export interface RawAnswers {
   [questionId: string]: string;
@@ -13,10 +14,16 @@ interface RadarData {
   axes: string[];
 }
 
+interface StyleAxisData {
+  questions: StyleAxisQuestion[];
+  scoring: Scoring;
+  types: DiagnosisType[];
+}
+
 export function dispatch(
   engineType: EngineType,
   answers: RawAnswers,
-  data: RadarData | unknown
+  data: RadarData | StyleAxisData | unknown
 ): DiagnosisResult {
   switch (engineType) {
     case "radar": {
@@ -47,8 +54,30 @@ export function dispatch(
         })),
       };
     }
-    case "type16":
-      throw new Error("type16 engine: not implemented (Phase 3)");
+
+    case "type16": {
+      const { questions, scoring, types } = data as StyleAxisData;
+      const maxScore = scoring.maxScorePerAxis ?? 20;
+
+      // 4スタイル軸スコアを算出 (-1.0 〜 +1.0)
+      const axisScores = calculateStyleAxisScores(answers, questions, maxScore);
+
+      // 符号マッチングでタイプ確定
+      const typeId = resolveStyleAxisType(axisScores, types, scoring.fallback);
+
+      // 5能力値: 判定タイプの代表スコアを使用（土台版）
+      const matchedType = types.find((t) => t.id === typeId);
+      const repScores = matchedType?.representativeScores ?? {};
+
+      return {
+        typeId,
+        scores: Object.entries(repScores).map(([axisId, score]) => ({
+          axisId,
+          score,
+        })),
+      };
+    }
+
     case "branch":
       throw new Error("branch engine: not implemented (Phase 2)");
     case "score":

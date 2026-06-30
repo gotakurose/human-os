@@ -19,7 +19,7 @@ export const MetaSchema = z.object({
   createdAt: z.string(),
 });
 
-// ── questions.json ──────────────────────────────────────────
+// ── questions.json (radar / 旧形式) ─────────────────────────
 const OptionSchema = z.object({
   id: z.string().min(1),
   text: z.string().min(1),
@@ -33,6 +33,34 @@ export const QuestionSchema = z.object({
 });
 
 export const QuestionsSchema = z.array(QuestionSchema);
+
+// ── questions.json (type16 / 4スタイル軸形式) ───────────────
+export const StyleAxisNameSchema = z.enum([
+  "thinking_action",
+  "offensive_stable",
+  "solo_team",
+  "divergent_convergent",
+]);
+
+export const StyleAxisChoiceSchema = z.enum([
+  "strongly_a",
+  "lean_a",
+  "lean_b",
+  "strongly_b",
+]);
+
+export const StyleAxisQuestionSchema = z.object({
+  id: z.string().min(1),
+  order: z.number().int().positive(),
+  axis: StyleAxisNameSchema,
+  prompt: z.string().min(1),
+  optionA: z.string().min(1),
+  optionB: z.string().min(1),
+  optionASide: z.string().min(1), // 各軸のどちらの極か (e.g. "thinking" / "action")
+  optionBSide: z.string().min(1),
+});
+
+export const StyleAxisQuestionsSchema = z.array(StyleAxisQuestionSchema);
 
 // ── types.json ──────────────────────────────────────────────
 
@@ -93,13 +121,18 @@ const ScoringRuleSchema = z.object({
 });
 
 export const ScoringSchema = z.object({
-  method: z.enum(["dominant-axis"]),
-  rules: z.array(ScoringRuleSchema),
+  method: z.enum(["dominant-axis", "style-axis"]),
+  // dominant-axis 用
+  rules: z.array(ScoringRuleSchema).optional(),
+  // style-axis 用
+  maxScorePerAxis: z.number().int().positive().optional(),
   fallback: z.string(),
 });
 
 // ── inferred types ───────────────────────────────────────────
 export type Meta = z.infer<typeof MetaSchema>;
 export type Question = z.infer<typeof QuestionSchema>;
+export type StyleAxisQuestion = z.infer<typeof StyleAxisQuestionSchema>;
+export type StyleAxisChoice = z.infer<typeof StyleAxisChoiceSchema>;
 export type DiagnosisType = z.infer<typeof DiagnosisTypeSchema>;
 export type Scoring = z.infer<typeof ScoringSchema>;
