@@ -43,6 +43,8 @@ interface SimType {
     soloTeam: number;
     divergentConvergent: number;
   };
+  compatibleTypes?: string[];
+  conflictTypes?: string[];
 }
 
 // ── 定数 ─────────────────────────────────────────────────────────────────
@@ -338,6 +340,68 @@ function showTypeProfiles(types: SimType[]): void {
   }
 }
 
+// ── 相性データ検証 ────────────────────────────────────────────────────────
+function validateCompatibility(types: SimType[]): void {
+  console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("  相性データ検証");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+
+  const allIds = new Set(types.map((t) => t.id));
+  let errors = 0;
+
+  const fail = (msg: string) => {
+    console.log(`  ✗ ${msg}`);
+    errors++;
+  };
+
+  for (const t of types) {
+    const compat = t.compatibleTypes ?? [];
+    const conflict = t.conflictTypes ?? [];
+
+    // 件数チェック
+    if (compat.length !== 3) fail(`${t.id}: compatibleTypes が ${compat.length} 件 (期待: 3)`);
+    if (conflict.length !== 3) fail(`${t.id}: conflictTypes が ${conflict.length} 件 (期待: 3)`);
+
+    // 自己参照チェック
+    if (compat.includes(t.id)) fail(`${t.id}: compatibleTypes に自分自身が含まれる`);
+    if (conflict.includes(t.id)) fail(`${t.id}: conflictTypes に自分自身が含まれる`);
+
+    // 存在チェック
+    for (const id of [...compat, ...conflict]) {
+      if (!allIds.has(id)) fail(`${t.id}: 不明な ID "${id}"`);
+    }
+
+    // 重複チェック
+    const overlap = compat.filter((id) => conflict.includes(id));
+    if (overlap.length > 0) fail(`${t.id}: compatible と conflict に重複 [${overlap.join(", ")}]`);
+  }
+
+  // 対称性チェック
+  const typeMap = new Map(types.map((t) => [t.id, t]));
+  for (const t of types) {
+    for (const otherId of t.compatibleTypes ?? []) {
+      const other = typeMap.get(otherId);
+      if (!other) continue;
+      if (!(other.compatibleTypes ?? []).includes(t.id)) {
+        fail(`compatibleTypes 非対称: ${t.id} → ${otherId} だが ${otherId} → ${t.id} がない`);
+      }
+    }
+    for (const otherId of t.conflictTypes ?? []) {
+      const other = typeMap.get(otherId);
+      if (!other) continue;
+      if (!(other.conflictTypes ?? []).includes(t.id)) {
+        fail(`conflictTypes 非対称: ${t.id} → ${otherId} だが ${otherId} → ${t.id} がない`);
+      }
+    }
+  }
+
+  if (errors === 0) {
+    console.log("  ✓ 全チェック通過 (件数・対称性・重複・自己参照・存在)");
+  } else {
+    console.log(`\n  ✗ ${errors} 件のエラーが見つかりました`);
+  }
+}
+
 // ── エントリーポイント ────────────────────────────────────────────────────
 function main(): void {
   const args = process.argv.slice(2);
@@ -370,6 +434,7 @@ function main(): void {
   }
 
   showTypeProfiles(types);
+  validateCompatibility(types);
   console.log("\n  シミュレーション完了\n");
 }
 

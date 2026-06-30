@@ -4,26 +4,13 @@
     "name": "事業構想家",
     "englishName": "Vision Architect",
     "accentColorKey": "indigo",
-    "character": {
-      "color": "#3730a3"
-    },
-    "axes": {
-      "thinkingAction": 1,
-      "offensiveStable": 1,
-      "soloTeam": 1,
-      "divergentConvergent": 1
-    },
+    "character": { "color": "#3730a3" },
+    "axes": { "thinkingAction": 1, "offensiveStable": 1, "soloTeam": 1, "divergentConvergent": 1 },
     "catchCopy": "思考と発想で、存在しない市場を創る",
     "shortDescription": "データと構想力を武器に、市場にまだない事業を描く。一人で高い山を見上げ、登り方を設計する戦略家。考える量が他人の10倍ある。",
     "summary": "思考と発想で、存在しない市場を創る",
     "detail": "データと構想力を武器に、市場にまだない事業を描く。一人で高い山を見上げ、登り方を設計する戦略家。考える量が他人の10倍ある。",
-    "representativeScores": {
-      "logic": 85,
-      "execution": 50,
-      "sales": 65,
-      "creativity": 80,
-      "management": 50
-    },
+    "representativeScores": { "logic": 85, "execution": 50, "sales": 65, "creativity": 80, "management": 50 },
     "strengths": [
       "事業の本質を見抜く思考力",
       "ゼロからの構想設計力",
@@ -35,11 +22,9 @@
       "人を巻き込む動きが苦手"
     ],
     "fatalWeakness": "完璧な計画を待ち続けて機を逃す",
-    "badEnvironments": [
-      "短期的な成果だけを求める職場",
-      "思考する余白がない忙殺環境"
-    ],
-    "compatibleTypes": ["siege-advisor", "closer"],
+    "badEnvironments": ["短期的な成果だけを求める職場", "思考する余白がない忙殺環境"],
+    "compatibleTypes": ["win-hunter", "assault-creator", "sales-monster"],
+    "conflictTypes": ["strategy-commander", "solo-inventor", "structure-hacker"],
     "recommendedRoles": ["事業企画", "新規事業開発", "経営戦略", "リサーチャー"],
     "sarcasticComments": [
       "構想書は完璧だ。で、プロトタイプはいつできる？",
@@ -59,35 +44,22 @@
     ],
     "recommendedCareers": ["新規事業開発", "経営戦略", "シンクタンク・リサーチ", "VC・エンジェル投資家"],
     "recommendedTasks": ["事業計画の策定", "市場調査・仮説構築", "コンセプト設計", "ピッチ資料の作成"],
-    "notRecommendedWork": "短納期の量産業務・ルーティン実行・クレーム対応のような即レス型タスク",
-    "conflictTypes": ["sales-monster", "frontline-commander"],
-    "teamRole": "ビジョン設定と問題定義。チームの『なぜやるか』を作り、方向性を定める人。"
+    "notRecommendedWork": "マニュアル通りの確認作業、受電対応、毎週同じ形式のレポート作成",
+    "teamRole": "ビジョン設定と問題定義。チームの『なぜやるか』を作り、方向性を定める人。",
+    "shareCatch": "構想で未来を殴るタイプ"
   },
   {
     "id": "win-hunter",
     "name": "勝ち筋ハンター",
     "englishName": "Win Hunter",
     "accentColorKey": "crimson",
-    "character": {
-      "color": "#9b1c1c"
-    },
-    "axes": {
-      "thinkingAction": 1,
-      "offensiveStable": 1,
-      "soloTeam": 1,
-      "divergentConvergent": 4
-    },
+    "character": { "color": "#9b1c1c" },
+    "axes": { "thinkingAction": 1, "offensiveStable": 1, "soloTeam": 1, "divergentConvergent": 4 },
     "catchCopy": "最短距離で勝ちを取りに行く、論理の狙撃手",
     "shortDescription": "感情を排し、勝てる場所と方法を冷静に見極める。ロジックと実行を組み合わせ、個人の力で目標を射抜く。勝てる戦しかしない。",
     "summary": "最短距離で勝ちを取りに行く、論理の狙撃手",
     "detail": "感情を排し、勝てる場所と方法を冷静に見極める。ロジックと実行を組み合わせ、個人の力で目標を射抜く。勝てる戦しかしない。",
-    "representativeScores": {
-      "logic": 85,
-      "execution": 75,
-      "sales": 70,
-      "creativity": 40,
-      "management": 50
-    },
+    "representativeScores": { "logic": 85, "execution": 75, "sales": 70, "creativity": 40, "management": 50 },
     "strengths": [
       "勝機の見極めが圧倒的に速い",
       "無駄を排除した行動設計",
@@ -99,11 +71,9 @@
       "チームの感情面への配慮が後回しになる"
     ],
     "fatalWeakness": "勝てない戦に突入して消耗する",
-    "badEnvironments": [
-      "正解が曖昧すぎる環境",
-      "根回しや政治が支配する組織"
-    ],
-    "compatibleTypes": ["team-conductor", "last-fortress"],
+    "badEnvironments": ["正解が曖昧すぎる環境", "根回しや政治が支配する組織"],
+    "compatibleTypes": ["vision-architect", "assault-creator", "sales-monster"],
+    "conflictTypes": ["siege-advisor", "precision-sniper", "fortress-guardian"],
     "recommendedRoles": ["コンサルタント", "事業開発", "投資家", "プロダクトマネージャー"],
     "sarcasticComments": [
       "その分析、もう勝ちは決まっていたのでは？",
@@ -123,35 +93,22 @@
     ],
     "recommendedCareers": ["コンサルタント", "プロダクトマネージャー", "スタートアップ共同創業者", "投資家・VC"],
     "recommendedTasks": ["競合分析と勝機の見極め", "KPI設計と意思決定の設計", "優先度と撤退の判断", "最短経路の戦略立案"],
-    "notRecommendedWork": "合意形成が必要な根回し業務・チームビルディング・メンバーのメンタルケア",
-    "conflictTypes": ["team-conductor", "producer"],
-    "teamRole": "勝てる方向を定め、迷いを排除する。チームのナビゲーターかつ意思決定の加速装置。"
+    "notRecommendedWork": "何十人もの合意が必要な大規模な社内調整、根回し中心の根回し業務、感情的な場の収拾",
+    "teamRole": "勝てる方向を定め、迷いを排除する。チームのナビゲーターかつ意思決定の加速装置。",
+    "shareCatch": "勝てる戦しかしないタイプ"
   },
   {
     "id": "strategy-commander",
     "name": "企画軍師",
     "englishName": "Strategy Commander",
     "accentColorKey": "navy",
-    "character": {
-      "color": "#1e3a5f"
-    },
-    "axes": {
-      "thinkingAction": 1,
-      "offensiveStable": 1,
-      "soloTeam": 4,
-      "divergentConvergent": 1
-    },
+    "character": { "color": "#1e3a5f" },
+    "axes": { "thinkingAction": 1, "offensiveStable": 1, "soloTeam": 4, "divergentConvergent": 1 },
     "catchCopy": "知恵と巻き込みで、チームを前に進める企画者",
     "shortDescription": "論理と創造力でアイデアを形にし、人を動かして結果につなげる。チームを戦略的に動かし、大きな絵を描く。企画と人心掌握の両刀。",
     "summary": "知恵と巻き込みで、チームを前に進める企画者",
     "detail": "論理と創造力でアイデアを形にし、人を動かして結果につなげる。チームを戦略的に動かし、大きな絵を描く。企画と人心掌握の両刀。",
-    "representativeScores": {
-      "logic": 80,
-      "execution": 60,
-      "sales": 65,
-      "creativity": 75,
-      "management": 70
-    },
+    "representativeScores": { "logic": 80, "execution": 60, "sales": 65, "creativity": 75, "management": 70 },
     "strengths": [
       "企画力と実現力の融合",
       "チームへの戦略的な仕事の割り振り",
@@ -162,12 +119,10 @@
       "一人では完結できないことが多い",
       "チームの質に成果が大きく左右される"
     ],
-    "fatalWeakness": "自分のビジョンを押し付けてチームが疲弊する",
-    "badEnvironments": [
-      "孤立した単独作業環境",
-      "承認フローが硬直した官僚的組織"
-    ],
-    "compatibleTypes": ["closer", "last-fortress"],
+    "fatalWeakness": "作戦が複雑になりすぎて、理解しているのが自分だけの状態になる",
+    "badEnvironments": ["孤立した単独作業環境", "承認フローが硬直した官僚的組織"],
+    "compatibleTypes": ["siege-advisor", "producer", "frontline-commander"],
+    "conflictTypes": ["vision-architect", "solo-inventor", "structure-hacker"],
     "recommendedRoles": ["マーケティングマネージャー", "プランナー", "事業責任者", "クリエイティブディレクター"],
     "sarcasticComments": [
       "企画書は完璧。でもチームはあなたの意図をどこまで理解している？",
@@ -176,8 +131,8 @@
     ],
     "characterConcept": "軍用地図の前に立つ参謀。眼光鋭く、作戦を練る存在。整然としたユニフォーム。",
     "characterImage": "",
-    "oneLine": "企画と人心掌握の両刀使い。ただし両手が塞がると迷子になる。",
-    "osDescription": "論理と人を動かす力を同時に持つ希少種。策略が複雑になるほど、自分だけが理解している状態になる危険がある。チームを動かすことが目的であって、動かしたい自分が目的になっていないか——この問いに定期的に答えられるかどうかがこのタイプのキャリアを分ける。",
+    "oneLine": "まず設計してから人を動かす。頭の中の絵が完成してから始まる。",
+    "osDescription": "まず頭の中で設計し、それを持ってから人を動かす。行動より構想が先にある。ただし策略が複雑になるほど、自分だけが理解している状態になる危険がある。チームを動かすことが目的であって、動かしたい自分が目的になっていないか——この問いに定期的に答えられるかどうかがこのタイプのキャリアを分ける。",
     "humanOsComment": "企画書は完璧で、チームは動いている。では数字を実際に作っているのは誰か。",
     "brokenEnvironment": "上が決めた方向しか実行できない環境。アイデアを出す前に承認が12回必要な組織。",
     "growthTips": [
@@ -187,35 +142,22 @@
     ],
     "recommendedCareers": ["マーケティングマネージャー", "事業責任者", "クリエイティブディレクター", "スタートアップCOO"],
     "recommendedTasks": ["企画立案と推進", "プレゼンテーションと提案", "チームへの目標設定", "顧客インサイトの言語化"],
-    "notRecommendedWork": "個人完結の黙々とした実装作業・細かい数値の詳細管理・ルーティン処理",
-    "conflictTypes": ["precision-sniper", "lone-crafter"],
-    "teamRole": "戦略と熱量を設計し、チームを前に向かせる。チームのエンジン兼企画の司令塔。"
+    "notRecommendedWork": "目標が上から固定された中での定型実行、個人で完結する黙々とした単独作業",
+    "teamRole": "戦略と熱量を設計し、チームを前に向かせる。チームのエンジン兼企画の司令塔。",
+    "shareCatch": "頭で設計して人を動かすタイプ"
   },
   {
     "id": "siege-advisor",
     "name": "攻城参謀",
     "englishName": "Siege Advisor",
     "accentColorKey": "teal",
-    "character": {
-      "color": "#0f4c4c"
-    },
-    "axes": {
-      "thinkingAction": 1,
-      "offensiveStable": 1,
-      "soloTeam": 4,
-      "divergentConvergent": 4
-    },
+    "character": { "color": "#0f4c4c" },
+    "axes": { "thinkingAction": 1, "offensiveStable": 1, "soloTeam": 4, "divergentConvergent": 4 },
     "catchCopy": "論理と組織力で、難攻不落の目標を攻略する",
     "shortDescription": "緻密な計画とチームマネジメントを武器に、大きな目標を実行で崩す。ロジックと人事配置のプロ。チームを最適に動かして山を動かす。",
     "summary": "論理と組織力で、難攻不落の目標を攻略する",
     "detail": "緻密な計画とチームマネジメントを武器に、大きな目標を実行で崩す。ロジックと人事配置のプロ。チームを最適に動かして山を動かす。",
-    "representativeScores": {
-      "logic": 85,
-      "execution": 70,
-      "sales": 60,
-      "creativity": 45,
-      "management": 75
-    },
+    "representativeScores": { "logic": 85, "execution": 70, "sales": 60, "creativity": 45, "management": 75 },
     "strengths": [
       "複雑なプロジェクト管理と計画立案",
       "論理的な目標設定と進捗管理",
@@ -227,11 +169,9 @@
       "即興対応より計画修正に時間がかかる"
     ],
     "fatalWeakness": "前提が崩れたとき計画全体が瓦解する",
-    "badEnvironments": [
-      "カオスで変化が速すぎる環境",
-      "計画を軽視するカルチャーの組織"
-    ],
-    "compatibleTypes": ["vision-architect", "assault-creator"],
+    "badEnvironments": ["カオスで変化が速すぎる環境", "計画を軽視するカルチャーの組織"],
+    "compatibleTypes": ["strategy-commander", "producer", "frontline-commander"],
+    "conflictTypes": ["win-hunter", "precision-sniper", "fortress-guardian"],
     "recommendedRoles": ["プロジェクトマネージャー", "COO", "事業推進", "経営企画"],
     "sarcasticComments": [
       "ガントチャートは完璧。現場はその通りに動いているか？",
@@ -240,8 +180,8 @@
     ],
     "characterConcept": "参謀本部で書類を積み上げる将校。冷静で有能、命令は明確。戦略マップを前に思索する姿。",
     "characterImage": "",
-    "oneLine": "計画と人事配置で難攻不落を攻略する。前提が崩れると固まるのが欠点。",
-    "osDescription": "プロジェクト管理と論理展開の精度が高く、複雑な目標を段階的に崩していく。完璧な計画を作る能力に長けているが、その計画が前提崩壊で瓦解したとき、最も動けなくなるタイプでもある。計画は手段であって目的ではない——この一文をいつも手元に置いておくこと。",
+    "oneLine": "現場には下りない参謀。作戦は本部から精緻に積み上げる。",
+    "osDescription": "現場には下りない。作戦を本部で精緻に設計し、チームへの指示として落とす参謀。完璧な計画を作る能力に長けているが、その計画が前提崩壊で瓦解したとき、最も動けなくなるタイプでもある。計画は手段であって目的ではない——この一文をいつも手元に置いておくこと。",
     "humanOsComment": "ガントチャートは完璧。現場がその通りに動いているかどうかは、また別の問題。",
     "brokenEnvironment": "カオスで変化が速すぎる初期スタートアップ。計画を『ムダ』と扱う文化の職場。",
     "growthTips": [
@@ -249,37 +189,24 @@
       "現場に下りてリアルタイムの情報を直接取りに行く習慣を持つ",
       "チームのメンバーが計画に賛同しているかを定期的に確認する"
     ],
-    "recommendedCareers": ["プロジェクトマネージャー", "COO", "経営企画", "コンサルティングファーム"],
+    "recommendedCareers": ["プロジェクトマネージャー", "COO", "経営企画", "コンサルティング会社"],
     "recommendedTasks": ["プロジェクト計画策定", "リソース配置の最適化", "リスク管理設計", "進捗管理と報告"],
-    "notRecommendedWork": "即興対応が求められる現場営業・ゼロイチの発想・感情的な人間関係の調整",
-    "conflictTypes": ["assault-creator", "lone-crafter"],
-    "teamRole": "計画の構造化と進捗管理。チームの『どうやって』を担い、実行を最適化する人。"
+    "notRecommendedWork": "仕様が毎週変わるプロジェクト、即断即決を求められる現場対応、感情的な調整業務",
+    "teamRole": "計画の構造化と進捗管理。チームの『どうやって』を担い、実行を最適化する人。",
+    "shareCatch": "作戦を精密に積み上げるタイプ"
   },
   {
     "id": "solo-inventor",
     "name": "独創の発明家",
     "englishName": "Solo Inventor",
     "accentColorKey": "violet",
-    "character": {
-      "color": "#5b21b6"
-    },
-    "axes": {
-      "thinkingAction": 1,
-      "offensiveStable": 4,
-      "soloTeam": 1,
-      "divergentConvergent": 1
-    },
+    "character": { "color": "#5b21b6" },
+    "axes": { "thinkingAction": 1, "offensiveStable": 4, "soloTeam": 1, "divergentConvergent": 1 },
     "catchCopy": "誰も見ていない角度から、世界を作り変える発見者",
     "shortDescription": "高い論理力と突き抜けた創造力で、誰も到達していない発想を形にする。孤独を力に変えるイノベーター。作ること自体が生きがい。",
     "summary": "誰も見ていない角度から、世界を作り変える発見者",
     "detail": "高い論理力と突き抜けた創造力で、誰も到達していない発想を形にする。孤独を力に変えるイノベーター。作ること自体が生きがい。",
-    "representativeScores": {
-      "logic": 80,
-      "execution": 45,
-      "sales": 30,
-      "creativity": 90,
-      "management": 50
-    },
+    "representativeScores": { "logic": 80, "execution": 45, "sales": 30, "creativity": 90, "management": 50 },
     "strengths": [
       "独自の切り口と突き抜けた発想力",
       "深い思考と圧倒的な集中力",
@@ -291,11 +218,9 @@
       "人との協働・調整が苦手"
     ],
     "fatalWeakness": "作りっぱなしで誰にも届かない",
-    "badEnvironments": [
-      "集団思考が支配する組織",
-      "短期成果のプレッシャーが強い環境"
-    ],
-    "compatibleTypes": ["closer", "siege-advisor"],
+    "badEnvironments": ["集団思考が支配する組織", "短期成果のプレッシャーが強い環境"],
+    "compatibleTypes": ["precision-sniper", "lone-crafter", "closer"],
+    "conflictTypes": ["vision-architect", "strategy-commander", "structure-hacker"],
     "recommendedRoles": ["研究者", "コンセプトデザイナー", "プロダクトデザイナー", "技術者"],
     "sarcasticComments": [
       "天才の閃き。誰が使うかは考えた？",
@@ -304,8 +229,8 @@
     ],
     "characterConcept": "散らかった工房で一人没頭する発明家。天才肌で風変わり、時代の1歩先を生きている。",
     "characterImage": "",
-    "oneLine": "世界で一番深いところに潜って、誰も見ていないものを掘り出す。",
-    "osDescription": "独自の思考と孤独な集中力で、誰もたどり着かない場所に行く。問題は、そこで掘り出したものを地上まで持ち帰る手段を持っていないことが多い点だ。天才は届いてはじめて意味を持つ。このタイプが孤独を武器にするのは正しいが、孤立を武器にするのは誤りだ。",
+    "oneLine": "考えてから作る。構想が先で、手を動かすのは確信が持てた後。",
+    "osDescription": "考えてから作る。構想が先で、手を動かすのは確信が持てた後——それがこのタイプの設計思想。問題は、そこで掘り出したものを地上まで持ち帰る手段を持っていないことが多い点だ。天才は届いてはじめて意味を持つ。孤独を武器にするのは正しいが、孤立を武器にするのは誤りだ。",
     "humanOsComment": "発明した。誰が使うかは考えていない。それが問題の全て。",
     "brokenEnvironment": "集団思考が支配する会議室。毎週KPIを問われる管理文化。",
     "growthTips": [
@@ -313,37 +238,24 @@
       "作ったものを定期的に外部に公開し、反応を観察する習慣を持つ",
       "孤独な深化と外部フィードバックを交互に行うサイクルを作る"
     ],
-    "recommendedCareers": ["研究者・コンセプトデザイナー", "プロダクトデザイナー", "独立系コンサルタント", "技術者・発明家"],
+    "recommendedCareers": ["研究者・コンセプトデザイナー", "プロダクトデザイナー", "独立系専門家・コンサルタント", "技術者・発明家"],
     "recommendedTasks": ["コンセプト設計と独自発想", "技術・市場の深堀り調査", "プロトタイプ制作", "特定領域の専門知識構築"],
-    "notRecommendedWork": "人を動かす調整業務・量産・スケール業務・チームのモチベーション管理",
-    "conflictTypes": ["frontline-commander", "sales-monster"],
-    "teamRole": "誰も発想しない切り口と深い専門性の供給源。チームのR&D部門であり、知的資産の製造者。"
+    "notRecommendedWork": "週次レポート作成、KPI進捗の定例報告、チームのモチベーション管理",
+    "teamRole": "誰も発想しない切り口と深い専門性の供給源。チームのR&D部門であり、知的資産の製造者。",
+    "shareCatch": "一人で世界の外まで掘り下げるタイプ"
   },
   {
     "id": "precision-sniper",
     "name": "精密スナイパー",
     "englishName": "Precision Sniper",
     "accentColorKey": "slate",
-    "character": {
-      "color": "#334155"
-    },
-    "axes": {
-      "thinkingAction": 1,
-      "offensiveStable": 4,
-      "soloTeam": 1,
-      "divergentConvergent": 4
-    },
+    "character": { "color": "#334155" },
+    "axes": { "thinkingAction": 1, "offensiveStable": 4, "soloTeam": 1, "divergentConvergent": 4 },
     "catchCopy": "論理と精度で、外さない選択をし続ける精密機械",
     "shortDescription": "高い論理力と徹底した実行力で、狙った成果を確実に射止める。ブレない判断と完遂力のスペシャリスト。エラーの少なさが武器。",
     "summary": "論理と精度で、外さない選択をし続ける精密機械",
     "detail": "高い論理力と徹底した実行力で、狙った成果を確実に射止める。ブレない判断と完遂力のスペシャリスト。エラーの少なさが武器。",
-    "representativeScores": {
-      "logic": 90,
-      "execution": 80,
-      "sales": 30,
-      "creativity": 40,
-      "management": 55
-    },
+    "representativeScores": { "logic": 90, "execution": 80, "sales": 30, "creativity": 40, "management": 55 },
     "strengths": [
       "論理的な問題解析と最短経路の設計",
       "一人で完結させる高い実行力",
@@ -354,12 +266,10 @@
       "柔軟な変更への対応がやや遅い",
       "チームへの共有・巻き込みが苦手"
     ],
-    "fatalWeakness": "完璧主義で動き出しが遅くなる",
-    "badEnvironments": [
-      "雑な指示で動かされる環境",
-      "成果より政治が重要な職場"
-    ],
-    "compatibleTypes": ["producer", "team-conductor"],
+    "fatalWeakness": "完璧に仕上げようとして、競合より3ヶ月遅く動き始める",
+    "badEnvironments": ["雑な指示で動かされる環境", "成果より政治が重要な職場"],
+    "compatibleTypes": ["solo-inventor", "lone-crafter", "closer"],
+    "conflictTypes": ["win-hunter", "siege-advisor", "fortress-guardian"],
     "recommendedRoles": ["エンジニア", "アナリスト", "会計士", "スペシャリスト"],
     "sarcasticComments": [
       "精度は高い。速度は？",
@@ -379,35 +289,22 @@
     ],
     "recommendedCareers": ["エンジニア・技術専門職", "データアナリスト", "公認会計士・税理士", "法律家・専門職"],
     "recommendedTasks": ["要件定義と設計", "データ分析・モデリング", "品質管理と検証", "専門領域の技術実装"],
-    "notRecommendedWork": "不確実性が高い新規事業・大人数の感情調整・即興プレゼンのような非定型コミュニケーション",
-    "conflictTypes": ["assault-creator", "producer"],
-    "teamRole": "品質の担保と実装の確実性。チームの精度と信頼性を上げる、静かなアンカー。"
+    "notRecommendedWork": "要件が曖昧なまま走る新規事業、対立する多人数の感情調整、毎日優先度が変わる業務",
+    "teamRole": "品質の担保と実装の確実性。チームの精度と信頼性を上げる、静かなアンカー。",
+    "shareCatch": "外さないことが仕事のタイプ"
   },
   {
     "id": "structure-hacker",
     "name": "構造ハッカー",
     "englishName": "Structure Hacker",
     "accentColorKey": "purple",
-    "character": {
-      "color": "#4c1d95"
-    },
-    "axes": {
-      "thinkingAction": 1,
-      "offensiveStable": 4,
-      "soloTeam": 4,
-      "divergentConvergent": 1
-    },
+    "character": { "color": "#4c1d95" },
+    "axes": { "thinkingAction": 1, "offensiveStable": 4, "soloTeam": 4, "divergentConvergent": 1 },
     "catchCopy": "組織の無駄を解体し、より良い構造を再設計する",
     "shortDescription": "論理と創造力で既存の仕組みの問題を暴き、チームを動かして再設計する。組織改革の異端者。現状に満足しない批評家。",
     "summary": "組織の無駄を解体し、より良い構造を再設計する",
     "detail": "論理と創造力で既存の仕組みの問題を暴き、チームを動かして再設計する。組織改革の異端者。現状に満足しない批評家。",
-    "representativeScores": {
-      "logic": 80,
-      "execution": 55,
-      "sales": 40,
-      "creativity": 75,
-      "management": 70
-    },
+    "representativeScores": { "logic": 80, "execution": 55, "sales": 40, "creativity": 75, "management": 70 },
     "strengths": [
       "問題の構造的な把握と言語化",
       "組織改善のアイデア出し",
@@ -419,11 +316,9 @@
       "改革が中途半端に終わることがある"
     ],
     "fatalWeakness": "構造批判だけで代替案が曖昧なまま進む",
-    "badEnvironments": [
-      "変化を極端に嫌う保守的な組織",
-      "トップダウンで改革できない環境"
-    ],
-    "compatibleTypes": ["frontline-commander", "sales-monster"],
+    "badEnvironments": ["変化を極端に嫌う保守的な組織", "トップダウンで改革できない環境"],
+    "compatibleTypes": ["fortress-guardian", "team-conductor", "last-fortress"],
+    "conflictTypes": ["vision-architect", "strategy-commander", "solo-inventor"],
     "recommendedRoles": ["組織開発", "業務改善コンサル", "エンジニアリングマネージャー", "社内改革推進"],
     "sarcasticComments": [
       "仕組みの問題は分かった。誰が動かす？",
@@ -441,37 +336,24 @@
       "改革の抵抗勢力を『敵』ではなく『変数』として戦略に組み込む",
       "小さな改善を積み重ねて信頼を積む前に大きな改革を試みない"
     ],
-    "recommendedCareers": ["組織開発・業務改善コンサルタント", "エンジニアリングマネージャー", "社内変革リーダー", "システムアーキテクト"],
-    "recommendedTasks": ["業務プロセスの可視化・改善", "組織課題のヒアリングと分析", "改善施策の設計と実行", "システム・ルールの再設計"],
-    "notRecommendedWork": "現状維持が最優先の守り業務・感情的なケアや面談・前例踏襲の定型業務",
-    "conflictTypes": ["closer", "last-fortress"],
-    "teamRole": "組織・プロセスの欠陥を発見し、改善の設計図を引く。チームのデバッガー。"
+    "recommendedCareers": ["組織開発・業務改善コンサルタント", "エンジニアリングマネージャー", "社内変革リーダー", "システム設計者"],
+    "recommendedTasks": ["業務プロセスの可視化・改善", "組織課題のヒアリングと分析", "改善施策の設計と実行", "仕組み・ルールの再設計"],
+    "notRecommendedWork": "承認待ちが何層もある定型プロセス、変化を嫌う上司の元での守り業務",
+    "teamRole": "組織・プロセスの欠陥を発見し、改善の設計図を引く。チームのデバッガー。",
+    "shareCatch": "仕組みの欠陥を見つけて再設計するタイプ"
   },
   {
     "id": "fortress-guardian",
     "name": "城塞の守護者",
     "englishName": "Fortress Guardian",
     "accentColorKey": "forest",
-    "character": {
-      "color": "#14532d"
-    },
-    "axes": {
-      "thinkingAction": 1,
-      "offensiveStable": 4,
-      "soloTeam": 4,
-      "divergentConvergent": 4
-    },
+    "character": { "color": "#14532d" },
+    "axes": { "thinkingAction": 1, "offensiveStable": 4, "soloTeam": 4, "divergentConvergent": 4 },
     "catchCopy": "論理で築いた組織を、管理の力で堅牢に守る",
     "shortDescription": "高い論理力と組織管理力で、長期的に揺るがない基盤を設計・運用する。チームの安定と継続を守る番人。崩れる前に補強する。",
     "summary": "論理で築いた組織を、管理の力で堅牢に守る",
     "detail": "高い論理力と組織管理力で、長期的に揺るがない基盤を設計・運用する。チームの安定と継続を守る番人。崩れる前に補強する。",
-    "representativeScores": {
-      "logic": 80,
-      "execution": 65,
-      "sales": 35,
-      "creativity": 45,
-      "management": 85
-    },
+    "representativeScores": { "logic": 80, "execution": 65, "sales": 35, "creativity": 45, "management": 85 },
     "strengths": [
       "長期的なリスク管理と基盤設計",
       "チームの安定稼働の維持",
@@ -482,12 +364,10 @@
       "変化・スピードへの対応が遅い",
       "攻めるよりも守ることを優先する"
     ],
-    "fatalWeakness": "守りを固めすぎて成長機会を逃す",
-    "badEnvironments": [
-      "スタートアップの高速変化環境",
-      "ルールより感覚で動く組織"
-    ],
-    "compatibleTypes": ["vision-architect", "assault-creator"],
+    "fatalWeakness": "堅牢さへの追求が組織の成長機会を静かに刈り取っていく",
+    "badEnvironments": ["スタートアップの高速変化環境", "ルールより感覚で動く組織"],
+    "compatibleTypes": ["structure-hacker", "team-conductor", "last-fortress"],
+    "conflictTypes": ["win-hunter", "siege-advisor", "precision-sniper"],
     "recommendedRoles": ["リスク管理", "コンプライアンス", "組織管理職", "プロジェクト品質保証"],
     "sarcasticComments": [
       "城は完璧だ。敵が来なければ要塞はただの建造物だ。",
@@ -496,8 +376,8 @@
     ],
     "characterConcept": "甲冑を着た城の番人。威厳があり、侵入者を許さない。静かで揺るぎない存在感。",
     "characterImage": "",
-    "oneLine": "組織の土台を設計し、崩れる前に気づく人。攻めが苦手なのは仕様。",
-    "osDescription": "長期的なリスクを見通し、組織の安定基盤を設計・維持する。問題は、守ることへの集中が攻めることへの無関心に変わると、成長機会を全て見送ることになる点だ。城が立派になるほど、中にいる人が外に出たくなくなる——このジレンマに気づいているかどうかが分岐点。",
+    "oneLine": "仕組みとルールで組織を守る。壊れる前に設計し直す人。",
+    "osDescription": "仕組みとルールで組織を守る。壊れる前に補強し、崩れる前に設計し直す——それがこのタイプの役割の核心。問題は、守ることへの集中が攻めることへの無関心に変わると、成長機会を全て見送ることになる点だ。城が立派になるほど、中にいる人が外に出たくなくなる——このジレンマに気づいているかどうかが分岐点。",
     "humanOsComment": "組織が崩れない。ただし、新しいものが入ってくる隙間もない。",
     "brokenEnvironment": "スタートアップの高速変化環境。『失敗からの学習』を美徳とするカルチャー。",
     "growthTips": [
@@ -505,37 +385,24 @@
       "現状維持と停滞の違いを定期的に自問する習慣を持つ",
       "定期的に外部の視点を取り込んで、内部最適化の罠に気づく機会を作る"
     ],
-    "recommendedCareers": ["リスク管理責任者", "コンプライアンス担当", "内部監査", "品質保証・QAエンジニア"],
-    "recommendedTasks": ["ルール・ガバナンスの整備", "リスクアセスメント", "組織の品質基準策定", "長期計画の安定運用"],
-    "notRecommendedWork": "新規事業の立ち上げ・ゼロベースの発想が必要な場面・スピード優先の突破業務",
-    "conflictTypes": ["assault-creator", "producer"],
-    "teamRole": "チームの土台を守り、ガバナンスを維持する。組織のインフラ担当かつリスクの番人。"
+    "recommendedCareers": ["リスク管理責任者", "法令順守・コンプライアンス担当", "内部監査", "品質保証エンジニア"],
+    "recommendedTasks": ["ルール・ガバナンス整備", "リスクアセスメント", "組織の品質基準策定", "長期計画の安定運用"],
+    "notRecommendedWork": "即断即決のスタートアップ業務、失敗を推奨する実験的な文化の中での立ち上げ作業",
+    "teamRole": "チームの土台を守り、仕組みを維持する。組織のインフラ担当かつリスクの番人。",
+    "shareCatch": "組織の土台を黙って守るタイプ"
   },
   {
     "id": "assault-creator",
     "name": "突撃クリエイター",
     "englishName": "Assault Creator",
     "accentColorKey": "amber",
-    "character": {
-      "color": "#b45309"
-    },
-    "axes": {
-      "thinkingAction": 4,
-      "offensiveStable": 1,
-      "soloTeam": 1,
-      "divergentConvergent": 1
-    },
+    "character": { "color": "#b45309" },
+    "axes": { "thinkingAction": 4, "offensiveStable": 1, "soloTeam": 1, "divergentConvergent": 1 },
     "catchCopy": "動きながら発想し、現場で世界を塗り替える",
     "shortDescription": "行動力と創造力を同時に爆発させる。考えながら走り、作りながら突破する。現場主義の表現者。熱量が武器。",
     "summary": "動きながら発想し、現場で世界を塗り替える",
     "detail": "行動力と創造力を同時に爆発させる。考えながら走り、作りながら突破する。現場主義の表現者。熱量が武器。",
-    "representativeScores": {
-      "logic": 50,
-      "execution": 75,
-      "sales": 65,
-      "creativity": 85,
-      "management": 40
-    },
+    "representativeScores": { "logic": 50, "execution": 75, "sales": 65, "creativity": 85, "management": 40 },
     "strengths": [
       "スピード感ある発想と実行",
       "現場で即興する創造力",
@@ -547,11 +414,9 @@
       "仕上げより始めることを優先しすぎる"
     ],
     "fatalWeakness": "次のアイデアに飛びついて既存が未完のまま積み上がる",
-    "badEnvironments": [
-      "稟議・承認が重い組織",
-      "完璧主義の文化"
-    ],
-    "compatibleTypes": ["siege-advisor", "fortress-guardian"],
+    "badEnvironments": ["稟議・承認が重い組織", "完璧主義の文化"],
+    "compatibleTypes": ["vision-architect", "win-hunter", "sales-monster"],
+    "conflictTypes": ["producer", "lone-crafter", "team-conductor"],
     "recommendedRoles": ["クリエイター", "コンテンツプロデューサー", "スタートアップメンバー", "エバンジェリスト"],
     "sarcasticComments": [
       "熱量は最高。完成品の数は？",
@@ -571,35 +436,22 @@
     ],
     "recommendedCareers": ["クリエイター・コンテンツプロデューサー", "スタートアップ創業メンバー", "エバンジェリスト", "プロダクトデザイナー"],
     "recommendedTasks": ["アイデア発散と試作", "コンテンツの企画と制作", "プロトタイプの爆速構築", "新規プロジェクトの立ち上げ"],
-    "notRecommendedWork": "長期運用・保守業務・精緻な品質管理・繰り返しの定型業務",
-    "conflictTypes": ["precision-sniper", "fortress-guardian"],
-    "teamRole": "チームのエネルギー源。停滞を吹き飛ばし、突破口を開ける最初の一撃を担う。"
+    "notRecommendedWork": "数年単位で変化のない保守・運用、品質を重視した緻密なチェック業務、同じ作業の繰り返し",
+    "teamRole": "チームのエネルギー源。停滞を吹き飛ばし、突破口を開ける最初の一撃を担う。",
+    "shareCatch": "動きながら世界を塗り替えるタイプ"
   },
   {
     "id": "sales-monster",
     "name": "営業モンスター",
     "englishName": "Sales Monster",
     "accentColorKey": "scarlet",
-    "character": {
-      "color": "#b91c1c"
-    },
-    "axes": {
-      "thinkingAction": 4,
-      "offensiveStable": 1,
-      "soloTeam": 1,
-      "divergentConvergent": 4
-    },
+    "character": { "color": "#b91c1c" },
+    "axes": { "thinkingAction": 4, "offensiveStable": 1, "soloTeam": 1, "divergentConvergent": 4 },
     "catchCopy": "人を動かす言葉と行動で、結果を量産する化け物",
     "shortDescription": "圧倒的な行動力と交渉力で、一人で場を制圧する。数字にコミットし、逆境でも前進する生粋のハンター。断られるほど燃える。",
     "summary": "人を動かす言葉と行動で、結果を量産する化け物",
     "detail": "圧倒的な行動力と交渉力で、一人で場を制圧する。数字にコミットし、逆境でも前進する生粋のハンター。断られるほど燃える。",
-    "representativeScores": {
-      "logic": 50,
-      "execution": 85,
-      "sales": 90,
-      "creativity": 40,
-      "management": 45
-    },
+    "representativeScores": { "logic": 50, "execution": 85, "sales": 90, "creativity": 40, "management": 45 },
     "strengths": [
       "圧倒的な行動量とスピード",
       "人を動かす説得力と共感力",
@@ -611,11 +463,9 @@
       "関係構築より結果を優先しすぎる場面がある"
     ],
     "fatalWeakness": "熱量先行で信頼を損ねる",
-    "badEnvironments": [
-      "数字で評価されない職場",
-      "受動的で動かない組織"
-    ],
-    "compatibleTypes": ["fortress-guardian", "structure-hacker"],
+    "badEnvironments": ["数字で評価されない職場", "受動的で動かない組織"],
+    "compatibleTypes": ["vision-architect", "win-hunter", "assault-creator"],
+    "conflictTypes": ["frontline-commander", "closer", "last-fortress"],
     "recommendedRoles": ["営業", "事業開発", "スタートアップ創業者", "代理店営業"],
     "sarcasticComments": [
       "話が速い。相手は追いつけているか？",
@@ -633,37 +483,24 @@
       "スピードを落とさずに相手のペースに合わせる技術を磨く",
       "細かい書類業務を支援するサポート体制を整え、コア業務に集中できる環境を作る"
     ],
-    "recommendedCareers": ["営業・法人営業", "事業開発", "スタートアップ創業者", "代理店・パートナーセールス"],
+    "recommendedCareers": ["法人営業・直販営業", "事業開発", "スタートアップ創業者", "代理店・パートナーセールス"],
     "recommendedTasks": ["新規顧客の開拓", "商談・クロージング", "営業戦略の立案と実行", "パートナー交渉・契約"],
-    "notRecommendedWork": "精細なドキュメント作成・内向きの業務改善・チームの感情ケアと傾聴",
-    "conflictTypes": ["precision-sniper", "fortress-guardian"],
-    "teamRole": "売上と関係を作るフロントライン。チームの収益エンジンであり、外部との橋渡し役。"
+    "notRecommendedWork": "成果が数字で見えにくい社内調整業務、ドキュメント整備、内向きの業務改善活動",
+    "teamRole": "売上と関係を作るフロントライン。チームの収益エンジンであり、外部との橋渡し役。",
+    "shareCatch": "数字で黙らせるタイプ"
   },
   {
     "id": "producer",
     "name": "巻き込みプロデューサー",
     "englishName": "Producer",
     "accentColorKey": "orange",
-    "character": {
-      "color": "#c2410c"
-    },
-    "axes": {
-      "thinkingAction": 4,
-      "offensiveStable": 1,
-      "soloTeam": 4,
-      "divergentConvergent": 1
-    },
+    "character": { "color": "#c2410c" },
+    "axes": { "thinkingAction": 4, "offensiveStable": 1, "soloTeam": 4, "divergentConvergent": 1 },
     "catchCopy": "人を集め、熱量を増幅させ、場を生み出すプロデューサー",
     "shortDescription": "アイデアと人脈と行動力を組み合わせ、プロジェクトを動かし続ける。場を作る力のプロ。いるだけで何かが始まる。",
     "summary": "人を集め、熱量を増幅させ、場を生み出すプロデューサー",
     "detail": "アイデアと人脈と行動力を組み合わせ、プロジェクトを動かし続ける。場を作る力のプロ。いるだけで何かが始まる。",
-    "representativeScores": {
-      "logic": 55,
-      "execution": 75,
-      "sales": 80,
-      "creativity": 75,
-      "management": 65
-    },
+    "representativeScores": { "logic": 55, "execution": 75, "sales": 80, "creativity": 75, "management": 65 },
     "strengths": [
       "人を巻き込む求心力",
       "広い視点と多様なアイデア",
@@ -674,12 +511,10 @@
       "一つのことへの集中が続かない",
       "細部の詰めが甘くなることがある"
     ],
-    "fatalWeakness": "巻き込んだ人を置いてけぼりにして進む",
-    "badEnvironments": [
-      "個人作業が多い環境",
-      "変化のない安定一辺倒の職場"
-    ],
-    "compatibleTypes": ["precision-sniper", "fortress-guardian"],
+    "fatalWeakness": "場を作るのに夢中で、誰が何をすべきかの共通認識がないまま動き始める",
+    "badEnvironments": ["個人作業が多い環境", "変化のない安定一辺倒の職場"],
+    "compatibleTypes": ["strategy-commander", "siege-advisor", "frontline-commander"],
+    "conflictTypes": ["assault-creator", "lone-crafter", "team-conductor"],
     "recommendedRoles": ["プロデューサー", "マーケター", "コミュニティマネージャー", "事業立ち上げ担当"],
     "sarcasticComments": [
       "熱量と人脈はある。最後まで責任を持つ覚悟も？",
@@ -688,8 +523,8 @@
     ],
     "characterConcept": "舞台袖で全体を見渡す演出家。ダイナミックで感染力がある。常に誰かと電話している。",
     "characterImage": "",
-    "oneLine": "いるだけで何かが始まる。終わるかどうかは保証されていない。",
-    "osDescription": "人を集め、熱量を増幅し、プロジェクトを動かし続ける。場を作る力は本物だが、場を作ることと場を閉めることは別のスキルだ。関わった全員の名前と現在地を把握できているなら、このタイプは本物の推進力を持つ。それが怪しいなら、熱量が先走っているだけかもしれない。",
+    "oneLine": "動きながら人を巻き込む。設計が完成する前に走り始める。",
+    "osDescription": "設計が完成する前に走り始め、動きながら人を集めて場を作る。構想は行動の中から生まれる。場を作る力は本物だが、場を作ることと場を閉めることは別のスキルだ。関わった全員の名前と現在地を把握できているなら、このタイプは本物の推進力を持つ。それが怪しいなら、熱量が先走っているだけかもしれない。",
     "humanOsComment": "10人を巻き込んだ。全員が何をすべきか分かっているかどうかを確認したのはいつ？",
     "brokenEnvironment": "個人作業が9割の環境。変化がなく静的な職場。",
     "growthTips": [
@@ -698,36 +533,23 @@
       "細部の詰め役を意図的にチームに入れ、自分の抜けを補完する"
     ],
     "recommendedCareers": ["プロデューサー", "マーケター", "コミュニティマネージャー", "事業立ち上げ責任者"],
-    "recommendedTasks": ["プロジェクトの企画と推進", "関係者の巻き込みとアライメント", "イベント・場づくり", "多様なステークホルダーの調整"],
-    "notRecommendedWork": "細部の詰めが必要な実装・ルーティンの単独業務・長期間の守り業務",
-    "conflictTypes": ["closer", "precision-sniper"],
-    "teamRole": "プロジェクトを動かし続ける推進役。チームのエンジン兼ネットワーカー。"
+    "recommendedTasks": ["プロジェクトの企画と推進", "関係者の巻き込みと方向合わせ", "イベント・場づくり", "多様な関係者の調整"],
+    "notRecommendedWork": "細部まで仕上げが必要な単独実装、誰とも話さない一人での長期保守業務",
+    "teamRole": "プロジェクトを動かし続ける推進役。チームのエンジン兼ネットワーカー。",
+    "shareCatch": "いるだけでプロジェクトが始まるタイプ"
   },
   {
     "id": "frontline-commander",
     "name": "前線指揮官",
     "englishName": "Frontline Commander",
     "accentColorKey": "rust",
-    "character": {
-      "color": "#92400e"
-    },
-    "axes": {
-      "thinkingAction": 4,
-      "offensiveStable": 1,
-      "soloTeam": 4,
-      "divergentConvergent": 4
-    },
+    "character": { "color": "#92400e" },
+    "axes": { "thinkingAction": 4, "offensiveStable": 1, "soloTeam": 4, "divergentConvergent": 4 },
     "catchCopy": "チームを束ね、数字で語り、最前線で勝利を掴む",
     "shortDescription": "強いリーダーシップと実行力で部隊を動かし、攻めて成果を出す。数字にシビアな前線型リーダー。チームで勝つための指揮官。",
     "summary": "チームを束ね、数字で語り、最前線で勝利を掴む",
     "detail": "強いリーダーシップと実行力で部隊を動かし、攻めて成果を出す。数字にシビアな前線型リーダー。チームで勝つための指揮官。",
-    "representativeScores": {
-      "logic": 60,
-      "execution": 80,
-      "sales": 75,
-      "creativity": 40,
-      "management": 75
-    },
+    "representativeScores": { "logic": 60, "execution": 80, "sales": 75, "creativity": 40, "management": 75 },
     "strengths": [
       "チームの推進力と牽引力",
       "目標達成へのプレッシャー管理",
@@ -738,12 +560,10 @@
       "チームのメンタルへの配慮が後回しになる",
       "トップダウン傾向で現場の意見が届きにくい"
     ],
-    "fatalWeakness": "チームが疲弊してもアクセルを踏み続ける",
-    "badEnvironments": [
-      "指示を評価されない風土",
-      "変化が全くない静的な環境"
-    ],
-    "compatibleTypes": ["structure-hacker", "solo-inventor"],
+    "fatalWeakness": "チームの疲弊を数字の問題として処理し、人の問題として認識しない",
+    "badEnvironments": ["指示を評価されない風土", "変化が全くない静的な環境"],
+    "compatibleTypes": ["strategy-commander", "siege-advisor", "producer"],
+    "conflictTypes": ["sales-monster", "closer", "last-fortress"],
     "recommendedRoles": ["営業マネージャー", "チームリーダー", "フィールドセールス責任者", "事業部長"],
     "sarcasticComments": [
       "チームは動いている。燃え尽きていないか確認した？",
@@ -752,8 +572,8 @@
     ],
     "characterConcept": "隊列の先頭に立つ指揮官。旗を持ち、前に進み続ける。傷だらけで、まだ前を向いている。",
     "characterImage": "",
-    "oneLine": "チームを束ねて数字で語る。部下が疲弊していることには気づいていないかもしれない。",
-    "osDescription": "強いリーダーシップと実行力でチームを引っ張り、最前線で成果を出す。問題は、そのアクセルがチームの体力を無視して踏まれること。燃え尽きたチームが次のクォーターに成果を出せるかどうかは、このタイプが最も意識すべきリスクだ。",
+    "oneLine": "現場で指揮する。本部ではなく、前線に自分がいる。",
+    "osDescription": "本部ではなく現場で指揮する。数字と人間を同時に動かしながら、自ら前線で戦う指揮官。問題は、そのアクセルがチームの体力を無視して踏まれること。燃え尽きたチームが次のクォーターに成果を出せるかどうかは、このタイプが最も意識すべきリスクだ。",
     "humanOsComment": "チームの数字は動いた。チームのメンタルが動いているかどうかを最後に確認したのはいつ？",
     "brokenEnvironment": "指示を評価されない風土。チームの感情に配慮が必要なカルチャーとのミスマッチ。",
     "growthTips": [
@@ -763,35 +583,22 @@
     ],
     "recommendedCareers": ["営業マネージャー", "事業部長", "チームリーダー", "フィールドセールス責任者"],
     "recommendedTasks": ["チームの目標設定と進捗管理", "メンバーのパフォーマンス管理", "営業・推進のPDCA", "困難な案件のリカバリー指揮"],
-    "notRecommendedWork": "個人の深い専門作業・感情的な文化形成・長期的な組織設計",
-    "conflictTypes": ["solo-inventor", "lone-crafter"],
-    "teamRole": "チームを前に動かす牽引力。数字と方向性を持ちながら現場を走る人。"
+    "notRecommendedWork": "メンバー一人ひとりの感情に時間をかける傾聴面談、組織の長期設計、内向きの専門技術作業",
+    "teamRole": "チームを前に動かす牽引力。数字と方向性を持ちながら現場を走る人。",
+    "shareCatch": "チームごと最前線を突破するタイプ"
   },
   {
     "id": "lone-crafter",
     "name": "孤高のクラフター",
     "englishName": "Lone Crafter",
     "accentColorKey": "earth",
-    "character": {
-      "color": "#78350f"
-    },
-    "axes": {
-      "thinkingAction": 4,
-      "offensiveStable": 4,
-      "soloTeam": 1,
-      "divergentConvergent": 1
-    },
+    "character": { "color": "#78350f" },
+    "axes": { "thinkingAction": 4, "offensiveStable": 4, "soloTeam": 1, "divergentConvergent": 1 },
     "catchCopy": "静かに動き、誰も真似できないものを作り続ける",
     "shortDescription": "自分のペースと感覚で動き、独自の作品を積み重ねる職人。派手さはないが、その仕事は本物だ。自分の軸を曲げない。",
     "summary": "静かに動き、誰も真似できないものを作り続ける",
     "detail": "自分のペースと感覚で動き、独自の作品を積み重ねる職人。派手さはないが、その仕事は本物だ。自分の軸を曲げない。",
-    "representativeScores": {
-      "logic": 55,
-      "execution": 75,
-      "sales": 30,
-      "creativity": 80,
-      "management": 50
-    },
+    "representativeScores": { "logic": 55, "execution": 75, "sales": 30, "creativity": 80, "management": 50 },
     "strengths": [
       "独自のスキルと感覚の深化",
       "一人で動き、確実にアウトプットを出す",
@@ -803,11 +610,9 @@
       "人への説明・共有が苦手"
     ],
     "fatalWeakness": "作り続けるが評価されないと消える",
-    "badEnvironments": [
-      "集団プレーを強要される職場",
-      "スピードと量ばかりを求められる環境"
-    ],
-    "compatibleTypes": ["siege-advisor", "last-fortress"],
+    "badEnvironments": ["集団プレーを強要される職場", "スピードと量ばかりを求められる環境"],
+    "compatibleTypes": ["solo-inventor", "precision-sniper", "closer"],
+    "conflictTypes": ["assault-creator", "producer", "team-conductor"],
     "recommendedRoles": ["クラフトマン", "デザイナー", "エンジニア", "コンテンツクリエイター"],
     "sarcasticComments": [
       "作品はいい。でも世界は知らない。",
@@ -816,8 +621,8 @@
     ],
     "characterConcept": "工房で一人黙々と作業する職人。手先が器用で、仕事に誇りを持つ。静かな情熱。",
     "characterImage": "",
-    "oneLine": "誰も真似できないものを作る。届けることへの関心は薄い。",
-    "osDescription": "独自のスキルと感覚で、再現不能なクオリティを積み重ねる職人。その作品は本物だ。問題は、本物の作品が評価されるためには誰かに届く必要があること。作ることと届けることを両立できるかどうかが、このタイプのキャリアを決める。",
+    "oneLine": "作りながら磨く。手を動かすことから全てが始まる。",
+    "osDescription": "作りながら磨く。手を動かすことから全てが始まり、考えは作業の中から生まれる——それがこのタイプの作業思想。その作品は本物だ。問題は、本物の作品が評価されるためには誰かに届く必要があること。作ることと届けることを両立できるかどうかが、このタイプのキャリアを決める。",
     "humanOsComment": "作品の質は認める。誰かがそれを見ているかどうかを確認したのはいつ？",
     "brokenEnvironment": "集団プレーを強要される職場。量と速度だけを評価される環境。",
     "growthTips": [
@@ -825,37 +630,24 @@
       "自分の作品を言語化する力を磨き、価値を第三者に伝えられるようにする",
       "少数でいいので、作品を理解してくれるコミュニティに繋がっておく"
     ],
-    "recommendedCareers": ["デザイナー", "エンジニア・技術者", "クラフトマン", "コンテンツクリエイター"],
+    "recommendedCareers": ["デザイナー", "エンジニア・技術者", "職人・クラフトマン", "コンテンツクリエイター"],
     "recommendedTasks": ["専門技術の深化と実装", "独自スタイルの作品制作", "品質にこだわった成果物の仕上げ", "特定領域のスペシャリスト業務"],
-    "notRecommendedWork": "多人数の調整・ファシリテーション・即興の場づくり・スピード重視の雑な実装",
-    "conflictTypes": ["frontline-commander", "producer"],
-    "teamRole": "チームが持てない専門性と品質水準を供給するスペシャリスト。静かな戦力。"
+    "notRecommendedWork": "多人数調整のファシリテーション、その場の即興で切り盛りする場づくり、スピード優先の雑な実装",
+    "teamRole": "チームが持てない専門性と品質水準を供給するスペシャリスト。静かな戦力。",
+    "shareCatch": "誰も真似できないものを作り続けるタイプ"
   },
   {
     "id": "closer",
     "name": "完遂クローザー",
     "englishName": "Closer",
     "accentColorKey": "charcoal",
-    "character": {
-      "color": "#1c1917"
-    },
-    "axes": {
-      "thinkingAction": 4,
-      "offensiveStable": 4,
-      "soloTeam": 1,
-      "divergentConvergent": 4
-    },
+    "character": { "color": "#1c1917" },
+    "axes": { "thinkingAction": 4, "offensiveStable": 4, "soloTeam": 1, "divergentConvergent": 4 },
     "catchCopy": "始まったことは必ず終わらせる、完遂の専門家",
     "shortDescription": "タスクを確実に終わらせる。高い実行力と自己管理で、一人で最後まで走り抜ける。どんな状況でも約束を守る人。",
     "summary": "始まったことは必ず終わらせる、完遂の専門家",
     "detail": "タスクを確実に終わらせる。高い実行力と自己管理で、一人で最後まで走り抜ける。どんな状況でも約束を守る人。",
-    "representativeScores": {
-      "logic": 60,
-      "execution": 85,
-      "sales": 45,
-      "creativity": 40,
-      "management": 65
-    },
+    "representativeScores": { "logic": 60, "execution": 85, "sales": 45, "creativity": 40, "management": 65 },
     "strengths": [
       "確実なタスク完遂と期限厳守",
       "高い自己管理能力",
@@ -866,12 +658,10 @@
       "新しいことへの挑戦よりも完遂を優先する",
       "柔軟な変更への適応が苦手"
     ],
-    "fatalWeakness": "完遂にこだわりすぎて正しい撤退ができない",
-    "badEnvironments": [
-      "コロコロ変わる優先事項",
-      "評価が曖昧な職場"
-    ],
-    "compatibleTypes": ["strategy-commander", "vision-architect"],
+    "fatalWeakness": "引き受けたことを終わらせることが目的化し、方向修正の判断が遅れる",
+    "badEnvironments": ["コロコロ変わる優先事項", "評価が曖昧な職場"],
+    "compatibleTypes": ["solo-inventor", "precision-sniper", "lone-crafter"],
+    "conflictTypes": ["sales-monster", "frontline-commander", "last-fortress"],
     "recommendedRoles": ["プロジェクト担当者", "個人営業", "フリーランス", "専門職"],
     "sarcasticComments": [
       "必ず終わらせる。では次は何を始める？",
@@ -891,35 +681,22 @@
     ],
     "recommendedCareers": ["プロジェクト担当者", "フリーランス専門職", "個人営業・外勤担当", "個人事業主"],
     "recommendedTasks": ["期限のある明確なタスクの完遂", "一人で走り切るプロジェクト管理", "クライアントへの約束の履行", "仕上げと品質確認"],
-    "notRecommendedWork": "目標が曖昧なままの探索・チームビルディング・大きなビジョン策定",
-    "conflictTypes": ["assault-creator", "producer"],
-    "teamRole": "引き受けたことを必ず終わらせる。チームのデッドライン番人。"
+    "notRecommendedWork": "ゴールが変わり続けるプロジェクト、合意形成そのものが主な仕事、発散と模索を繰り返す探索期",
+    "teamRole": "引き受けたことを必ず終わらせる。チームのデッドライン番人。",
+    "shareCatch": "始めたことを必ず終わらせるタイプ"
   },
   {
     "id": "team-conductor",
-    "name": "チーム調律師",
-    "englishName": "Team Conductor",
+    "name": "ギルド調律師",
+    "englishName": "Guild Conductor",
     "accentColorKey": "emerald",
-    "character": {
-      "color": "#065f46"
-    },
-    "axes": {
-      "thinkingAction": 4,
-      "offensiveStable": 4,
-      "soloTeam": 4,
-      "divergentConvergent": 1
-    },
+    "character": { "color": "#065f46" },
+    "axes": { "thinkingAction": 4, "offensiveStable": 4, "soloTeam": 4, "divergentConvergent": 1 },
     "catchCopy": "人の音を揃えて、チームを最高の音楽にする",
     "shortDescription": "行動力とチームワークで組織の調和を保ちながら、創造的なアイデアを引き出す。人の力を引き出す触媒。チームが最高状態になる。",
     "summary": "人の音を揃えて、チームを最高の音楽にする",
     "detail": "行動力とチームワークで組織の調和を保ちながら、創造的なアイデアを引き出す。人の力を引き出す触媒。チームが最高状態になる。",
-    "representativeScores": {
-      "logic": 50,
-      "execution": 70,
-      "sales": 60,
-      "creativity": 70,
-      "management": 80
-    },
+    "representativeScores": { "logic": 50, "execution": 70, "sales": 60, "creativity": 70, "management": 80 },
     "strengths": [
       "チームの雰囲気と関係を整える力",
       "多様なアイデアを引き出し統合する",
@@ -931,12 +708,10 @@
       "ハードな決断を避けがち"
     ],
     "fatalWeakness": "八方美人になってチームが迷走する",
-    "badEnvironments": [
-      "個人競争が激しい職場",
-      "冷たく数字だけを求める環境"
-    ],
-    "compatibleTypes": ["precision-sniper", "win-hunter"],
-    "recommendedRoles": ["チームリーダー", "HR", "スクラムマスター", "コーチ"],
+    "badEnvironments": ["個人競争が激しい職場", "冷たく数字だけを求める環境"],
+    "compatibleTypes": ["structure-hacker", "fortress-guardian", "last-fortress"],
+    "conflictTypes": ["assault-creator", "producer", "lone-crafter"],
+    "recommendedRoles": ["チームリーダー", "HR", "チーム進行管理担当", "コーチ"],
     "sarcasticComments": [
       "チームの空気は最高。成果は？",
       "人を活かすのは得意。自分は？",
@@ -953,37 +728,24 @@
       "チームの調和を守りながら、ハードな事実を伝えるフィードバックの技術を磨く",
       "自分自身のパフォーマンスに投資する時間を意図的に確保する"
     ],
-    "recommendedCareers": ["チームリーダー・HR", "スクラムマスター", "ファシリテーター", "コーチ・1on1担当"],
+    "recommendedCareers": ["チームリーダー・HR担当", "チーム進行管理担当", "ファシリテーター", "コーチ・1on1担当"],
     "recommendedTasks": ["チームの1on1と関係構築", "ファシリテーション", "多様なアイデアの統合と整理", "チームの雰囲気維持と改善"],
-    "notRecommendedWork": "一人で完結させる深い専門作業・数字だけで判断するKPI管理・強権的な意思決定",
-    "conflictTypes": ["win-hunter", "siege-advisor"],
-    "teamRole": "チームの心理的安全性と創造性を守る触媒。全員が力を出せる環境を作る人。"
+    "notRecommendedWork": "一人で長期間完結させる専門技術の実装、対立を力で押し切る強権的な意思決定",
+    "teamRole": "チームの心理的安全性と創造性を守る触媒。全員が力を出せる環境を作る人。",
+    "shareCatch": "チームを最高の状態に調律するタイプ"
   },
   {
     "id": "last-fortress",
     "name": "最後の砦",
     "englishName": "Last Fortress",
     "accentColorKey": "stone",
-    "character": {
-      "color": "#1e293b"
-    },
-    "axes": {
-      "thinkingAction": 4,
-      "offensiveStable": 4,
-      "soloTeam": 4,
-      "divergentConvergent": 4
-    },
+    "character": { "color": "#1e293b" },
+    "axes": { "thinkingAction": 4, "offensiveStable": 4, "soloTeam": 4, "divergentConvergent": 4 },
     "catchCopy": "組織が揺れても、最後に崩れない一人がいる",
     "shortDescription": "どんな状況でも組織を守り、チームを安定させ、確実にゴールへ導く。崩れない安定感の体現者。嵐の中でも動じない。",
     "summary": "組織が揺れても、最後に崩れない一人がいる",
     "detail": "どんな状況でも組織を守り、チームを安定させ、確実にゴールへ導く。崩れない安定感の体現者。嵐の中でも動じない。",
-    "representativeScores": {
-      "logic": 60,
-      "execution": 70,
-      "sales": 40,
-      "creativity": 40,
-      "management": 90
-    },
+    "representativeScores": { "logic": 60, "execution": 70, "sales": 40, "creativity": 40, "management": 90 },
     "strengths": [
       "組織の安定と秩序の維持",
       "チームを守り長期的に稼働させる力",
@@ -995,11 +757,9 @@
       "自分から革新を仕掛けることが少ない"
     ],
     "fatalWeakness": "変化が必要な場面で最後まで旧態を守る",
-    "badEnvironments": [
-      "変化を称賛するカルチャー",
-      "安定より挑戦を強要する環境"
-    ],
-    "compatibleTypes": ["win-hunter", "strategy-commander"],
+    "badEnvironments": ["変化を称賛するカルチャー", "安定より挑戦を強要する環境"],
+    "compatibleTypes": ["structure-hacker", "fortress-guardian", "team-conductor"],
+    "conflictTypes": ["sales-monster", "frontline-commander", "closer"],
     "recommendedRoles": ["オペレーションマネージャー", "総務・管理部門", "チームの安定基盤担当", "インフラエンジニア"],
     "sarcasticComments": [
       "砦は崩れない。では誰が攻める？",
@@ -1008,8 +768,8 @@
     ],
     "characterConcept": "城の最奥で守備を固める最後の将。無言で、動じない。周囲が崩れても表情が変わらない。",
     "characterImage": "",
-    "oneLine": "組織が揺れても最後に崩れない。ただし自分から揺れることはない。",
-    "osDescription": "どんな嵐の中でも組織を守り、チームを安定させる。揺るぎない実行と管理で、確実に成果を積み重ねる。問題は、変化が必要な局面でもその揺るぎなさを維持しようとすること。最後の砦が変化を遮断するとき、組織は安全に停滞する。",
+    "oneLine": "現場対応で崩れを防ぐ。嵐の中でも動じずに踏ん張る人。",
+    "osDescription": "現場対応で崩れを防ぐ。嵐の中でも動じず、泥臭く踏ん張ることが価値の源泉。揺るぎない実行と管理で、確実に成果を積み重ねる。問題は、変化が必要な局面でもその揺るぎなさを維持しようとすること。最後の砦が変化を遮断するとき、組織は安全に停滞する。",
     "humanOsComment": "砦は完璧だ。で、中にいる人たちは成長しているか、それとも守られているだけか。",
     "brokenEnvironment": "変化を称賛するカルチャー。挑戦しないと評価されない環境。",
     "growthTips": [
@@ -1019,8 +779,8 @@
     ],
     "recommendedCareers": ["オペレーションマネージャー", "総務・管理部門", "インフラエンジニア", "運用・保守担当"],
     "recommendedTasks": ["組織の安定運用と継続的な改善", "チームの長期稼働維持", "規則・プロセスの遵守管理", "危機対応と事業継続"],
-    "notRecommendedWork": "新規事業立ち上げ・発散的なブレスト・大胆な変革の推進",
-    "conflictTypes": ["vision-architect", "assault-creator"],
-    "teamRole": "組織の安定と継続を守る土台。チームが倒れないための最後の支柱。"
+    "notRecommendedWork": "ゼロから立ち上げる新規事業、失敗を歓迎するブレスト、大胆な変革を旗振り役として推進する役割",
+    "teamRole": "組織の安定と継続を守る土台。チームが倒れないための最後の支柱。",
+    "shareCatch": "現場の最後尾にいるタイプ"
   }
 ]

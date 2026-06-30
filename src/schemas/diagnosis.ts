@@ -118,6 +118,7 @@ export const DiagnosisTypeSchema = z.object({
   notRecommendedWork: z.string().optional(),
   conflictTypes: z.array(z.string()).optional(),
   teamRole: z.string().optional(),
+  shareCatch: z.string().optional(),  // SNS/OGP向け超短文キャッチ
 });
 
 export const TypesSchema = z.array(DiagnosisTypeSchema);
