@@ -37,19 +37,12 @@ export async function generateMetadata({ params }: Props) {
     return {
       title: `${type.name} — 社会人能力値診断`,
       description: type.shareCatch ?? type.summary,
+      robots: { index: false, follow: false },
     };
   } catch {
     return {};
   }
 }
-
-const AXES = [
-  { id: "logic", label: "論理力" },
-  { id: "execution", label: "実行力" },
-  { id: "sales", label: "営業力" },
-  { id: "creativity", label: "創造力" },
-  { id: "management", label: "管理力" },
-];
 
 function ScoreFallback() {
   return (
@@ -119,7 +112,6 @@ export default async function ResultPage({ params }: Props) {
 
         <Suspense fallback={<ScoreFallback />}>
           <ResultClient
-            axes={AXES}
             fallbackScores={type.representativeScores}
             sarcasticComments={type.sarcasticComments}
             typeColor={type.character.color}

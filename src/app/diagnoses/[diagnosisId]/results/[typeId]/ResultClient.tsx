@@ -3,13 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
-interface Axis {
-  id: string;
-  label: string;
-}
-
 interface Props {
-  axes: Axis[];
   fallbackScores: Record<string, number>;
   sarcasticComments: string[];
   typeColor: string;
@@ -17,13 +11,12 @@ interface Props {
 
 // ── Radar chart constants & helpers ──────────────────────────────────────────
 // Pentagon vertices go clockwise from top.
-// Axis order is chosen so that cognitively-related abilities are adjacent.
 
 const RADAR_AXES = [
   { id: "logic",      label: "論理力" },
-  { id: "creativity", label: "創造力" },
-  { id: "sales",      label: "営業力" },
   { id: "execution",  label: "実行力" },
+  { id: "sales",      label: "営業力" },
+  { id: "creativity", label: "創造力" },
   { id: "management", label: "管理力" },
 ] as const;
 
@@ -67,7 +60,6 @@ function labelAnchor(i: number): "start" | "middle" | "end" {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function ResultClient({
-  axes,
   fallbackScores,
   sarcasticComments,
   typeColor,
@@ -78,7 +70,7 @@ export function ResultClient({
     const parsed: Record<string, number> = {};
     let allValid = true;
 
-    for (const axis of axes) {
+    for (const axis of RADAR_AXES) {
       const raw = searchParams.get(axis.id);
       if (raw === null) {
         allValid = false;
@@ -98,16 +90,16 @@ export function ResultClient({
 
     // 1つでも欠損・不正値があれば representativeScores に全切替え（混在させない）
     const fallback: Record<string, number> = {};
-    for (const axis of axes) {
+    for (const axis of RADAR_AXES) {
       fallback[axis.id] = fallbackScores[axis.id] ?? 0;
     }
     return { scores: fallback, individualScoreMode: false };
-  }, [searchParams, axes, fallbackScores]);
+  }, [searchParams, fallbackScores]);
 
   // Stable comment selection based on highest-score axis (avoids hydration mismatch)
-  const topAxis = axes.reduce(
+  const topAxis = RADAR_AXES.reduce<string>(
     (top, axis) => (scores[axis.id] > (scores[top] ?? 0) ? axis.id : top),
-    axes[0]?.id ?? ""
+    RADAR_AXES[0].id
   );
   const commentIndex = topAxis.length % sarcasticComments.length;
   const sarcasticComment = sarcasticComments[commentIndex] ?? sarcasticComments[0];

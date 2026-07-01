@@ -120,16 +120,16 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
       </div>
 
       {/* A / B option cards
-          sm:min-h-[160px] stabilises the button Y-position across questions on desktop.
+          min-h-[120px] sm:min-h-[160px] stabilises the button Y-position across questions on desktop.
           flex flex-col lets content grow naturally while keeping the card height floored. */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-        <div className="border border-neutral-100 rounded-xl p-4 flex flex-col sm:min-h-[160px]">
+        <div className="border border-neutral-100 rounded-xl p-4 flex flex-col min-h-[120px] sm:min-h-[160px]">
           <span className="text-xs font-mono text-neutral-400 mb-2 block shrink-0">A</span>
           <p className="text-sm text-neutral-600 leading-relaxed">
             {currentQuestion.optionA}
           </p>
         </div>
-        <div className="border border-neutral-100 rounded-xl p-4 flex flex-col sm:min-h-[160px]">
+        <div className="border border-neutral-100 rounded-xl p-4 flex flex-col min-h-[120px] sm:min-h-[160px]">
           <span className="text-xs font-mono text-neutral-400 mb-2 block shrink-0">B</span>
           <p className="text-sm text-neutral-600 leading-relaxed">
             {currentQuestion.optionB}
