@@ -16,8 +16,8 @@ interface Props {
 
 const CHOICES = [
   { id: "strongly_a", label: "Aに近い" },
-  { id: "lean_a", label: "ややA寄り" },
-  { id: "lean_b", label: "ややB寄り" },
+  { id: "lean_a",     label: "ややA寄り" },
+  { id: "lean_b",     label: "ややB寄り" },
   { id: "strongly_b", label: "Bに近い" },
 ] as const;
 
@@ -109,8 +109,8 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
         </div>
       </div>
 
-      {/* Question prompt */}
-      <div className="mb-7">
+      {/* Question prompt — min-h reduces shift between 1-line and 2-line prompts */}
+      <div className="mb-6 min-h-[3.5rem]">
         <p className="text-xs font-mono text-neutral-400 mb-3">
           Q{currentIndex + 1}
         </p>
@@ -119,29 +119,31 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
         </p>
       </div>
 
-      {/* A / B options */}
+      {/* A / B option cards
+          sm:min-h-[160px] stabilises the button Y-position across questions on desktop.
+          flex flex-col lets content grow naturally while keeping the card height floored. */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-        <div className="border border-neutral-100 rounded-xl p-4">
-          <span className="text-xs font-mono text-neutral-400 mb-2 block">A</span>
+        <div className="border border-neutral-100 rounded-xl p-4 flex flex-col sm:min-h-[160px]">
+          <span className="text-xs font-mono text-neutral-400 mb-2 block shrink-0">A</span>
           <p className="text-sm text-neutral-600 leading-relaxed">
             {currentQuestion.optionA}
           </p>
         </div>
-        <div className="border border-neutral-100 rounded-xl p-4">
-          <span className="text-xs font-mono text-neutral-400 mb-2 block">B</span>
+        <div className="border border-neutral-100 rounded-xl p-4 flex flex-col sm:min-h-[160px]">
+          <span className="text-xs font-mono text-neutral-400 mb-2 block shrink-0">B</span>
           <p className="text-sm text-neutral-600 leading-relaxed">
             {currentQuestion.optionB}
           </p>
         </div>
       </div>
 
-      {/* 4-choice buttons (A → B スケール) */}
-      <div className="grid grid-cols-4 gap-2">
+      {/* 4-choice buttons: 2×2 on mobile (easier tap targets), 1×4 on desktop */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {CHOICES.map((choice) => (
           <button
             key={choice.id}
             onClick={() => handleChoice(choice.id)}
-            className="border border-neutral-200 rounded-xl py-3 text-xs text-neutral-600 hover:border-neutral-900 hover:text-neutral-900 active:bg-neutral-50 transition-colors"
+            className="border border-neutral-200 rounded-xl py-3 text-xs text-neutral-600 hover:border-neutral-900 hover:text-neutral-900 active:bg-neutral-50 transition-colors min-h-[44px] flex items-center justify-center"
           >
             {choice.label}
           </button>

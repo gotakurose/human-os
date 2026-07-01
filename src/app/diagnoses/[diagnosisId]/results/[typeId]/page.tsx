@@ -54,20 +54,10 @@ const AXES = [
 function ScoreFallback() {
   return (
     <div className="border border-neutral-100 rounded-2xl p-5 mb-6">
-      <p className="text-xs font-mono text-neutral-400 uppercase mb-5">
+      <p className="text-xs font-mono text-neutral-400 uppercase mb-4">
         Ability Scores
       </p>
-      <div className="space-y-4">
-        {AXES.map((axis) => (
-          <div key={axis.id}>
-            <div className="flex justify-between items-baseline mb-1.5">
-              <span className="text-sm text-neutral-600">{axis.label}</span>
-              <span className="font-mono text-sm text-neutral-300">--</span>
-            </div>
-            <div className="h-2 bg-neutral-100 rounded-full" />
-          </div>
-        ))}
-      </div>
+      <div className="w-full max-w-xs mx-auto aspect-square bg-neutral-50 rounded-2xl animate-pulse" />
     </div>
   );
 }
