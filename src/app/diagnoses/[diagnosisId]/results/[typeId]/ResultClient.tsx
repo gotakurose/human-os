@@ -23,21 +23,34 @@ export function ResultClient({
 }: Props) {
   const searchParams = useSearchParams();
 
-  const { scores, hasUrlScores } = useMemo(() => {
-    const result: Record<string, number> = {};
-    let found = false;
+  const { scores, individualScoreMode } = useMemo(() => {
+    const parsed: Record<string, number> = {};
+    let allValid = true;
 
     for (const axis of axes) {
       const raw = searchParams.get(axis.id);
-      if (raw !== null) {
-        result[axis.id] = Math.min(100, Math.max(0, parseInt(raw, 10)));
-        found = true;
-      } else {
-        result[axis.id] = fallbackScores[axis.id] ?? 0;
+      if (raw === null) {
+        allValid = false;
+        break;
       }
+      const n = parseInt(raw, 10);
+      if (!Number.isFinite(n)) {
+        allValid = false;
+        break;
+      }
+      parsed[axis.id] = Math.min(100, Math.max(0, n));
     }
 
-    return { scores: result, hasUrlScores: found };
+    if (allValid) {
+      return { scores: parsed, individualScoreMode: true };
+    }
+
+    // 1つでも欠損・不正値があれば representativeScores に全切替え
+    const fallback: Record<string, number> = {};
+    for (const axis of axes) {
+      fallback[axis.id] = fallbackScores[axis.id] ?? 0;
+    }
+    return { scores: fallback, individualScoreMode: false };
   }, [searchParams, axes, fallbackScores]);
 
   // Stable comment selection based on highest score axis (avoids hydration mismatch)
@@ -53,7 +66,7 @@ export function ResultClient({
       {/* Score bars */}
       <div className="border border-neutral-100 rounded-2xl p-5 mb-6">
         <p className="text-xs font-mono text-neutral-400 uppercase mb-5">
-          Ability Scores
+          {individualScoreMode ? "Ability Scores" : "このタイプの代表的な能力傾向"}
         </p>
         <div className="space-y-4">
           {axes.map((axis) => {
@@ -79,10 +92,13 @@ export function ResultClient({
             );
           })}
         </div>
-        {!hasUrlScores && (
-          <p className="text-xs text-neutral-300 mt-4">
-            ※ 代表的なスコアを表示しています
-          </p>
+
+        {!individualScoreMode && (
+          <div className="mt-5 border border-amber-200 bg-amber-50 rounded-xl px-4 py-3">
+            <p className="text-xs text-amber-700 leading-relaxed">
+              これは診断回答から算出された個人スコアではなく、このタイプの代表的な傾向です。個人スコアを確認するには診断を受けてください。
+            </p>
+          </div>
         )}
       </div>
 
