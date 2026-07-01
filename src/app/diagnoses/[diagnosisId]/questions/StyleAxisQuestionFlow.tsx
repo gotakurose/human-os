@@ -15,10 +15,10 @@ interface Props {
 }
 
 const CHOICES = [
-  { id: "strongly_a", sideLabel: "強", sideA: true,  mainLabel: "A寄り" },
-  { id: "lean_a",     sideLabel: "やや", sideA: true,  mainLabel: "A寄り" },
-  { id: "lean_b",     sideLabel: "やや", sideA: false, mainLabel: "B寄り" },
-  { id: "strongly_b", sideLabel: "強", sideA: false, mainLabel: "B寄り" },
+  { id: "strongly_a", sideLabel: "強",   sideA: true  },
+  { id: "lean_a",     sideLabel: "やや", sideA: true  },
+  { id: "lean_b",     sideLabel: "やや", sideA: false },
+  { id: "strongly_b", sideLabel: "強",   sideA: false },
 ] as const;
 
 export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }: Props) {
@@ -47,11 +47,7 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
     } else {
       setIsSubmitting(true);
 
-      const result = dispatch("type16", newAnswers, {
-        questions,
-        scoring,
-        types,
-      });
+      const result = dispatch("type16", newAnswers, { questions, scoring, types });
 
       const params = new URLSearchParams();
       for (const { axisId, score } of result.scores) {
@@ -74,8 +70,16 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
   if (isSubmitting) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[40vh] gap-3">
-        <div className="w-6 h-6 border-2 border-neutral-300 border-t-neutral-900 rounded-full animate-spin" />
-        <p className="text-sm text-neutral-400">診断中...</p>
+        <div
+          className="w-5 h-5 border-2 rounded-full animate-spin"
+          style={{
+            borderColor: "var(--dossier-line)",
+            borderTopColor: "var(--dossier-gold)",
+          }}
+        />
+        <p className="text-sm font-jp" style={{ color: "var(--dossier-muted)" }}>
+          解析中...
+        </p>
       </div>
     );
   }
@@ -85,33 +89,46 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
       {/* Back */}
       <Link
         href={`/diagnoses/${diagnosisId}`}
-        className="text-xs text-neutral-400 hover:text-neutral-600 mb-8 inline-block transition-colors"
+        className="text-xs font-jp transition-opacity hover:opacity-60 mb-8 inline-block"
+        style={{ color: "var(--dossier-muted)" }}
       >
         ← 説明へ戻る
       </Link>
 
       {/* Instruction */}
-      <div className="border-l-2 border-neutral-100 pl-3 mb-8">
-        <p className="text-xs text-neutral-400 leading-relaxed">
+      <div
+        className="pl-3 mb-8"
+        style={{ borderLeft: "2px solid var(--dossier-line)" }}
+      >
+        <p className="text-xs font-jp leading-relaxed" style={{ color: "var(--dossier-muted)" }}>
           深く考えすぎず、普段の仕事中の自分に近い方を選んでください。
         </p>
-        <p className="text-xs text-neutral-400 leading-relaxed mt-0.5">
-          どちらも当てはまる場合は、「より自然にやりがちな方」を選んでください。
+        <p className="text-xs font-jp leading-relaxed mt-0.5" style={{ color: "var(--dossier-muted)" }}>
+          どちらも当てはまる場合は、より自然にやりがちな方を選んでください。
         </p>
       </div>
 
-      {/* Progress */}
+      {/* Progress — thin measurement line */}
       <div className="mb-8">
-        <div className="flex justify-between text-xs text-neutral-400 mb-2">
-          <span className="font-mono">
+        <div className="flex justify-between text-xs mb-2">
+          <span className="font-mono-doc" style={{ color: "var(--dossier-sub)" }}>
             {currentIndex + 1} / {totalQuestions}
           </span>
-          <span>{progressPercent}%</span>
+          <span
+            className="font-mono-doc"
+            style={{ color: "var(--dossier-muted)" }}
+          >
+            {progressPercent}%
+          </span>
         </div>
-        <div className="h-1 bg-neutral-100 rounded-full overflow-hidden">
+        {/* Track */}
+        <div className="h-px relative" style={{ background: "var(--dossier-line)" }}>
           <div
-            className="h-1 bg-neutral-900 rounded-full transition-all duration-300"
-            style={{ width: `${progressPercent}%` }}
+            className="absolute inset-y-0 left-0 transition-all duration-300"
+            style={{
+              width: `${progressPercent}%`,
+              background: "var(--dossier-gold)",
+            }}
           />
         </div>
       </div>
@@ -120,41 +137,88 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
           min-h anchors the A/B card top regardless of 1-line vs 2-line question.
           mobile: 120px covers 3-line wraps; sm: 96px covers 2-line wraps. */}
       <div className="mb-6 min-h-[120px] sm:min-h-[96px]">
-        <p className="text-xs font-mono text-neutral-400 mb-3">
+        <p
+          className="text-[11px] font-mono-doc mb-3"
+          style={{ color: "var(--dossier-muted)" }}
+        >
           Q{currentIndex + 1}
         </p>
-        <p className="text-base font-medium leading-relaxed text-neutral-900">
+        <p
+          className="font-jp font-medium leading-relaxed"
+          style={{ fontSize: "1rem", color: "var(--dossier-ink)" }}
+        >
           {currentQuestion.prompt}
         </p>
       </div>
 
-      {/* A / B option cards */}
+      {/* A / B option cards — dossier question field style */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-        <div className="border border-neutral-100 rounded-xl p-4 flex flex-col min-h-[120px] sm:min-h-[160px]">
-          <span className="text-xs font-mono text-neutral-400 mb-2 block shrink-0">A</span>
-          <p className="text-sm text-neutral-600 leading-relaxed">
+        {/* A */}
+        <div
+          className="p-4 flex flex-col min-h-[120px] sm:min-h-[160px]"
+          style={{
+            border: "1px solid var(--dossier-line)",
+            background: "var(--dossier-surface)",
+          }}
+        >
+          <span
+            className="text-[11px] font-mono-doc mb-2 shrink-0"
+            style={{ color: "var(--dossier-gold)" }}
+          >
+            A
+          </span>
+          <p
+            className="font-jp leading-relaxed"
+            style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
+          >
             {currentQuestion.optionA}
           </p>
         </div>
-        <div className="border border-neutral-100 rounded-xl p-4 flex flex-col min-h-[120px] sm:min-h-[160px]">
-          <span className="text-xs font-mono text-neutral-400 mb-2 block shrink-0">B</span>
-          <p className="text-sm text-neutral-600 leading-relaxed">
+        {/* B */}
+        <div
+          className="p-4 flex flex-col min-h-[120px] sm:min-h-[160px]"
+          style={{
+            border: "1px solid var(--dossier-line)",
+            background: "var(--dossier-surface)",
+          }}
+        >
+          <span
+            className="text-[11px] font-mono-doc mb-2 shrink-0"
+            style={{ color: "var(--dossier-muted)" }}
+          >
+            B
+          </span>
+          <p
+            className="font-jp leading-relaxed"
+            style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
+          >
             {currentQuestion.optionB}
           </p>
         </div>
       </div>
 
-      {/* ── 4-segment connected choice UI ──────────────────────────────────── */}
-      {/* A label row (PC: above buttons; mobile: shown as in-button text only) */}
+      {/* ── 4-segment connected answer strip ─────────────────────────────── */}
+
+      {/* A/B side labels — above on PC */}
       <div className="hidden sm:flex justify-between mb-1 px-px">
-        <span className="text-[11px] text-neutral-400">← A側</span>
-        <span className="text-[11px] text-neutral-400">B側 →</span>
+        <span
+          className="text-[11px] font-mono-doc"
+          style={{ color: "var(--dossier-muted)" }}
+        >
+          ← A 側
+        </span>
+        <span
+          className="text-[11px] font-mono-doc"
+          style={{ color: "var(--dossier-muted)" }}
+        >
+          B 側 →
+        </span>
       </div>
 
-      {/* Connected button strip: gap-px on bg = accent border colour */}
+      {/* Connected strip — gap-px on a gold background = ruled border */}
       <div
-        className="grid grid-cols-4 gap-px rounded-lg overflow-hidden"
-        style={{ background: "#D6CEB8" }}
+        className="grid grid-cols-4 gap-px overflow-hidden"
+        style={{ background: "var(--dossier-line)" }}
       >
         {CHOICES.map((choice, idx) => {
           const isOuter = idx === 0 || idx === 3;
@@ -164,30 +228,40 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
               onClick={() => handleChoice(choice.id)}
               className="flex flex-col items-center justify-center gap-0.5 py-4 transition-colors"
               style={{
-                background: "#FAFAF8",
-                minHeight: "64px",
+                background: "var(--dossier-surface)",
+                minHeight: "60px",
                 borderTop: isOuter
-                  ? "2px solid #8C7A4B"
-                  : "2px solid rgba(140,122,75,0.28)",
+                  ? "2px solid var(--dossier-gold)"
+                  : "2px solid rgba(140,122,75,0.30)",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = "#F0EDE6";
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  "var(--dossier-paper)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = "#FAFAF8";
+                (e.currentTarget as HTMLButtonElement).style.background =
+                  "var(--dossier-surface)";
               }}
             >
               {/* 強 / やや helper label */}
               <span
-                className="text-[9px] leading-none font-mono"
-                style={{ color: isOuter ? "#8C7A4B" : "#B0A99A" }}
+                className="text-[9px] leading-none font-mono-doc"
+                style={{
+                  color: isOuter
+                    ? "var(--dossier-gold)"
+                    : "var(--dossier-muted)",
+                }}
               >
                 {choice.sideLabel}
               </span>
-              {/* Main label */}
+              {/* A / B label */}
               <span
-                className="text-xs font-medium leading-none"
-                style={{ color: isOuter ? "#1A1815" : "#6B655C" }}
+                className="text-xs leading-none font-jp font-medium"
+                style={{
+                  color: isOuter
+                    ? "var(--dossier-ink)"
+                    : "var(--dossier-sub)",
+                }}
               >
                 {choice.sideA ? "A" : "B"}寄り
               </span>
@@ -196,10 +270,20 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
         })}
       </div>
 
-      {/* A/B side labels below (mobile) */}
+      {/* A/B side labels — below on mobile */}
       <div className="flex justify-between mt-1 px-px sm:hidden">
-        <span className="text-[10px] text-neutral-400">← A側</span>
-        <span className="text-[10px] text-neutral-400">B側 →</span>
+        <span
+          className="text-[10px] font-mono-doc"
+          style={{ color: "var(--dossier-muted)" }}
+        >
+          ← A 側
+        </span>
+        <span
+          className="text-[10px] font-mono-doc"
+          style={{ color: "var(--dossier-muted)" }}
+        >
+          B 側 →
+        </span>
       </div>
     </div>
   );

@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Zen_Old_Mincho, Noto_Sans_JP } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Zen_Old_Mincho,
+  Noto_Sans_JP,
+  EB_Garamond,
+  IBM_Plex_Mono,
+} from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,6 +28,23 @@ const zenOldMincho = Zen_Old_Mincho({
 
 const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  preload: false,
+});
+
+// English serif — for englishName, Dossier labels, italicized quotes
+const ebGaramond = EB_Garamond({
+  variable: "--font-eb-garamond",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  preload: false,
+});
+
+// Document mono — for TYPE-01, No. 001, section IDs, axis values
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
   preload: false,
@@ -54,7 +78,15 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${geistSans.variable} ${geistMono.variable} ${zenOldMincho.variable} ${notoSansJP.variable} h-full antialiased`}
+      className={[
+        geistSans.variable,
+        geistMono.variable,
+        zenOldMincho.variable,
+        notoSansJP.variable,
+        ebGaramond.variable,
+        ibmPlexMono.variable,
+        "h-full antialiased",
+      ].join(" ")}
     >
       <body className="min-h-full flex flex-col bg-white text-neutral-900">
         {children}
