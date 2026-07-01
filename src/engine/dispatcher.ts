@@ -74,6 +74,12 @@ export function dispatch(
           axisId,
           score,
         })),
+        styleAxisScores: {
+          thinking_action: axisScores.thinking_action,
+          offensive_stable: axisScores.offensive_stable,
+          solo_team: axisScores.solo_team,
+          divergent_convergent: axisScores.divergent_convergent,
+        },
       };
     }
 

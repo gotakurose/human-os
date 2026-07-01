@@ -17,6 +17,8 @@
   --color-border: var(--border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-zen: var(--font-zen-old-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-jp: var(--font-noto-sans-jp), "Hiragino Sans", "Noto Sans JP", sans-serif;
 }
 
 body {

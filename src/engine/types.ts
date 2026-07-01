@@ -19,7 +19,15 @@ export interface AxisScore {
   score: number; // 0–100 normalized
 }
 
+export interface StyleAxisScoreMap {
+  thinking_action: number;
+  offensive_stable: number;
+  solo_team: number;
+  divergent_convergent: number;
+}
+
 export interface DiagnosisResult {
   typeId: string;
   scores: AxisScore[];
+  styleAxisScores?: StyleAxisScoreMap;
 }

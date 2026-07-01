@@ -57,6 +57,13 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
       for (const { axisId, score } of result.scores) {
         params.set(axisId, String(Math.round(score)));
       }
+      if (result.styleAxisScores) {
+        const sa = result.styleAxisScores;
+        params.set("ta", String(Math.round(sa.thinking_action * 100)));
+        params.set("os", String(Math.round(sa.offensive_stable * 100)));
+        params.set("st", String(Math.round(sa.solo_team * 100)));
+        params.set("dc", String(Math.round(sa.divergent_convergent * 100)));
+      }
 
       router.push(
         `/diagnoses/${diagnosisId}/results/${result.typeId}?${params.toString()}`
