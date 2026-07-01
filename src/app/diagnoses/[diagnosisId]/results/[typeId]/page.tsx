@@ -16,7 +16,7 @@ const TEMP_TYPE_ASSETS: Record<string, {
   traitBadgeImage: string;
   traitLabel: string;
 }> = {
-  "structure-hacker": {
+  "vision-architect": {
     characterImage: "/images/diagnoses/business-skills/characters/structure-hacker.png",
     traitBadgeImage: "/images/diagnoses/business-skills/badges/logical-specialist.png",
     traitLabel: "論理特化型",

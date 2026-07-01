@@ -20,6 +20,8 @@ export interface AxisScore {
 }
 
 export interface StyleAxisScoreMap {
+  // -1.0 ~ +1.0 normalized style-axis score
+  // positive = left pole (thinking / offensive / solo / divergent)
   thinking_action: number;
   offensive_stable: number;
   solo_team: number;

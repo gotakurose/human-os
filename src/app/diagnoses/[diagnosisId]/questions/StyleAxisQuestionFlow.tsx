@@ -116,8 +116,10 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
         </div>
       </div>
 
-      {/* Question prompt — min-h reduces shift between 1-line and 2-line prompts */}
-      <div className="mb-6 min-h-[3.5rem]">
+      {/* Question prompt
+          min-h anchors the A/B card top regardless of 1-line vs 2-line question.
+          mobile: 120px covers 3-line wraps; sm: 96px covers 2-line wraps. */}
+      <div className="mb-6 min-h-[120px] sm:min-h-[96px]">
         <p className="text-xs font-mono text-neutral-400 mb-3">
           Q{currentIndex + 1}
         </p>
@@ -150,7 +152,7 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
           <button
             key={choice.id}
             onClick={() => handleChoice(choice.id)}
-            className="border border-neutral-200 rounded-xl py-3 text-xs text-neutral-600 hover:border-neutral-900 hover:text-neutral-900 active:bg-neutral-50 transition-colors min-h-[44px] flex items-center justify-center"
+            className="border border-neutral-200 rounded-xl py-3 text-xs text-neutral-600 hover:border-neutral-900 hover:text-neutral-900 active:bg-neutral-50 transition-colors min-h-[56px] flex items-center justify-center"
           >
             {choice.label}
           </button>
