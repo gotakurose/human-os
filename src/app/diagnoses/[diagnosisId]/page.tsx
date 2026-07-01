@@ -83,7 +83,7 @@ export default async function DiagnosisPage({ params }: Props) {
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-neutral-400">診断方式</span>
-          <span className="font-medium">5軸スコアリング</span>
+          <span className="font-medium">4スタイル軸 × 5能力値</span>
         </div>
       </div>
 
@@ -92,8 +92,8 @@ export default async function DiagnosisPage({ params }: Props) {
         <div className="border border-neutral-100 rounded-2xl p-5 mb-8">
           <div className="flex items-center gap-2 mb-4">
             <BarChart2 size={14} className="text-neutral-400" />
-            <p className="text-xs font-mono text-neutral-400 uppercase">
-              Ability Axes
+            <p className="text-xs text-neutral-400">
+              評価軸
             </p>
           </div>
           <div className="flex flex-wrap gap-2">

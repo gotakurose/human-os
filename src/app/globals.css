@@ -7,6 +7,26 @@
   --muted-foreground: #737373;
   --border: #e5e5e5;
   --accent: #0a0a0a;
+
+  /* ── Human OS design tokens ───────────────────────── */
+  /* Light (question / detail / top pages) */
+  --hos-bg: #F5F3EF;
+  --hos-surface: #FCFBF9;
+  --hos-border: #E5E0D8;
+  --hos-text-primary: #1A1815;
+  --hos-text-secondary: #6B655C;
+  --hos-accent: #8C7A4B;
+
+  /* Dark (result page) */
+  --hos-dark-bg: #14120F;
+  --hos-dark-surface: #1C1A16;
+  --hos-dark-border: #2E2A24;
+  --hos-dark-text-primary: #EDE9E1;
+  --hos-dark-text-secondary: #8A8378;
+  --hos-dark-text-muted: #6B6560;
+  --hos-dark-accent: #B8A06A;
+  --hos-dark-fatal: #B5544A;
+  --hos-dark-broken: #B87A3D;
 }
 
 @theme inline {
@@ -19,6 +39,13 @@
   --font-mono: var(--font-geist-mono);
   --font-zen: var(--font-zen-old-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
   --font-jp: var(--font-noto-sans-jp), "Hiragino Sans", "Noto Sans JP", sans-serif;
+
+  /* Human OS color utilities */
+  --color-hos-accent: var(--hos-accent);
+  --color-hos-dark-accent: var(--hos-dark-accent);
+  --color-hos-dark-bg: var(--hos-dark-bg);
+  --color-hos-dark-surface: var(--hos-dark-surface);
+  --color-hos-dark-border: var(--hos-dark-border);
 }
 
 body {

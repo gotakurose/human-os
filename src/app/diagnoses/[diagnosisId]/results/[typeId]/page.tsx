@@ -20,7 +20,10 @@ const TEMP_TYPE_ASSETS: Record<string, {
     characterImage: "/images/diagnoses/business-skills/characters/structure-hacker.png",
     traitBadgeImage: "/images/diagnoses/business-skills/badges/logical-specialist.png",
     traitLabel: "論理特化型",
-  },
+    // TODO: Use person+background-only images — no text burned in.
+    //       All 16 character images: unified framing, background, lighting.
+    //       Type name / english name are rendered in UI, not embedded in image.
+  } as { characterImage: string; traitBadgeImage: string; traitLabel: string },
 };
 
 export async function generateStaticParams() {
@@ -59,10 +62,11 @@ export async function generateMetadata({ params }: Props) {
 
 function ScoreFallback({ typeColor }: { typeColor: string }) {
   return (
-    <div className="border border-white/[0.06] rounded-xl p-5 mb-4">
-      <p className="text-xs text-neutral-500 mb-4">能力値</p>
+    <div className="rounded-lg p-5 mb-4"
+         style={{ background: "#1C1A16", border: "1px solid #2E2A24" }}>
+      <p className="text-xs mb-4" style={{ color: "#8A8378" }}>能力値</p>
       <div
-        className="w-full max-w-xs mx-auto rounded-xl animate-pulse"
+        className="w-full max-w-xs mx-auto rounded-lg animate-pulse"
         style={{
           aspectRatio: "1",
           background: `${typeColor}08`,
@@ -103,27 +107,39 @@ export default async function ResultPage({ params }: Props) {
   const compatibleNames = compatibleIds.map((id) => typeNameMap.get(id) ?? id);
   const conflictNames = conflictIds.map((id) => typeNameMap.get(id) ?? id);
 
-  const humanOsCommentBlock = type.humanOsComment ? (
-    <div className="border-l-[2px] pl-4" style={{ borderColor: tc }}>
-      <p className="text-xs text-neutral-600 mb-2">Human OS Comment</p>
-      <p className="text-base text-neutral-300 italic leading-relaxed font-jp">
-        {type.humanOsComment}
-      </p>
-    </div>
-  ) : null;
+  // ── Shared style shortcuts ────────────────────────────────────────────────
+  const card = {
+    className: "rounded-lg p-4",
+    style: { background: "#1C1A16", border: "1px solid #2E2A24" },
+  } as const;
+
+  const cardP5 = {
+    className: "rounded-lg p-5",
+    style: { background: "#1C1A16", border: "1px solid #2E2A24" },
+  } as const;
 
   return (
-    <main className="flex-1 bg-[#0d0f14] text-neutral-100 result-fade-in">
+    <main
+      className="flex-1 result-fade-in"
+      style={{ background: "#14120F", color: "#EDE9E1" }}
+    >
       <div className="max-w-2xl mx-auto px-5 py-10 w-full">
 
         {/* ── Identity Panel ────────────────────────────────────────────────── */}
         <section className="mb-8">
+
           {/* Header row */}
           <div className="flex items-start justify-between mb-5">
-            <span className="text-xs font-mono tracking-[0.18em] text-neutral-700 uppercase">
+            <span
+              className="text-xs font-mono tracking-[0.15em] uppercase"
+              style={{ color: "#8A8378" }}
+            >
               {meta.title}
             </span>
-            <span className="text-xs font-mono text-neutral-700 tracking-widest shrink-0 ml-4">
+            <span
+              className="text-xs font-mono tracking-[0.12em] shrink-0 ml-4"
+              style={{ color: "#6B6560" }}
+            >
               TYPE-{String(typeIndex).padStart(2, "0")}
             </span>
           </div>
@@ -131,93 +147,116 @@ export default async function ResultPage({ params }: Props) {
           {/* Type name */}
           <div className="mb-5">
             <h1
-              className="text-4xl md:text-5xl font-semibold text-white tracking-[0.05em] leading-tight font-zen"
+              className="text-4xl md:text-5xl font-semibold leading-tight font-zen"
+              style={{ color: "#EDE9E1", letterSpacing: "0.04em" }}
             >
               {type.name}
             </h1>
             {type.englishName && (
               <p
-                className="text-xs font-mono tracking-[0.18em] uppercase mt-2"
-                style={{ color: `${tc}cc` }}
+                className="text-sm tracking-[0.06em] mt-2 font-mono"
+                style={{ color: `${tc}bb` }}
               >
                 {type.englishName}
               </p>
             )}
           </div>
 
-          {/* FV: with or without character image */}
+          {/* FV grid (character image present) */}
           {resolvedCharacterImage ? (
-            <>
-              <div className="sm:grid sm:grid-cols-[1fr_200px] sm:gap-7 mb-6">
-                <div className="mb-5 sm:mb-0">
-                  {type.shareCatch && (
-                    <p className="text-lg font-semibold text-neutral-100 leading-snug mb-3 font-jp">
-                      {type.shareCatch}
-                    </p>
-                  )}
-                  {type.catchCopy && (
-                    <p className="text-sm text-neutral-500 leading-relaxed mb-4 font-jp">
-                      {type.catchCopy}
-                    </p>
-                  )}
-                  {traitBadge && (
-                    // eslint-disable-next-line @next/next/no-img-element
+            <div className="sm:grid sm:grid-cols-[1fr_200px] sm:gap-7 mb-6">
+              <div className="mb-5 sm:mb-0">
+                {type.shareCatch && (
+                  <p
+                    className="text-lg font-semibold leading-snug mb-3 font-jp"
+                    style={{ color: "#EDE9E1" }}
+                  >
+                    {type.shareCatch}
+                  </p>
+                )}
+                {type.catchCopy && (
+                  <p
+                    className="text-sm leading-relaxed font-jp"
+                    style={{ color: "#8A8378" }}
+                  >
+                    {type.catchCopy}
+                  </p>
+                )}
+              </div>
+
+              {/* Character image + badge overlay */}
+              <div className="relative shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={resolvedCharacterImage}
+                  alt={type.name}
+                  className="w-full max-w-[240px] sm:max-w-none mx-auto rounded-lg object-cover"
+                  style={{ border: "1px solid #2E2A24" }}
+                />
+                {/* Badge: small overlay bottom-right */}
+                {traitBadge && (
+                  <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={traitBadge.image}
                       alt={traitBadge.label}
-                      className="max-w-[180px] w-auto mt-2"
+                      className="w-[56px] sm:w-[72px] h-auto opacity-85"
                     />
-                  )}
-                  {/* Human OS Comment: PC only (inside left column) */}
-                  {humanOsCommentBlock && (
-                    <div className="hidden sm:block mt-5">
-                      {humanOsCommentBlock}
-                    </div>
-                  )}
-                </div>
-                {/* Character image: right column */}
-                <div className="shrink-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={resolvedCharacterImage}
-                    alt={type.name}
-                    className="w-full max-w-[240px] sm:max-w-none mx-auto rounded-lg object-cover"
-                    style={{ border: "1px solid rgba(255,255,255,0.06)" }}
-                  />
-                </div>
+                  </div>
+                )}
               </div>
-              {/* Human OS Comment: mobile only (below image) */}
-              {humanOsCommentBlock && (
-                <div className="sm:hidden mb-6">{humanOsCommentBlock}</div>
-              )}
-            </>
+            </div>
           ) : (
             /* No character image: simple stack */
             <div className="mb-6">
               {type.shareCatch && (
-                <p className="text-lg font-semibold text-neutral-100 leading-snug mb-3 font-jp">
+                <p
+                  className="text-lg font-semibold leading-snug mb-3 font-jp"
+                  style={{ color: "#EDE9E1" }}
+                >
                   {type.shareCatch}
                 </p>
               )}
               {type.catchCopy && (
-                <p className="text-sm text-neutral-500 leading-relaxed mb-4 font-jp">
+                <p
+                  className="text-sm leading-relaxed mb-4 font-jp"
+                  style={{ color: "#8A8378" }}
+                >
                   {type.catchCopy}
                 </p>
               )}
+              {/* Badge inline when no character image */}
               {traitBadge && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={traitBadge.image}
                   alt={traitBadge.label}
-                  className="max-w-[180px] w-auto mb-4"
+                  className="w-[72px] sm:w-[88px] h-auto mb-4 opacity-85"
                 />
-              )}
-              {humanOsCommentBlock && (
-                <div className="mt-5">{humanOsCommentBlock}</div>
               )}
             </div>
           )}
         </section>
+
+        {/* ── 解析コメント (Human OS Comment — outside FV) ─────────────────── */}
+        {type.humanOsComment && (
+          <section className="mb-8">
+            <div className="pl-4" style={{ borderLeft: `2px solid ${tc}55` }}>
+              <p
+                className="text-xs mb-2 tracking-[0.06em]"
+                style={{ color: "#6B6560" }}
+              >
+                解析コメント
+              </p>
+              <p
+                className="text-base italic leading-relaxed font-jp"
+                style={{ color: "#C8C3BB" }}
+              >
+                {type.humanOsComment}
+              </p>
+            </div>
+          </section>
+        )}
 
         {/* ── 能力値 + スタイル傾向 (client) ──────────────────────────────── */}
         <Suspense fallback={<ScoreFallback typeColor={tc} />}>
@@ -230,16 +269,27 @@ export default async function ResultPage({ params }: Props) {
 
         {/* ── あなたの社会人OS ─────────────────────────────────────────────── */}
         {(type.oneLine ?? type.osDescription) && (
-          <section className="border-t border-white/[0.06] pt-8 mb-8">
-            <p className="text-xs text-neutral-500 mb-4">あなたの社会人OS</p>
+          <section
+            className="pt-8 mb-8"
+            style={{ borderTop: "1px solid #2E2A24" }}
+          >
+            <p className="text-xs mb-4 tracking-[0.06em]" style={{ color: "#8A8378" }}>
+              あなたの社会人OS
+            </p>
             {type.oneLine && (
-              <p className="text-base font-semibold text-neutral-200 mb-3 leading-snug font-jp">
+              <p
+                className="text-base font-semibold mb-3 leading-snug font-jp"
+                style={{ color: "#D4CFC6" }}
+              >
                 {type.oneLine}
               </p>
             )}
             {type.osDescription && (
-              <div className="border border-white/[0.06] rounded-xl p-5">
-                <p className="text-sm text-neutral-400 leading-relaxed whitespace-pre-line font-jp">
+              <div {...cardP5}>
+                <p
+                  className="text-sm leading-relaxed whitespace-pre-line font-jp"
+                  style={{ color: "#8A8378" }}
+                >
                   {type.osDescription}
                 </p>
               </div>
@@ -248,26 +298,31 @@ export default async function ResultPage({ params }: Props) {
         )}
 
         {/* ── 強み・弱み ───────────────────────────────────────────────────── */}
-        <section className="border-t border-white/[0.06] pt-8 mb-8">
-          <p className="text-xs text-neutral-500 mb-4">強み・弱み</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <div className="border border-white/[0.06] rounded-xl p-4">
-              <p className="text-xs text-neutral-500 mb-3">強み</p>
+        <section
+          className="pt-8 mb-8"
+          style={{ borderTop: "1px solid #2E2A24" }}
+        >
+          <p className="text-xs mb-4 tracking-[0.06em]" style={{ color: "#8A8378" }}>
+            強み・弱み
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div {...card}>
+              <p className="text-xs mb-3 tracking-[0.05em]" style={{ color: "#8A8378" }}>強み</p>
               <ul className="space-y-2">
                 {type.strengths.map((s, i) => (
-                  <li key={i} className="text-sm text-neutral-300 flex gap-2 font-jp">
-                    <span className="text-neutral-700 shrink-0">—</span>
+                  <li key={i} className="text-sm flex gap-2 font-jp" style={{ color: "#B8B3AB" }}>
+                    <span className="shrink-0" style={{ color: "#4A4540" }}>—</span>
                     {s}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="border border-white/[0.06] rounded-xl p-4">
-              <p className="text-xs text-neutral-500 mb-3">弱み</p>
+            <div {...card}>
+              <p className="text-xs mb-3 tracking-[0.05em]" style={{ color: "#8A8378" }}>弱み</p>
               <ul className="space-y-2">
                 {type.weaknesses.map((w, i) => (
-                  <li key={i} className="text-sm text-neutral-300 flex gap-2 font-jp">
-                    <span className="text-neutral-700 shrink-0">—</span>
+                  <li key={i} className="text-sm flex gap-2 font-jp" style={{ color: "#B8B3AB" }}>
+                    <span className="shrink-0" style={{ color: "#4A4540" }}>—</span>
                     {w}
                   </li>
                 ))}
@@ -275,30 +330,51 @@ export default async function ResultPage({ params }: Props) {
             </div>
           </div>
           {type.fatalWeakness && (
-            <div className="border border-red-900/40 bg-red-950/20 rounded-xl p-4">
-              <p className="text-xs text-red-700/80 mb-2">致命的な弱点</p>
-              <p className="text-sm text-red-400 leading-relaxed font-jp">{type.fatalWeakness}</p>
+            <div
+              className="rounded-lg p-4"
+              style={{ border: "1px solid #6B2E2A", background: "#1E0F0E" }}
+            >
+              <p className="text-xs mb-2 tracking-[0.05em]" style={{ color: "#B5544A" }}>
+                致命的な弱点
+              </p>
+              <p className="text-sm leading-relaxed font-jp" style={{ color: "#D4A09B" }}>
+                {type.fatalWeakness}
+              </p>
             </div>
           )}
         </section>
 
         {/* ── 自己成長 ─────────────────────────────────────────────────────── */}
         {(type.brokenEnvironment ?? (type.growthTips && type.growthTips.length > 0)) && (
-          <section className="border-t border-white/[0.06] pt-8 mb-8">
-            <p className="text-xs text-neutral-500 mb-4">自己成長</p>
+          <section
+            className="pt-8 mb-8"
+            style={{ borderTop: "1px solid #2E2A24" }}
+          >
+            <p className="text-xs mb-4 tracking-[0.06em]" style={{ color: "#8A8378" }}>
+              自己成長
+            </p>
             {type.brokenEnvironment && (
-              <div className="border border-amber-800/30 bg-amber-950/20 rounded-xl p-4 mb-4">
-                <p className="text-xs text-amber-700/80 mb-2">壊れる環境</p>
-                <p className="text-sm text-amber-400 leading-relaxed font-jp">{type.brokenEnvironment}</p>
+              <div
+                className="rounded-lg p-4 mb-3"
+                style={{ border: "1px solid #6B4523", background: "#1C1108" }}
+              >
+                <p className="text-xs mb-2 tracking-[0.05em]" style={{ color: "#B87A3D" }}>
+                  壊れる環境
+                </p>
+                <p className="text-sm leading-relaxed font-jp" style={{ color: "#D4B08C" }}>
+                  {type.brokenEnvironment}
+                </p>
               </div>
             )}
             {type.growthTips && type.growthTips.length > 0 && (
-              <div className="border border-white/[0.06] rounded-xl p-4">
-                <p className="text-xs text-neutral-500 mb-3">成長のヒント</p>
+              <div {...card}>
+                <p className="text-xs mb-3 tracking-[0.05em]" style={{ color: "#8A8378" }}>
+                  成長のヒント
+                </p>
                 <ul className="space-y-3">
                   {type.growthTips.map((tip, i) => (
-                    <li key={i} className="text-sm text-neutral-400 flex gap-2 font-jp">
-                      <span className="text-neutral-700 shrink-0 font-mono">{i + 1}.</span>
+                    <li key={i} className="text-sm flex gap-2 font-jp" style={{ color: "#8A8378" }}>
+                      <span className="shrink-0 font-mono" style={{ color: "#4A4540" }}>{i + 1}.</span>
                       {tip}
                     </li>
                   ))}
@@ -310,16 +386,28 @@ export default async function ResultPage({ params }: Props) {
 
         {/* ── キャリア適性 ─────────────────────────────────────────────────── */}
         {(type.recommendedCareers ?? type.recommendedTasks ?? type.notRecommendedWork) && (
-          <section className="border-t border-white/[0.06] pt-8 mb-8">
-            <p className="text-xs text-neutral-500 mb-4">キャリア適性</p>
+          <section
+            className="pt-8 mb-8"
+            style={{ borderTop: "1px solid #2E2A24" }}
+          >
+            <p className="text-xs mb-4 tracking-[0.06em]" style={{ color: "#8A8378" }}>
+              キャリア適性
+            </p>
             {type.recommendedCareers && type.recommendedCareers.length > 0 && (
               <div className="mb-4">
-                <p className="text-xs text-neutral-500 mb-3">向いている職種</p>
+                <p className="text-xs mb-3 tracking-[0.05em]" style={{ color: "#8A8378" }}>
+                  向いている職種
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {type.recommendedCareers.map((career, i) => (
                     <span
                       key={i}
-                      className="text-xs text-neutral-400 bg-white/[0.04] border border-white/[0.06] px-3 py-1 rounded-full font-jp"
+                      className="text-xs px-3 py-1 rounded-full font-jp"
+                      style={{
+                        background: "#1C1A16",
+                        border: "1px solid #2E2A24",
+                        color: "#8A8378",
+                      }}
                     >
                       {career}
                     </span>
@@ -328,12 +416,14 @@ export default async function ResultPage({ params }: Props) {
               </div>
             )}
             {type.recommendedTasks && type.recommendedTasks.length > 0 && (
-              <div className="border border-white/[0.06] rounded-xl p-4 mb-4">
-                <p className="text-xs text-neutral-500 mb-3">向いている仕事</p>
+              <div {...card} className="rounded-lg p-4 mb-3">
+                <p className="text-xs mb-3 tracking-[0.05em]" style={{ color: "#8A8378" }}>
+                  向いている仕事
+                </p>
                 <ul className="space-y-2">
                   {type.recommendedTasks.map((task, i) => (
-                    <li key={i} className="text-sm text-neutral-400 flex gap-2 font-jp">
-                      <span className="text-neutral-700 shrink-0">—</span>
+                    <li key={i} className="text-sm flex gap-2 font-jp" style={{ color: "#8A8378" }}>
+                      <span className="shrink-0" style={{ color: "#4A4540" }}>—</span>
                       {task}
                     </li>
                   ))}
@@ -341,9 +431,13 @@ export default async function ResultPage({ params }: Props) {
               </div>
             )}
             {type.notRecommendedWork && (
-              <div className="border border-white/[0.06] rounded-xl p-4">
-                <p className="text-xs text-neutral-500 mb-2">避けた方がいい仕事</p>
-                <p className="text-sm text-neutral-500 leading-relaxed font-jp">{type.notRecommendedWork}</p>
+              <div {...card}>
+                <p className="text-xs mb-2 tracking-[0.05em]" style={{ color: "#8A8378" }}>
+                  避けた方がいい仕事
+                </p>
+                <p className="text-sm leading-relaxed font-jp" style={{ color: "#6B6560" }}>
+                  {type.notRecommendedWork}
+                </p>
               </div>
             )}
           </section>
@@ -351,16 +445,23 @@ export default async function ResultPage({ params }: Props) {
 
         {/* ── 人間関係 ─────────────────────────────────────────────────────── */}
         {(compatibleNames.length > 0 || conflictNames.length > 0) && (
-          <section className="border-t border-white/[0.06] pt-8 mb-8">
-            <p className="text-xs text-neutral-500 mb-4">人間関係</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <section
+            className="pt-8 mb-8"
+            style={{ borderTop: "1px solid #2E2A24" }}
+          >
+            <p className="text-xs mb-4 tracking-[0.06em]" style={{ color: "#8A8378" }}>
+              人間関係
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {compatibleNames.length > 0 && (
-                <div className="border border-white/[0.06] rounded-xl p-4">
-                  <p className="text-xs text-neutral-500 mb-3">相性が良いタイプ</p>
+                <div {...card}>
+                  <p className="text-xs mb-3 tracking-[0.05em]" style={{ color: "#8A8378" }}>
+                    相性が良いタイプ
+                  </p>
                   <ul className="space-y-2">
                     {compatibleNames.map((name, i) => (
-                      <li key={i} className="text-sm text-neutral-400 flex gap-2 font-jp">
-                        <span className="text-green-600 shrink-0">◎</span>
+                      <li key={i} className="text-sm flex gap-2 font-jp" style={{ color: "#8A8378" }}>
+                        <span className="shrink-0" style={{ color: "#4E7A5A" }}>◎</span>
                         {name}
                       </li>
                     ))}
@@ -368,12 +469,14 @@ export default async function ResultPage({ params }: Props) {
                 </div>
               )}
               {conflictNames.length > 0 && (
-                <div className="border border-white/[0.06] rounded-xl p-4">
-                  <p className="text-xs text-neutral-500 mb-3">ぶつかりやすいタイプ</p>
+                <div {...card}>
+                  <p className="text-xs mb-3 tracking-[0.05em]" style={{ color: "#8A8378" }}>
+                    ぶつかりやすいタイプ
+                  </p>
                   <ul className="space-y-2">
                     {conflictNames.map((name, i) => (
-                      <li key={i} className="text-sm text-neutral-400 flex gap-2 font-jp">
-                        <span className="text-red-700 shrink-0">△</span>
+                      <li key={i} className="text-sm flex gap-2 font-jp" style={{ color: "#8A8378" }}>
+                        <span className="shrink-0" style={{ color: "#7A4E4E" }}>△</span>
                         {name}
                       </li>
                     ))}
@@ -386,26 +489,38 @@ export default async function ResultPage({ params }: Props) {
 
         {/* ── チーム内での役割 ──────────────────────────────────────────────── */}
         {type.teamRole && (
-          <section className="border-t border-white/[0.06] pt-8 mb-8">
-            <p className="text-xs text-neutral-500 mb-4">チーム内での役割</p>
-            <div className="border border-white/[0.06] rounded-xl p-5">
-              <p className="text-sm text-neutral-400 leading-relaxed font-jp">{type.teamRole}</p>
+          <section
+            className="pt-8 mb-8"
+            style={{ borderTop: "1px solid #2E2A24" }}
+          >
+            <p className="text-xs mb-4 tracking-[0.06em]" style={{ color: "#8A8378" }}>
+              チーム内での役割
+            </p>
+            <div {...cardP5}>
+              <p className="text-sm leading-relaxed font-jp" style={{ color: "#8A8378" }}>
+                {type.teamRole}
+              </p>
             </div>
           </section>
         )}
 
         {/* ── Actions ───────────────────────────────────────────────────────── */}
-        <div className="border-t border-white/[0.06] pt-8 flex flex-col gap-3">
+        <div className="pt-8 flex flex-col gap-3" style={{ borderTop: "1px solid #2E2A24" }}>
           <Link
             href={`/diagnoses/${diagnosisId}/questions`}
-            className="flex items-center justify-center gap-2 w-full border border-white/15 rounded-xl py-3.5 text-sm font-medium text-neutral-400 hover:border-white/30 hover:text-white transition-colors"
+            className="flex items-center justify-center gap-2 w-full rounded-lg py-3.5 text-sm font-medium transition-colors"
+            style={{
+              border: "1px solid #3E3A33",
+              color: "#8A8378",
+            }}
           >
             <RotateCcw size={14} />
             もう一度診断する
           </Link>
           <Link
             href="/"
-            className="flex items-center justify-center gap-2 w-full text-sm text-neutral-700 hover:text-neutral-500 py-2 transition-colors"
+            className="flex items-center justify-center gap-2 w-full text-sm py-2 transition-colors"
+            style={{ color: "#4A4540" }}
           >
             <Home size={14} />
             トップへ戻る

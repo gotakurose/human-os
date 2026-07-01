@@ -15,10 +15,10 @@ interface Props {
 }
 
 const CHOICES = [
-  { id: "strongly_a", label: "Aに近い" },
-  { id: "lean_a",     label: "ややA寄り" },
-  { id: "lean_b",     label: "ややB寄り" },
-  { id: "strongly_b", label: "Bに近い" },
+  { id: "strongly_a", sideLabel: "強", sideA: true,  mainLabel: "A寄り" },
+  { id: "lean_a",     sideLabel: "やや", sideA: true,  mainLabel: "A寄り" },
+  { id: "lean_b",     sideLabel: "やや", sideA: false, mainLabel: "B寄り" },
+  { id: "strongly_b", sideLabel: "強", sideA: false, mainLabel: "B寄り" },
 ] as const;
 
 export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }: Props) {
@@ -128,9 +128,7 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
         </p>
       </div>
 
-      {/* A / B option cards
-          min-h-[120px] sm:min-h-[160px] stabilises the button Y-position across questions on desktop.
-          flex flex-col lets content grow naturally while keeping the card height floored. */}
+      {/* A / B option cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
         <div className="border border-neutral-100 rounded-xl p-4 flex flex-col min-h-[120px] sm:min-h-[160px]">
           <span className="text-xs font-mono text-neutral-400 mb-2 block shrink-0">A</span>
@@ -146,17 +144,62 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types }
         </div>
       </div>
 
-      {/* 4-choice buttons: 2×2 on mobile (easier tap targets), 1×4 on desktop */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        {CHOICES.map((choice) => (
-          <button
-            key={choice.id}
-            onClick={() => handleChoice(choice.id)}
-            className="border border-neutral-200 rounded-xl py-3 text-xs text-neutral-600 hover:border-neutral-900 hover:text-neutral-900 active:bg-neutral-50 transition-colors min-h-[56px] flex items-center justify-center"
-          >
-            {choice.label}
-          </button>
-        ))}
+      {/* ── 4-segment connected choice UI ──────────────────────────────────── */}
+      {/* A label row (PC: above buttons; mobile: shown as in-button text only) */}
+      <div className="hidden sm:flex justify-between mb-1 px-px">
+        <span className="text-[11px] text-neutral-400">← A側</span>
+        <span className="text-[11px] text-neutral-400">B側 →</span>
+      </div>
+
+      {/* Connected button strip: gap-px on bg = accent border colour */}
+      <div
+        className="grid grid-cols-4 gap-px rounded-lg overflow-hidden"
+        style={{ background: "#D6CEB8" }}
+      >
+        {CHOICES.map((choice, idx) => {
+          const isOuter = idx === 0 || idx === 3;
+          return (
+            <button
+              key={choice.id}
+              onClick={() => handleChoice(choice.id)}
+              className="flex flex-col items-center justify-center gap-0.5 py-4 transition-colors"
+              style={{
+                background: "#FAFAF8",
+                minHeight: "64px",
+                borderTop: isOuter
+                  ? "2px solid #8C7A4B"
+                  : "2px solid rgba(140,122,75,0.28)",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = "#F0EDE6";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = "#FAFAF8";
+              }}
+            >
+              {/* 強 / やや helper label */}
+              <span
+                className="text-[9px] leading-none font-mono"
+                style={{ color: isOuter ? "#8C7A4B" : "#B0A99A" }}
+              >
+                {choice.sideLabel}
+              </span>
+              {/* Main label */}
+              <span
+                className="text-xs font-medium leading-none"
+                style={{ color: isOuter ? "#1A1815" : "#6B655C" }}
+              >
+                {choice.sideA ? "A" : "B"}寄り
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* A/B side labels below (mobile) */}
+      <div className="flex justify-between mt-1 px-px sm:hidden">
+        <span className="text-[10px] text-neutral-400">← A側</span>
+        <span className="text-[10px] text-neutral-400">B側 →</span>
       </div>
     </div>
   );
