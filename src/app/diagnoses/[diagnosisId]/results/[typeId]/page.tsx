@@ -1,29 +1,119 @@
-import { loadTypes, loadMeta, loadAllMeta } from "@/lib/data-loader";
-import { computeCompatibleTypes, computeConflictTypes } from "@/lib/type-compatibility";
+import { loadTypes, loadMeta, loadAllMeta, loadFixedCopy, loadDynamicCopy } from "@/lib/data-loader";
+import type { DiagnosisType, FixedCopy } from "@/schemas/diagnosis";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ResultClient } from "./ResultClient";
+import { ResultShareSection } from "./ResultShareSection";
+import { ResultStyleBadge } from "./ResultStyleBadge";
+import { ResultSpecialistBadge } from "./ResultSpecialistBadge";
+import { ResultAbilitySection } from "./ResultAbilitySection";
+import { ProseBody } from "./ProseBody";
+import { DynamicCopySlot } from "./DynamicCopySlot";
+import { TYPE_DISPLAY_ASSETS } from "./result-assets";
 import { RotateCcw, Home } from "lucide-react";
+import type { DynamicCopyPart, TypeDefinition } from "./resolve-axis-dynamic-copy";
+
+const ORN = "/images/diagnoses/business-skills/ornaments";
+
+function DividerOrnament() {
+  return (
+    <div className="divider-ornament-wrap">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${ORN}/divider-ornament.png`}
+        alt=""
+        aria-hidden="true"
+        className="divider-ornament-img pointer-events-none select-none"
+      />
+    </div>
+  );
+}
+
+function computeBaseCode(axes: {
+  thinkingAction: number;
+  offensiveStable: number;
+  soloTeam: number;
+  divergentConvergent: number;
+}): string {
+  return (
+    (axes.thinkingAction <= 2 ? "T" : "A") +
+    (axes.offensiveStable <= 2 ? "O" : "S") +
+    (axes.soloTeam <= 2 ? "I" : "G") +
+    (axes.divergentConvergent <= 2 ? "E" : "F")
+  );
+}
+
+function validateFixedCopyIntegrity(fixedCopy: FixedCopy, types: DiagnosisType[]): void {
+  if (fixedCopy.schemaVersion !== 1)
+    throw new Error(`fixed-copy.json schemaVersion must be 1, got ${fixedCopy.schemaVersion}`);
+
+  if (fixedCopy.types.length !== 16)
+    throw new Error(`fixed-copy.json must have exactly 16 types, got ${fixedCopy.types.length}`);
+
+  const fcTypeIds = fixedCopy.types.map((t) => t.typeId);
+  const fcTypeIdSet = new Set(fcTypeIds);
+  if (fcTypeIdSet.size !== 16)
+    throw new Error(`fixed-copy.json has duplicate typeIds`);
+
+  const fcBaseCodes = fixedCopy.types.map((t) => t.baseCode);
+  if (new Set(fcBaseCodes).size !== 16)
+    throw new Error(`fixed-copy.json has duplicate baseCodes`);
+
+  const typesJsonIdSet = new Set(types.map((t) => t.id));
+  for (const id of fcTypeIds) {
+    if (!typesJsonIdSet.has(id))
+      throw new Error(`fixed-copy.json typeId "${id}" not found in types.json`);
+  }
+  for (const id of typesJsonIdSet) {
+    if (!fcTypeIdSet.has(id))
+      throw new Error(`types.json typeId "${id}" not found in fixed-copy.json`);
+  }
+
+  const allIds: string[] = [];
+  for (const ft of fixedCopy.types) {
+    const prefix = `type.${ft.typeId}.`;
+    const collectId = (id: string) => {
+      if (!id.startsWith(prefix))
+        throw new Error(`Field ID "${id}" does not have expected prefix "${prefix}"`);
+      allIds.push(id);
+    };
+    collectId(ft.catch.id);
+    collectId(ft.overview.id);
+    collectId(ft.harsh.title.id);
+    collectId(ft.harsh.body.id);
+    collectId(ft.thinking.id);
+    for (const s of ft.strengths) { collectId(s.title.id); collectId(s.body.id); }
+    for (const w of ft.weaknesses) { collectId(w.title.id); collectId(w.body.id); }
+    collectId(ft.fatal.title.id);
+    collectId(ft.fatal.body.id);
+    for (const g of ft.growthTips) { collectId(g.title.id); collectId(g.body.id); }
+    collectId(ft.career.id);
+    for (const l of ft.fitJobs.labels) collectId(l.id);
+    collectId(ft.fitJobs.body.id);
+    for (const l of ft.avoidJobs.labels) collectId(l.id);
+    collectId(ft.avoidJobs.body.id);
+    collectId(ft.relationships.id);
+    collectId(ft.teamRole.id);
+    collectId(ft.conclusion.id);
+  }
+  if (new Set(allIds).size !== allIds.length)
+    throw new Error(`fixed-copy.json has duplicate field IDs`);
+
+  for (const ft of fixedCopy.types) {
+    const matchingAxes = types.find((t) => t.id === ft.typeId)?.axes;
+    if (!matchingAxes) continue;
+    const computed = computeBaseCode(matchingAxes);
+    if (ft.baseCode !== computed)
+      throw new Error(
+        `baseCode mismatch for "${ft.typeId}": fixed-copy has "${ft.baseCode}", axes compute "${computed}"`,
+      );
+  }
+}
 
 interface Props {
   params: Promise<{ diagnosisId: string; typeId: string }>;
 }
-
-// Temporary per-type image mapping until characterImage/badgeImage are in types.json
-const TEMP_TYPE_ASSETS: Record<string, {
-  characterImage: string;
-  traitBadgeImage: string;
-  traitLabel: string;
-}> = {
-  "vision-architect": {
-    characterImage: "/images/diagnoses/business-skills/characters/structure-hacker.png",
-    traitBadgeImage: "/images/diagnoses/business-skills/badges/logical-specialist.png",
-    traitLabel: "論理特化型",
-    // TODO: Replace with per-type portrait images — person + background only,
-    //       no text burned in. Type name & label are rendered by UI, not in image.
-  } as { characterImage: string; traitBadgeImage: string; traitLabel: string },
-};
 
 export async function generateStaticParams() {
   const allMeta = loadAllMeta();
@@ -49,32 +139,17 @@ export async function generateMetadata({ params }: Props) {
     const types = loadTypes(diagnosisId);
     const type = types.find((t) => t.id === typeId);
     if (!type) return {};
+    const fixedCopy = loadFixedCopy(diagnosisId);
+    const fixedType = fixedCopy.types.find((t) => t.typeId === typeId);
     return {
       title: `${type.name} — 社会人能力値診断`,
-      description: type.shareCatch ?? type.summary,
+      description: fixedType?.catch.text ?? fixedType?.overview.text,
       robots: { index: false, follow: false },
     };
   } catch {
     return {};
   }
 }
-
-// ── Shared shorthand helpers ──────────────────────────────────────────────────
-
-const DL = "1px solid var(--dossier-line)";         // main ruled line
-const DLS = "1px solid var(--dossier-line-soft)";  // soft divider
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p
-      className="text-[10px] font-mono-doc tracking-[0.14em] mb-4"
-      style={{ color: "var(--dossier-gold)" }}
-    >
-      {children}
-    </p>
-  );
-}
-
 
 export default async function ResultPage({ params }: Props) {
   const { diagnosisId, typeId } = await params;
@@ -90,572 +165,809 @@ export default async function ResultPage({ params }: Props) {
   const type = types.find((t) => t.id === typeId);
   if (!type) notFound();
 
-  const typeIndex = types.findIndex((t) => t.id === typeId) + 1;
-  const typeNo = String(typeIndex).padStart(2, "0");
-  const dossierNo = String(typeIndex).padStart(3, "0");
-  const tc = type.character.color;
+  let fixedCopy;
+  try {
+    fixedCopy = loadFixedCopy(diagnosisId);
+  } catch {
+    notFound();
+  }
 
-  const tempAssets = TEMP_TYPE_ASSETS[typeId] ?? null;
-  const resolvedCharacterImage = tempAssets?.characterImage ?? (type.characterImage || null);
-  const traitBadge = tempAssets
-    ? { image: tempAssets.traitBadgeImage, label: tempAssets.traitLabel }
-    : null;
+  validateFixedCopyIntegrity(fixedCopy, types);
 
-  const compatibleIds = computeCompatibleTypes(type, types);
-  const conflictIds = computeConflictTypes(type, types);
-  const typeNameMap = new Map(types.map((t) => [t.id, t.name]));
-  const compatibleNames = compatibleIds.map((id) => typeNameMap.get(id) ?? id);
-  const conflictNames = conflictIds.map((id) => typeNameMap.get(id) ?? id);
+  let dynamicCopyParts: DynamicCopyPart[];
+  try {
+    dynamicCopyParts = loadDynamicCopy(diagnosisId) as DynamicCopyPart[];
+  } catch (err) {
+    if (process.env.NODE_ENV === "development") {
+      console.error("[ResultPage] loadDynamicCopy failed:", err);
+    }
+    dynamicCopyParts = [];
+  }
 
-  // ── Portrait JSX — reused on mobile (inside heading) and PC (left col) ───
-  const portraitInner = (
-    <>
-      <div
-        className="relative overflow-hidden"
-        style={{
-          border: DL,
-          aspectRatio: "3/4",
-          background: "var(--dossier-surface)",
-        }}
-      >
-        {resolvedCharacterImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={resolvedCharacterImage}
-            alt={`${type.name} 肖像`}
-            className="w-full h-full object-cover object-top"
-          />
-        ) : (
-          /* Placeholder portrait frame */
-          <div
-            className="w-full h-full flex items-end justify-start p-3"
-            style={{ background: "var(--dossier-paper)" }}
-          >
-            <span
-              className="text-[9px] font-mono-doc tracking-[0.2em]"
-              style={{ color: "var(--dossier-line)" }}
-            >
-              PORTRAIT
-            </span>
-          </div>
-        )}
-        {/* Trait badge — small certification stamp, bottom-right */}
-        {traitBadge && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={traitBadge.image}
-            alt={traitBadge.label}
-            className="absolute bottom-2 right-2 w-10 h-auto opacity-75"
-          />
-        )}
-        {/* Type colour accent — thin left border stripe */}
-        <div
-          className="absolute inset-y-0 left-0 w-[3px]"
-          style={{ background: tc, opacity: 0.6 }}
-        />
-      </div>
-      {/* Portrait caption */}
-      <div
-        className="flex items-center justify-between mt-1.5 px-0.5"
-        style={{ borderTop: "1px solid var(--dossier-line-soft)", paddingTop: "4px" }}
-      >
-        <span
-          className="text-[9px] font-mono-doc tracking-[0.18em]"
-          style={{ color: "var(--dossier-muted)" }}
-        >
-          肖像 / Portrait
-        </span>
-        {traitBadge && (
-          <span
-            className="text-[9px] font-mono-doc"
-            style={{ color: "var(--dossier-gold)" }}
-          >
-            {traitBadge.label}
-          </span>
-        )}
-      </div>
-    </>
+  const allTypeDefinitions: TypeDefinition[] = types.flatMap((t) =>
+    t.axes ? [{ id: t.id, axes: t.axes }] : [],
   );
+
+  const fixedTypeArr = fixedCopy.types.filter((t) => t.typeId === typeId);
+  if (fixedTypeArr.length !== 1)
+    throw new Error(`Expected exactly 1 fixed type for "${typeId}", found ${fixedTypeArr.length}`);
+  const fixedType = fixedTypeArr[0];
+
+  if (type.axes) {
+    const computed = computeBaseCode(type.axes);
+    if (fixedType.baseCode !== computed)
+      throw new Error(
+        `baseCode mismatch for "${typeId}": fixed-copy has "${fixedType.baseCode}", axes compute "${computed}"`,
+      );
+  }
+
+  const typeAssets        = TYPE_DISPLAY_ASSETS[typeId] ?? null;
+  const resolvedCharImage = typeAssets?.characterImage ?? (type.characterImage || null);
+  const resolvedEnName    = typeAssets?.displayEnglishName ?? type.englishName;
 
   return (
     <main
-      className="dossier-page flex-1 result-fade-in"
-      style={{ color: "var(--dossier-ink)" }}
+      className="dossier-page flex-1"
+      style={{ color: "#21160D" }}
     >
-      <div className="max-w-2xl mx-auto px-5 w-full">
 
-        {/* ── Dossier header bar ─────────────────────────────────────────── */}
-        <div className="flex items-center justify-between py-4">
-          <span
-            className="text-[11px] font-jp"
-            style={{ color: "var(--dossier-muted)" }}
+      {/* ── コーナー装飾（左上・右上） ─────────────────────────────── */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${ORN}/corner-ornament.png`}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none select-none absolute corner-ornament corner-ornament-left"
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${ORN}/corner-ornament.png`}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none select-none absolute corner-ornament corner-ornament-right"
+        style={{ transform: "scaleX(-1)" }}
+      />
+
+      {/* ══════════════════════════════════════════════════════════
+          ファーストビュー
+      ══════════════════════════════════════════════════════════ */}
+      <section
+        className="flex flex-col items-center min-h-[calc(100vh-64px)] pt-8 md:pt-10 pb-14 md:pb-20 max-w-[1040px] mx-auto px-5 md:px-7 lg:px-8"
+        style={{ textAlign: "center" }}
+      >
+
+        {/* パンくず */}
+        <div className="w-full mb-6 md:mb-8 text-left">
+          <Link
+            href={`/diagnoses/${diagnosisId}`}
+            className="text-xs md:text-sm font-jp transition-opacity hover:opacity-70"
+            style={{ color: "rgba(33,22,13,0.52)" }}
           >
-            {meta.title}
-          </span>
-          <span
-            className="text-[11px] font-mono-doc tracking-[0.12em]"
-            style={{ color: "var(--dossier-gold)" }}
-          >
-            No. {dossierNo}
-          </span>
+            ← {meta.title}
+          </Link>
         </div>
 
-        {/* ── FV: Identity + Portrait ────────────────────────────────────── */}
-        <section style={{ borderTop: DL, borderBottom: DL, paddingTop: "1.75rem", paddingBottom: "1.75rem" }}>
-
-          {/* PC layout: CSS grid [portrait | identity] */}
-          <div className="sm:grid sm:gap-8" style={{ gridTemplateColumns: "200px 1fr" }}>
-
-            {/* Portrait — PC left column (hidden on mobile) */}
-            <div className="hidden sm:block">
-              {portraitInner}
-            </div>
-
-            {/* Identity column */}
-            <div>
-              {/* TYPE label */}
-              <p
-                className="text-[10px] font-mono-doc tracking-[0.18em] mb-2"
-                style={{ color: "var(--dossier-gold)" }}
-              >
-                TYPE-{typeNo}
-              </p>
-
-              {/* Type name */}
-              <h1
-                className="font-zen leading-tight mb-1"
-                style={{
-                  fontSize: "clamp(2rem, 8vw, 3rem)",
-                  color: "var(--dossier-ink)",
-                  letterSpacing: "0.04em",
-                }}
-              >
-                {type.name}
-              </h1>
-
-              {/* English name */}
-              {type.englishName && (
-                <p
-                  className="font-serif-en italic mb-5"
-                  style={{ fontSize: "1.1rem", color: "var(--dossier-sub)" }}
+        {/* ① キャラクター画像 */}
+        <div
+          data-slot="character-portrait"
+          className="relative mx-auto result-portrait-stage w-[280px] md:w-[400px] lg:w-[520px]"
+        >
+          <div className="relative overflow-hidden">
+            {resolvedCharImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={resolvedCharImage}
+                alt={`${type.name} キャラクター`}
+                data-slot="character-image"
+                className="w-full h-auto object-contain block"
+              />
+            ) : (
+              <div className="w-full aspect-[3/4] flex items-end justify-start p-4">
+                <span
+                  className="text-[9px] font-mono-doc tracking-[0.2em]"
+                  style={{ color: "rgba(111,85,44,0.40)" }}
                 >
-                  {type.englishName}
-                </p>
-              )}
-
-              {/* Portrait — mobile (shown below name, hidden on PC) */}
-              <div className="sm:hidden mb-5 max-w-[200px]">
-                {portraitInner}
+                  PORTRAIT
+                </span>
               </div>
-
-              {/* Divider between name and description */}
-              <div className="mb-4" style={{ borderTop: DLS }} />
-
-              {/* Catch copy */}
-              {type.shareCatch && (
-                <p
-                  className="font-jp font-medium leading-snug mb-2"
-                  style={{ fontSize: "1rem", color: "var(--dossier-ink)" }}
-                >
-                  {type.shareCatch}
-                </p>
-              )}
-
-              {/* Description */}
-              {type.catchCopy && (
-                <p
-                  className="font-jp leading-relaxed"
-                  style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
-                >
-                  {type.catchCopy}
-                </p>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* ── 解析コメント ───────────────────────────────────────────────── */}
-        {type.humanOsComment && (
-          <section
-            className="py-6"
-            style={{ borderBottom: DL }}
-          >
-            <SectionLabel>解析コメント</SectionLabel>
+            )}
             <div
-              className="pl-3"
-              style={{ borderLeft: "2px solid rgba(140,122,75,0.35)" }}
+              className="absolute inset-0 pointer-events-none result-shine-overlay"
+              style={{
+                background:
+                  "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.62) 48%, rgba(255,255,255,0.18) 52%, transparent 66%)",
+              }}
+            />
+          </div>
+        </div>
+
+        {/* ②③ 動物タイプ + 日本語タイプ名 */}
+        <div className="mt-6 md:mt-8">
+          {typeAssets?.animalType && (
+            <p
+              className="font-mono-doc sub-label mb-2 md:mb-3"
+              style={{ color: "rgba(111,85,44,0.82)" }}
             >
-              <p
-                className="font-jp leading-relaxed"
-                style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
-              >
-                {type.humanOsComment}
-              </p>
-            </div>
-          </section>
+              {typeAssets.animalType}
+            </p>
+          )}
+          <h1
+            className="font-heading tracking-[0.04em] result-type-name result-type-name-heading"
+            style={{ fontWeight: 700, color: "#17100A" }}
+          >
+            {type.name}
+          </h1>
+        </div>
+
+        {/* ④ 族バッジ・特化個体バッジ（日本語タイプ名の下、英語名の上） */}
+        {type.axes && (
+          <Suspense fallback={<div className="tribe-badge-fallback" />}>
+            <ResultStyleBadge typeAxesFallback={type.axes} />
+          </Suspense>
+        )}
+        <Suspense fallback={null}>
+          <ResultSpecialistBadge />
+        </Suspense>
+
+        {/* ⑤ 英語タイプ名 */}
+        {resolvedEnName && (
+          <p
+            className="font-serif-en italic result-en-name"
+            style={{
+              fontSize: "clamp(1.1rem, 2.6vw, 1.65rem)",
+              lineHeight: "1.3",
+              color: "rgba(33,22,13,0.72)",
+              marginTop: "16px",
+            }}
+          >
+            {resolvedEnName}
+          </p>
         )}
 
-        {/* ── 能力値 + スタイル傾向 (client) ───────────────────────────── */}
+        {/* ⑥ キャッチコピー */}
+        <p
+          className="font-heading leading-[1.4] tracking-[0.04em] max-w-2xl mx-auto result-catch"
+          style={{
+            fontSize: "clamp(1.3rem, 3.2vw, 2rem)",
+            color: "#17100A",
+            marginTop: "28px",
+          }}
+        >
+          {fixedType.catch.text}
+        </p>
+
+        {/* ⑦ タイプ概要 */}
+        <div
+          className="mx-auto w-full result-panel-reveal parchment-panel text-left"
+          style={{ maxWidth: "760px", marginTop: "40px" }}
+        >
+          <h2
+            className="font-heading leading-[1.2] tracking-[0.04em] mb-5"
+            style={{ fontSize: "clamp(1.4rem, 2.2vw, 1.9rem)", color: "#17100A" }}
+          >
+            このタイプについて
+          </h2>
+          <ProseBody
+            text={fixedType.overview.text}
+            className="space-y-4"
+            paragraphClassName="font-jp prose-text"
+            style={{ color: "#21160D" }}
+          />
+          {type.axes && (
+            <>
+              <Suspense fallback={null}>
+                <DynamicCopySlot
+                  targetSlot="overview.axisSoftNote"
+                  typeId={typeId}
+                  typeAxesFallback={type.axes}
+                  parts={dynamicCopyParts}
+                  allTypeDefinitions={allTypeDefinitions}
+                />
+              </Suspense>
+              <Suspense fallback={null}>
+                <DynamicCopySlot
+                  targetSlot="overview.axisBalanceNote"
+                  typeId={typeId}
+                  typeAxesFallback={type.axes}
+                  parts={dynamicCopyParts}
+                  allTypeDefinitions={allTypeDefinitions}
+                />
+              </Suspense>
+            </>
+          )}
+        </div>
+
+      </section>
+
+      {/* ── 8/辛辣コメント ──────────────────────────────────────── */}
+      <div
+        className="mx-auto px-5 md:px-7 w-full"
+        style={{ maxWidth: "760px", paddingTop: "32px", paddingBottom: "8px" }}
+      >
+        <h2
+          className="font-heading tracking-[0.04em] section-heading"
+          style={{ color: "#17100A" }}
+        >
+          辛辣コメント
+        </h2>
+        <div style={{ borderLeft: "2px solid #9A7350", paddingLeft: "16px" }}>
+          <p
+            className="font-heading leading-[1.4] tracking-[0.03em] mb-4"
+            style={{
+              fontSize: "clamp(21px, 2.3vw, 34px)",
+              color: "#21160D",
+            }}
+          >
+            {fixedType.harsh.title.text}
+          </p>
+          <ProseBody
+            text={fixedType.harsh.body.text}
+            className="space-y-4"
+            paragraphClassName="font-jp"
+            style={{
+              fontSize: "clamp(15px, 1.6vw, 18px)",
+              lineHeight: "1.8",
+              color: "#21160D",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* ── DIVIDER #1: 辛辣コメント後 ──────────────────────────── */}
+      <DividerOrnament />
+
+      {/* ── Section 9: 5能力値・五角形レーダー ──────────────────── */}
+      <Suspense fallback={null}>
+        <ResultAbilitySection />
+      </Suspense>
+
+      {/* ── スタイル傾向（ResultClient: Section 10） ─────────────── */}
+      <div className="max-w-[960px] mx-auto px-5 md:px-7 lg:px-8 w-full pb-4">
         <Suspense
           fallback={
-            <div className="py-10 text-center">
+            <div className="py-16 text-center">
               <div
                 className="w-5 h-5 border-2 rounded-full animate-spin mx-auto"
-                style={{
-                  borderColor: "var(--dossier-line)",
-                  borderTopColor: "var(--dossier-gold)",
-                }}
+                style={{ borderColor: "rgba(111,85,44,0.28)", borderTopColor: "#8A713C" }}
               />
             </div>
           }
         >
           <ResultClient
-            fallbackScores={type.representativeScores}
-            typeColor={tc}
             styleAxesFallback={type.axes}
           />
         </Suspense>
+      </div>
 
-        {/* ── あなたの社会人OS ────────────────────────────────────────────── */}
-        {(type.oneLine ?? type.osDescription) && (
-          <section className="py-7" style={{ borderBottom: DL }}>
-            <SectionLabel>社会人 OS</SectionLabel>
-            {type.oneLine && (
-              <p
-                className="font-jp font-medium leading-snug mb-3"
-                style={{ fontSize: "1rem", color: "var(--dossier-ink)" }}
-              >
-                {type.oneLine}
-              </p>
-            )}
-            {type.osDescription && (
-              <p
-                className="font-jp leading-relaxed whitespace-pre-line"
-                style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
-              >
-                {type.osDescription}
-              </p>
-            )}
-          </section>
-        )}
+      {/* ── DIVIDER #2: スタイル傾向後 ──────────────────────────── */}
+      <DividerOrnament />
 
-        {/* ── 強み・弱み ─────────────────────────────────────────────────── */}
-        <section className="py-7" style={{ borderBottom: DL }}>
-          <SectionLabel>強み・弱み</SectionLabel>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            {/* 強み */}
-            <div>
-              <p
-                className="text-xs font-mono-doc mb-3 tracking-[0.06em]"
-                style={{ color: "var(--dossier-muted)" }}
-              >
-                強み
-              </p>
-              <ul className="space-y-2">
-                {type.strengths.map((s, i) => (
-                  <li key={i} className="flex gap-2">
-                    <span
-                      className="shrink-0 text-xs mt-0.5"
-                      style={{ color: "var(--dossier-gold)" }}
-                    >
-                      ◦
-                    </span>
-                    <span
-                      className="font-jp leading-relaxed"
-                      style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
-                    >
-                      {s}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* 弱み */}
-            <div>
-              <p
-                className="text-xs font-mono-doc mb-3 tracking-[0.06em]"
-                style={{ color: "var(--dossier-muted)" }}
-              >
-                弱み
-              </p>
-              <ul className="space-y-2">
-                {type.weaknesses.map((w, i) => (
-                  <li key={i} className="flex gap-2">
-                    <span
-                      className="shrink-0 text-xs mt-0.5"
-                      style={{ color: "var(--dossier-muted)" }}
-                    >
-                      ◦
-                    </span>
-                    <span
-                      className="font-jp leading-relaxed"
-                      style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
-                    >
-                      {w}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+      {/* ══════════════════════════════════════════════════════════
+          詳細セクション（11〜15）
+      ══════════════════════════════════════════════════════════ */}
+      <div className="max-w-[1040px] mx-auto px-5 md:px-7 lg:px-8 w-full">
+
+        {/* ─ 11/仕事の思考回路 ────────────────────────────────────── */}
+        <section>
+          <h2
+            className="font-heading tracking-[0.04em] section-heading"
+            style={{ color: "#17100A" }}
+          >
+            仕事の思考回路
+          </h2>
+          <div style={{ maxWidth: "760px" }}>
+            <ProseBody
+              text={fixedType.thinking.text}
+              className="space-y-4"
+              paragraphClassName="font-jp prose-text"
+              style={{ color: "#21160D" }}
+            />
+            {type.axes && (
+              <Suspense fallback={null}>
+                <DynamicCopySlot
+                  targetSlot="thinking.axisNote"
+                  typeId={typeId}
+                  typeAxesFallback={type.axes}
+                  parts={dynamicCopyParts}
+                  allTypeDefinitions={allTypeDefinitions}
+                />
+              </Suspense>
+            )}
           </div>
-
-          {/* 致命的な弱点 — red annotation */}
-          {type.fatalWeakness && (
-            <div
-              className="mt-2 p-4"
-              style={{
-                background: "var(--dossier-red-bg)",
-                borderLeft: "3px solid var(--dossier-red-line)",
-              }}
-            >
-              <p
-                className="text-[10px] font-mono-doc mb-1.5 tracking-[0.06em]"
-                style={{ color: "var(--dossier-red-line)" }}
-              >
-                致命的な弱点
-              </p>
-              <p
-                className="font-jp leading-relaxed"
-                style={{ fontSize: "0.875rem", color: "var(--dossier-red-text)" }}
-              >
-                {type.fatalWeakness}
-              </p>
-            </div>
-          )}
         </section>
 
-        {/* ── 自己成長 ───────────────────────────────────────────────────── */}
-        {(type.brokenEnvironment ?? (type.growthTips && type.growthTips.length > 0)) && (
-          <section className="py-7" style={{ borderBottom: DL }}>
-            <SectionLabel>自己成長</SectionLabel>
+        {/* ─ 12/強み ─────────────────────────────────────────────── */}
+        <section
+          className="section-block-gap"
+          style={{ borderTop: "1px solid rgba(111,85,44,0.24)", paddingTop: "clamp(36px, 4vw, 48px)" }}
+        >
+          <h2
+            className="font-heading tracking-[0.04em] section-heading"
+            style={{ color: "#17100A" }}
+          >
+            強み
+          </h2>
+          <div style={{ borderLeft: "2px solid #9A7C46", paddingLeft: "20px", maxWidth: "760px" }}>
+            <ul style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
+              {fixedType.strengths.map((s) => (
+                <li key={s.title.id}>
+                  <p
+                    className="font-heading leading-[1.3] tracking-[0.03em] mb-2"
+                    style={{ fontSize: "clamp(18px, 2vw, 22px)", color: "#17100A" }}
+                  >
+                    {s.title.text}
+                  </p>
+                  <ProseBody
+                    text={s.body.text}
+                    className="space-y-2"
+                    paragraphClassName="font-jp prose-text"
+                    style={{ color: "#21160D" }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
-            {/* 壊れる環境 — orange annotation */}
-            {type.brokenEnvironment && (
-              <div
-                className="mb-4 p-4"
+        {/* ─ 13/弱み ─────────────────────────────────────────────── */}
+        <section
+          className="section-block-gap"
+          style={{ borderTop: "1px solid rgba(111,85,44,0.24)", paddingTop: "clamp(36px, 4vw, 48px)" }}
+        >
+          <h2
+            className="font-heading tracking-[0.04em] section-heading"
+            style={{ color: "#17100A" }}
+          >
+            弱み
+          </h2>
+          <div style={{ borderLeft: "2px solid #A77A70", paddingLeft: "20px", maxWidth: "760px" }}>
+            <ul style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
+              {fixedType.weaknesses.map((w) => (
+                <li key={w.title.id}>
+                  <p
+                    className="font-heading leading-[1.3] tracking-[0.03em] mb-2"
+                    style={{ fontSize: "clamp(18px, 2vw, 22px)", color: "#17100A" }}
+                  >
+                    {w.title.text}
+                  </p>
+                  <ProseBody
+                    text={w.body.text}
+                    className="space-y-2"
+                    paragraphClassName="font-jp prose-text"
+                    style={{ color: "#21160D" }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* ─ 14/致命的弱点 ────────────────────────────────────────── */}
+        <section className="section-block-gap">
+          <h2
+            className="font-heading tracking-[0.04em] section-heading"
+            style={{ color: "#17100A" }}
+          >
+            致命的な弱点
+          </h2>
+          <div
+            className="parchment-scroll-container mx-auto"
+            style={{ maxWidth: "960px" }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`${ORN}/result-frame-hero.png`}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full pointer-events-none select-none"
+              style={{ objectFit: "fill" }}
+            />
+            <div className="parchment-scroll-safe">
+              <p
+                className="font-mono-doc sub-label"
+                style={{ letterSpacing: "0.32em", marginBottom: "18px", color: "rgba(116,49,40,0.72)" }}
+              >
+                CRITICAL WEAKNESS
+              </p>
+              <p
+                className="font-heading leading-[1.3]"
                 style={{
-                  background: "var(--dossier-orange-bg)",
-                  borderLeft: "3px solid var(--dossier-orange-line)",
+                  fontSize: "clamp(23px, 3.8vw, 52px)",
+                  color: "#743128",
+                  maxWidth: "680px",
+                  marginBottom: "24px",
                 }}
               >
-                <p
-                  className="text-[10px] font-mono-doc mb-1.5 tracking-[0.06em]"
-                  style={{ color: "var(--dossier-orange-line)" }}
-                >
-                  壊れる環境
-                </p>
-                <p
-                  className="font-jp leading-relaxed"
-                  style={{ fontSize: "0.875rem", color: "var(--dossier-orange-text)" }}
-                >
-                  {type.brokenEnvironment}
-                </p>
-              </div>
-            )}
-
-            {/* 成長ヒント */}
-            {type.growthTips && type.growthTips.length > 0 && (
-              <div>
-                <p
-                  className="text-xs font-mono-doc mb-3 tracking-[0.06em]"
-                  style={{ color: "var(--dossier-muted)" }}
-                >
-                  成長のヒント
-                </p>
-                <ol className="space-y-3">
-                  {type.growthTips.map((tip, i) => (
-                    <li key={i} className="flex gap-3">
-                      <span
-                        className="shrink-0 font-mono-doc text-xs mt-0.5 w-4"
-                        style={{ color: "var(--dossier-gold)" }}
-                      >
-                        {i + 1}.
-                      </span>
-                      <span
-                        className="font-jp leading-relaxed"
-                        style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
-                      >
-                        {tip}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* ── キャリア適性 ───────────────────────────────────────────────── */}
-        {(type.recommendedCareers ?? type.recommendedTasks ?? type.notRecommendedWork) && (
-          <section className="py-7" style={{ borderBottom: DL }}>
-            <SectionLabel>キャリア適性</SectionLabel>
-
-            {type.recommendedCareers && type.recommendedCareers.length > 0 && (
-              <div className="mb-5">
-                <p
-                  className="text-xs font-mono-doc mb-3 tracking-[0.05em]"
-                  style={{ color: "var(--dossier-muted)" }}
-                >
-                  向いている職種
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {type.recommendedCareers.map((career, i) => (
-                    <span
-                      key={i}
-                      className="text-xs font-jp px-3 py-1"
-                      style={{
-                        border: "1px solid var(--dossier-line)",
-                        background: "var(--dossier-surface)",
-                        color: "var(--dossier-sub)",
-                      }}
-                    >
-                      {career}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {type.recommendedTasks && type.recommendedTasks.length > 0 && (
-              <div className="mb-4">
-                <p
-                  className="text-xs font-mono-doc mb-3 tracking-[0.05em]"
-                  style={{ color: "var(--dossier-muted)" }}
-                >
-                  向いている仕事
-                </p>
-                <ul className="space-y-2">
-                  {type.recommendedTasks.map((task, i) => (
-                    <li key={i} className="flex gap-2">
-                      <span
-                        className="shrink-0 text-xs mt-0.5"
-                        style={{ color: "var(--dossier-gold)" }}
-                      >
-                        ◦
-                      </span>
-                      <span
-                        className="font-jp leading-relaxed"
-                        style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
-                      >
-                        {task}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {type.notRecommendedWork && (
-              <div>
-                <p
-                  className="text-xs font-mono-doc mb-2 tracking-[0.05em]"
-                  style={{ color: "var(--dossier-muted)" }}
-                >
-                  避けた方がいい仕事
-                </p>
-                <p
-                  className="font-jp leading-relaxed"
-                  style={{ fontSize: "0.875rem", color: "var(--dossier-muted)" }}
-                >
-                  {type.notRecommendedWork}
-                </p>
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* ── 人間関係 ───────────────────────────────────────────────────── */}
-        {(compatibleNames.length > 0 || conflictNames.length > 0) && (
-          <section className="py-7" style={{ borderBottom: DL }}>
-            <SectionLabel>人間関係</SectionLabel>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {compatibleNames.length > 0 && (
-                <div>
-                  <p
-                    className="text-xs font-mono-doc mb-3 tracking-[0.05em]"
-                    style={{ color: "var(--dossier-muted)" }}
-                  >
-                    相性が良いタイプ
-                  </p>
-                  <ul className="space-y-1.5">
-                    {compatibleNames.map((name, i) => (
-                      <li key={i} className="flex gap-2">
-                        <span className="text-xs" style={{ color: "#4A7A58" }}>◎</span>
-                        <span
-                          className="font-jp"
-                          style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
-                        >
-                          {name}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {conflictNames.length > 0 && (
-                <div>
-                  <p
-                    className="text-xs font-mono-doc mb-3 tracking-[0.05em]"
-                    style={{ color: "var(--dossier-muted)" }}
-                  >
-                    ぶつかりやすいタイプ
-                  </p>
-                  <ul className="space-y-1.5">
-                    {conflictNames.map((name, i) => (
-                      <li key={i} className="flex gap-2">
-                        <span className="text-xs" style={{ color: "#8A5050" }}>△</span>
-                        <span
-                          className="font-jp"
-                          style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
-                        >
-                          {name}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                {fixedType.fatal.title.text}
+              </p>
+              <ProseBody
+                text={fixedType.fatal.body.text}
+                className="space-y-3"
+                paragraphClassName="font-jp prose-text"
+                style={{ color: "#4A2A10", maxWidth: "680px" }}
+              />
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
-        {/* ── チーム内での役割 ────────────────────────────────────────────── */}
-        {type.teamRole && (
-          <section className="py-7" style={{ borderBottom: DL }}>
-            <SectionLabel>チーム内での役割</SectionLabel>
+        {/* ─ 15/成長ヒント ────────────────────────────────────────── */}
+        <section className="section-block-gap">
+          <h2
+            className="font-heading tracking-[0.04em] section-heading"
+            style={{ color: "#17100A" }}
+          >
+            成長ヒント
+          </h2>
+          <div className="parchment-panel">
             <p
-              className="font-jp leading-relaxed"
-              style={{ fontSize: "0.875rem", color: "var(--dossier-sub)" }}
+              className="font-mono-doc sub-label mb-6"
+              style={{ letterSpacing: "0.34em", color: "rgba(111,85,44,0.78)" }}
             >
-              {type.teamRole}
+              RECOMMENDATION
             </p>
-          </section>
-        )}
-
-        {/* ── Actions ───────────────────────────────────────────────────── */}
-        <div className="py-10 flex flex-col gap-3">
-          <Link
-            href={`/diagnoses/${diagnosisId}/questions`}
-            className="flex items-center justify-center gap-2 w-full py-4 text-sm font-jp font-medium transition-opacity hover:opacity-80"
-            style={{
-              background: "var(--dossier-dark)",
-              color: "var(--dossier-bg)",
-            }}
-          >
-            <RotateCcw size={14} />
-            もう一度診断する
-          </Link>
-          <Link
-            href="/"
-            className="flex items-center justify-center gap-2 w-full text-sm py-2 font-jp transition-opacity hover:opacity-70"
-            style={{ color: "var(--dossier-muted)" }}
-          >
-            <Home size={14} />
-            トップへ戻る
-          </Link>
-        </div>
+            <ol style={{ display: "flex", flexDirection: "column", gap: "34px" }}>
+              {fixedType.growthTips.map((tip, i) => (
+                <li key={tip.title.id} className="flex gap-5">
+                  <span
+                    className="shrink-0 font-mono-doc font-medium"
+                    style={{
+                      fontSize: "clamp(24px, 2.8vw, 30px)",
+                      color: "#6F552C",
+                      lineHeight: "1.9",
+                    }}
+                  >
+                    {i + 1}.
+                  </span>
+                  <div>
+                    <p
+                      className="font-heading leading-[1.4] tracking-[0.03em] mb-2"
+                      style={{ fontSize: "clamp(17px, 1.8vw, 20px)", color: "#17100A" }}
+                    >
+                      {tip.title.text}
+                    </p>
+                    <ProseBody
+                      text={tip.body.text}
+                      className="space-y-2"
+                      paragraphClassName="font-jp prose-text"
+                      style={{ color: "#21160D" }}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
 
       </div>
+
+      {/* ── DIVIDER #3: 成長ヒント後 ────────────────────────────── */}
+      <DividerOrnament />
+
+      {/* ══ 16-18/キャリア適性・向いている仕事・避けたい仕事 ══════ */}
+      <div className="max-w-[1040px] mx-auto px-5 md:px-7 lg:px-8 w-full">
+        <section>
+          <h2
+            className="font-heading tracking-[0.04em] section-heading"
+            style={{ color: "#17100A" }}
+          >
+            キャリア適性
+          </h2>
+
+          {/* 16/キャリア適性 本文 */}
+          <div style={{ maxWidth: "760px", marginBottom: "40px" }}>
+            <ProseBody
+              text={fixedType.career.text}
+              className="space-y-4"
+              paragraphClassName="font-jp prose-text"
+              style={{ color: "#21160D" }}
+            />
+            {type.axes && (
+              <Suspense fallback={null}>
+                <DynamicCopySlot
+                  targetSlot="career.axisNote"
+                  typeId={typeId}
+                  typeAxesFallback={type.axes}
+                  parts={dynamicCopyParts}
+                  allTypeDefinitions={allTypeDefinitions}
+                />
+              </Suspense>
+            )}
+          </div>
+
+          {/* 17/向いている仕事 */}
+          <div className="mb-8">
+            <p
+              className="font-mono-doc sub-label mb-4"
+              style={{ letterSpacing: "0.24em", color: "rgba(111,85,44,0.72)" }}
+            >
+              向いている仕事
+            </p>
+            <div className="flex flex-wrap mb-5" style={{ gap: "10px" }}>
+              {fixedType.fitJobs.labels.map((l) => (
+                <span
+                  key={l.id}
+                  className="font-jp"
+                  style={{
+                    fontSize: "15px",
+                    padding: "9px 16px",
+                    minHeight: "40px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    border: "1px solid rgba(155,124,70,0.42)",
+                    background: "rgba(255,250,235,0.38)",
+                    borderRadius: "3px",
+                    color: "#21160D",
+                  }}
+                >
+                  {l.text}
+                </span>
+              ))}
+            </div>
+            <ProseBody
+              text={fixedType.fitJobs.body.text}
+              className="space-y-3"
+              paragraphClassName="font-jp prose-text"
+              style={{ color: "rgba(33,22,13,0.74)", maxWidth: "760px" }}
+            />
+          </div>
+
+          {/* 18/避けたい仕事 */}
+          <div>
+            <p
+              className="font-mono-doc sub-label mb-4"
+              style={{ letterSpacing: "0.24em", color: "rgba(111,85,44,0.72)" }}
+            >
+              避けたい仕事
+            </p>
+            <div className="flex flex-wrap mb-5" style={{ gap: "10px" }}>
+              {fixedType.avoidJobs.labels.map((l) => (
+                <span
+                  key={l.id}
+                  className="font-jp"
+                  style={{
+                    fontSize: "15px",
+                    padding: "9px 16px",
+                    minHeight: "40px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    border: "1px solid rgba(155,124,70,0.42)",
+                    background: "rgba(255,250,235,0.38)",
+                    borderRadius: "3px",
+                    color: "#21160D",
+                  }}
+                >
+                  {l.text}
+                </span>
+              ))}
+            </div>
+            <ProseBody
+              text={fixedType.avoidJobs.body.text}
+              className="space-y-3"
+              paragraphClassName="font-jp prose-text"
+              style={{ color: "rgba(33,22,13,0.74)", maxWidth: "760px" }}
+            />
+          </div>
+        </section>
+      </div>
+
+      {/* ── DIVIDER #4: キャリア後 ───────────────────────────────── */}
+      <DividerOrnament />
+
+      {/* ══ 19-21/人間関係・チームでの役割・結論 ════════════════════ */}
+      <div className="max-w-[1040px] mx-auto px-5 md:px-7 lg:px-8 w-full">
+
+        {/* ─ 19/人間関係 ─────────────────────────────────────────── */}
+        <section>
+          <h2
+            className="font-heading tracking-[0.04em] section-heading"
+            style={{ color: "#17100A" }}
+          >
+            人間関係
+          </h2>
+          <div style={{ maxWidth: "760px" }}>
+            <ProseBody
+              text={fixedType.relationships.text}
+              className="space-y-4"
+              paragraphClassName="font-jp prose-text"
+              style={{ color: "#21160D" }}
+            />
+            {type.axes && (
+              <Suspense fallback={null}>
+                <DynamicCopySlot
+                  targetSlot="relationships.axisNote"
+                  typeId={typeId}
+                  typeAxesFallback={type.axes}
+                  parts={dynamicCopyParts}
+                  allTypeDefinitions={allTypeDefinitions}
+                />
+              </Suspense>
+            )}
+          </div>
+        </section>
+
+        {/* ─ 20/チームでの役割 ──────────────────────────────────── */}
+        <section
+          className="section-block-gap text-center mx-auto"
+          style={{ maxWidth: "760px" }}
+        >
+          <p
+            className="font-mono-doc sub-label mb-6"
+            style={{ letterSpacing: "0.24em", color: "rgba(111,85,44,0.72)" }}
+          >
+            チームでの役割
+          </p>
+          <ProseBody
+            text={fixedType.teamRole.text}
+            className="space-y-3"
+            paragraphClassName="font-jp prose-text"
+            style={{ color: "#17100A" }}
+          />
+        </section>
+
+        {/* ─ 21/結論 ─────────────────────────────────────────────── */}
+        <section
+          className="section-block-gap"
+          style={{ borderTop: "1px solid rgba(111,85,44,0.24)", paddingTop: "clamp(36px, 4vw, 48px)" }}
+        >
+          <h2
+            className="font-heading tracking-[0.04em] section-heading"
+            style={{ color: "#17100A" }}
+          >
+            結論
+          </h2>
+          <div style={{ maxWidth: "760px" }}>
+            <ProseBody
+              text={fixedType.conclusion.text}
+              className="space-y-4"
+              paragraphClassName="font-jp prose-text"
+              style={{ color: "#21160D" }}
+            />
+          </div>
+        </section>
+
+      </div>
+
+      {/* ── DIVIDER #5: 結論後 → シェア前 ──────────────────────── */}
+      <DividerOrnament />
+
+      {/* ── シェアセクション ────────────────────────────────────── */}
+      <ResultShareSection typeName={type.name} />
+
+      {/* ── Actions ─────────────────────────────────────────────── */}
+      <div
+        className="mx-auto px-5 md:px-0 pt-6 pb-16 flex flex-col md:flex-row gap-3"
+        style={{ maxWidth: "760px" }}
+      >
+        <Link
+          href={`/diagnoses/${diagnosisId}/questions`}
+          className="flex items-center justify-center gap-2 flex-1 py-4 text-sm font-jp font-medium transition-opacity hover:opacity-80"
+          style={{ background: "#11100D", color: "#F4EFE4" }}
+        >
+          <RotateCcw size={14} />
+          もう一度診断する
+        </Link>
+        <Link
+          href="/"
+          className="flex items-center justify-center gap-2 flex-1 py-4 text-sm font-jp transition-opacity hover:opacity-70 border"
+          style={{ color: "#6F552C", borderColor: "rgba(111,85,44,0.35)" }}
+        >
+          <Home size={14} />
+          トップへ戻る
+        </Link>
+      </div>
+
+      {/* ── フッター ─────────────────────────────────────────────── */}
+      <footer
+        className="mt-20 md:mt-28 px-6 md:px-10 py-12 md:py-16"
+        style={{
+          borderTop: "1px solid rgba(111,85,44,0.24)",
+          background: "rgba(120,98,56,0.06)",
+        }}
+      >
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[1.4fr_2fr] gap-10">
+
+          {/* ブランド */}
+          <div>
+            <p
+              className="font-heading text-[2rem] md:text-[3rem] leading-[1.1] tracking-[0.04em] mb-2"
+              style={{ color: "#17100A" }}
+            >
+              Human OS
+            </p>
+            <p
+              className="font-jp text-sm md:text-base mb-5"
+              style={{ color: "rgba(33,22,13,0.74)" }}
+            >
+              ビジマル診断
+            </p>
+            <p
+              className="font-jp text-sm md:text-base leading-[1.8] max-w-sm"
+              style={{ color: "rgba(33,22,13,0.74)" }}
+            >
+              社会人の能力値と働き方の傾向を読み解く、ビジネスアニマル診断。
+            </p>
+          </div>
+
+          {/* リンクグリッド */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+
+            {/* コンテンツ */}
+            <div>
+              <p className="font-mono-doc text-xs tracking-[0.22em] mb-4" style={{ color: "rgba(111,85,44,0.78)" }}>
+                コンテンツ
+              </p>
+              <ul className="space-y-3">
+                <li>
+                  <Link href={`/diagnoses/${diagnosisId}`} className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
+                    診断トップ
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/diagnoses/${diagnosisId}/questions`} className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
+                    診断を受ける
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
+                    16タイプ一覧
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* 機能 */}
+            <div>
+              <p className="font-mono-doc text-xs tracking-[0.22em] mb-4" style={{ color: "rgba(111,85,44,0.78)" }}>
+                機能
+              </p>
+              <ul className="space-y-3">
+                <li>
+                  <span className="font-jp text-sm md:text-base" style={{ color: "rgba(33,22,13,0.44)" }}>
+                    結果をシェア
+                  </span>
+                </li>
+                <li>
+                  <Link href={`/diagnoses/${diagnosisId}/questions`} className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
+                    もう一度診断する
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* サポート */}
+            <div>
+              <p className="font-mono-doc text-xs tracking-[0.22em] mb-4" style={{ color: "rgba(111,85,44,0.78)" }}>
+                サポート
+              </p>
+              <ul className="space-y-3">
+                {[
+                  { label: "よくある質問" },
+                  { label: "お問い合わせ" },
+                  { label: "利用規約" },
+                  { label: "プライバシーポリシー" },
+                ].map(({ label }) => (
+                  <li key={label}>
+                    <Link href="#" className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <div
+          className="max-w-6xl mx-auto mt-12 pt-6"
+          style={{ borderTop: "1px solid rgba(111,85,44,0.16)" }}
+        >
+          <p className="font-mono-doc text-xs" style={{ color: "rgba(33,22,13,0.38)" }}>
+            © 2026 Human OS. All rights reserved.
+          </p>
+        </div>
+      </footer>
+
     </main>
   );
 }

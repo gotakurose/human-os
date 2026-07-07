@@ -1,17 +1,5 @@
 import type { StyleAxisQuestion, DiagnosisType } from "@/schemas/diagnosis";
 
-// ── 能力値マッピング ─────────────────────────────────────────────────────────
-// 各能力値に寄与する極と重みを定義する。weights の合計は各能力で 1.0。
-const ABILITY_WEIGHTS: Record<string, Record<string, number>> = {
-  logic:      { thinking: 0.50, convergent: 0.40, solo:      0.10 },
-  execution:  { action:   0.50, convergent: 0.35, offensive: 0.15 },
-  sales:      { offensive: 0.45, team:      0.35, action:    0.20 },
-  creativity: { divergent: 0.50, offensive: 0.30, solo:      0.20 },
-  management: { stable:   0.40, team:      0.35, convergent: 0.25 },
-};
-
-const ABILITY_KEYS = ["logic", "execution", "sales", "creativity", "management"] as const;
-
 export interface StyleAxisScores {
   thinking_action: number; // -1.0 〜 +1.0 (正 = thinking 優勢)
   offensive_stable: number; // -1.0 〜 +1.0 (正 = offensive 優勢)
@@ -95,42 +83,4 @@ export function resolveStyleAxisType(
   }
 
   return fallback;
-}
-
-/**
- * 4スタイル軸のノーマライズスコアから 5能力値（25〜95 の整数）を算出する。
- *
- * 各軸を bilateral pole strength に変換する（0〜1、中立 = 0.5）:
- *   thinking = (1 + ta) / 2,  action = (1 - ta) / 2  など
- *
- * ABILITY_WEIGHTS で加重和 raw ∈ [0, 1] を求め、25 + raw * 70 でスケーリング。
- * 中立ユーザー (全軸 0) → raw = 0.5 → score = 60。
- * 完全一致ユーザー → score = 95, 完全逆方向 → score = 25。
- */
-export function deriveAbilityScores(axisScores: StyleAxisScores): Record<string, number> {
-  const { thinking_action: ta, offensive_stable: os, solo_team: st, divergent_convergent: dc } =
-    axisScores;
-
-  // bilateral pole strengths (0〜1, 中立 = 0.5)
-  const poles: Record<string, number> = {
-    thinking:   (1 + ta) / 2,
-    action:     (1 - ta) / 2,
-    offensive:  (1 + os) / 2,
-    stable:     (1 - os) / 2,
-    solo:       (1 + st) / 2,
-    team:       (1 - st) / 2,
-    divergent:  (1 + dc) / 2,
-    convergent: (1 - dc) / 2,
-  };
-
-  const result: Record<string, number> = {};
-  for (const ability of ABILITY_KEYS) {
-    const weights = ABILITY_WEIGHTS[ability];
-    const raw = Object.entries(weights).reduce(
-      (sum, [pole, w]) => sum + (poles[pole] ?? 0) * w,
-      0
-    );
-    result[ability] = Math.min(95, Math.max(25, Math.round(25 + raw * 70)));
-  }
-  return result;
 }

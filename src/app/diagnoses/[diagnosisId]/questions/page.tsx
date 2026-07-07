@@ -4,7 +4,9 @@ import {
   loadScoring,
   loadStyleAxisQuestions,
   loadTypes,
+  loadAbilityScoring,
 } from "@/lib/data-loader";
+import type { AbilityScoringEntry } from "@/schemas/diagnosis";
 import { notFound } from "next/navigation";
 import { QuestionFlow } from "./QuestionFlow";
 import { StyleAxisQuestionFlow } from "./StyleAxisQuestionFlow";
@@ -17,6 +19,7 @@ export default async function QuestionsPage({ params }: Props) {
   const { diagnosisId } = await params;
 
   let meta, scoring, styleAxisQuestions, radarQuestions, types;
+  let abilityContributions: AbilityScoringEntry[] = [];
 
   try {
     meta = loadMeta(diagnosisId);
@@ -36,14 +39,18 @@ export default async function QuestionsPage({ params }: Props) {
 
   if (meta.engineType === "type16") {
     if (!styleAxisQuestions || !types) return notFound();
+    try {
+      abilityContributions = loadAbilityScoring(diagnosisId).contributions;
+    } catch { /* ability-scoring.json is optional */ }
     return (
-      <main className="flex-1 px-5 py-12 max-w-2xl mx-auto w-full">
+      <main className="flex-1">
         <StyleAxisQuestionFlow
           diagnosisId={diagnosisId}
           meta={meta}
           questions={styleAxisQuestions}
           scoring={scoring}
           types={types}
+          abilityContributions={abilityContributions}
         />
       </main>
     );

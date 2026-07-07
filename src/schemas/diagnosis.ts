@@ -66,10 +66,10 @@ export const StyleAxisQuestionsSchema = z.array(StyleAxisQuestionSchema);
 
 // 4スタイル軸（各軸 1〜4 の整数: 1=左極, 4=右極）
 const StyleAxesSchema = z.object({
-  thinkingAction: z.number().int().min(1).max(4),
-  offensiveStable: z.number().int().min(1).max(4),
-  soloTeam: z.number().int().min(1).max(4),
-  divergentConvergent: z.number().int().min(1).max(4),
+  thinkingAction: z.union([z.literal(1), z.literal(4)]),
+  offensiveStable: z.union([z.literal(1), z.literal(4)]),
+  soloTeam: z.union([z.literal(1), z.literal(4)]),
+  divergentConvergent: z.union([z.literal(1), z.literal(4)]),
 });
 
 export const DiagnosisTypeSchema = z.object({
@@ -141,6 +141,99 @@ export const ScoringSchema = z.object({
   fallback: z.string(),
 });
 
+// ── fixed-copy.json ──────────────────────────────────────────
+
+// baseCode: 4 chars — position 1: T/A, 2: O/S, 3: I/G, 4: E/F
+const BaseCodeSchema = z.string().regex(/^[TA][OS][IG][EF]$/);
+
+// {id, text} leaf
+const FixedTextFieldSchema = z.object({
+  id: z.string().min(1),
+  text: z.string().min(1),
+});
+
+// {title, body} pair
+const FixedTitleBodySchema = z.object({
+  title: FixedTextFieldSchema,
+  body: FixedTextFieldSchema,
+});
+
+// exactly-3 arrays
+const FixedArray3TitleBodySchema = z.array(FixedTitleBodySchema).min(3).max(3);
+const FixedArray3TextSchema = z.array(FixedTextFieldSchema).min(3).max(3);
+
+export const FixedCopyTypeSchema = z.object({
+  typeId: z.string().min(1),
+  baseCode: BaseCodeSchema,
+  catch: FixedTextFieldSchema,
+  overview: FixedTextFieldSchema,
+  harsh: FixedTitleBodySchema,
+  thinking: FixedTextFieldSchema,
+  strengths: FixedArray3TitleBodySchema,
+  weaknesses: FixedArray3TitleBodySchema,
+  fatal: FixedTitleBodySchema,
+  growthTips: FixedArray3TitleBodySchema,
+  career: FixedTextFieldSchema,
+  fitJobs: z.object({
+    labels: FixedArray3TextSchema,
+    body: FixedTextFieldSchema,
+  }),
+  avoidJobs: z.object({
+    labels: FixedArray3TextSchema,
+    body: FixedTextFieldSchema,
+  }),
+  relationships: FixedTextFieldSchema,
+  teamRole: FixedTextFieldSchema,
+  conclusion: FixedTextFieldSchema,
+});
+
+export const FixedCopySchema = z.object({
+  schemaVersion: z.number().int().positive(),
+  types: z.array(FixedCopyTypeSchema),
+});
+
+// ── dynamic-copy.json ─────────────────────────────────────────
+
+const DynamicCopyAxisRoleSchema = z.enum(["dominant", "soft", "balanced"]);
+const DynamicCopyPoleSchema = z.enum([
+  "think", "act", "offense", "stability",
+  "individual", "group", "expand", "focus", "none",
+]);
+const DynamicCopyStrengthSchema = z.enum(["mild", "clear", "extreme"]);
+
+export const DynamicCopyPartSchema = z.object({
+  id: z.string().min(1),
+  layer: z.string().min(1),
+  axisRole: DynamicCopyAxisRoleSchema,
+  pole: DynamicCopyPoleSchema,
+  strength: DynamicCopyStrengthSchema,
+  section: z.string().min(1),
+  targetSlot: z.string().min(1),
+  renderMode: z.enum(["append_paragraph", "replace_slot"]),
+  conditions: z.array(z.string()),
+  targetTypes: z.array(z.string()),
+  forbiddenTypes: z.array(z.string()),
+  priority: z.number().int(),
+  text: z.string().min(1),
+});
+
+export const DynamicCopyPartsSchema = z.array(DynamicCopyPartSchema);
+
+// ── ability-scoring.json ─────────────────────────────────────
+
+const AbilityKeySchema = z.enum(["logic", "execution", "sales", "creativity", "management"]);
+
+export const AbilityScoringEntrySchema = z.object({
+  questionId: z.string().min(1),
+  contributingSide: z.enum(["a", "b"]),
+  ability: AbilityKeySchema,
+});
+
+export const AbilityScoringSchema = z.object({
+  schemaVersion: z.number().int().positive(),
+  contributions: z.array(AbilityScoringEntrySchema),
+});
+
 // ── inferred types ───────────────────────────────────────────
 export type Meta = z.infer<typeof MetaSchema>;
 export type Question = z.infer<typeof QuestionSchema>;
@@ -148,3 +241,9 @@ export type StyleAxisQuestion = z.infer<typeof StyleAxisQuestionSchema>;
 export type StyleAxisChoice = z.infer<typeof StyleAxisChoiceSchema>;
 export type DiagnosisType = z.infer<typeof DiagnosisTypeSchema>;
 export type Scoring = z.infer<typeof ScoringSchema>;
+export type FixedCopyType = z.infer<typeof FixedCopyTypeSchema>;
+export type FixedCopy = z.infer<typeof FixedCopySchema>;
+export type DynamicCopyPartEntry = z.infer<typeof DynamicCopyPartSchema>;
+export type AbilityKey = z.infer<typeof AbilityKeySchema>;
+export type AbilityScoringEntry = z.infer<typeof AbilityScoringEntrySchema>;
+export type AbilityScoring = z.infer<typeof AbilityScoringSchema>;

@@ -6,6 +6,7 @@ import {
   Noto_Sans_JP,
   EB_Garamond,
   IBM_Plex_Mono,
+  Shippori_Mincho_B1,
 } from "next/font/google";
 import "./globals.css";
 
@@ -30,6 +31,14 @@ const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
   subsets: ["latin"],
   weight: ["400", "500"],
+  preload: false,
+});
+
+// Display / heading — for type names and major headings only
+const shipporiMinchoB1 = Shippori_Mincho_B1({
+  variable: "--font-shippori",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
   preload: false,
 });
 
@@ -85,6 +94,7 @@ export default function RootLayout({
         notoSansJP.variable,
         ebGaramond.variable,
         ibmPlexMono.variable,
+        shipporiMinchoB1.variable,
         "h-full antialiased",
       ].join(" ")}
     >

@@ -6,11 +6,17 @@ import {
   StyleAxisQuestionsSchema,
   TypesSchema,
   ScoringSchema,
+  FixedCopySchema,
+  DynamicCopyPartsSchema,
+  AbilityScoringSchema,
   type Meta,
   type Question,
   type StyleAxisQuestion,
   type DiagnosisType,
   type Scoring,
+  type FixedCopy,
+  type DynamicCopyPartEntry,
+  type AbilityScoring,
 } from "@/schemas/diagnosis";
 
 const DATA_ROOT = path.join(process.cwd(), "data", "diagnoses");
@@ -43,6 +49,21 @@ export function loadTypes(diagnosisId: string): DiagnosisType[] {
 export function loadScoring(diagnosisId: string): Scoring {
   const file = path.join(DATA_ROOT, diagnosisId, "scoring.json");
   return ScoringSchema.parse(readJson(file));
+}
+
+export function loadDynamicCopy(diagnosisId: string): DynamicCopyPartEntry[] {
+  const file = path.join(DATA_ROOT, diagnosisId, "dynamic-copy.json");
+  return DynamicCopyPartsSchema.parse(readJson(file));
+}
+
+export function loadFixedCopy(diagnosisId: string): FixedCopy {
+  const file = path.join(DATA_ROOT, diagnosisId, "fixed-copy.json");
+  return FixedCopySchema.parse(readJson(file));
+}
+
+export function loadAbilityScoring(diagnosisId: string): AbilityScoring {
+  const file = path.join(DATA_ROOT, diagnosisId, "ability-scoring.json");
+  return AbilityScoringSchema.parse(readJson(file));
 }
 
 export function loadAllMeta(): Meta[] {

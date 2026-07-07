@@ -13,14 +13,14 @@
   --accent: #0a0a0a;
 
   /* ── Dossier palette (social-skills diagnosis pages) ────── */
-  --dossier-bg:           #F5F3EF;  /* warm cream — page background      */
-  --dossier-surface:      #FCFBF9;  /* slightly lighter — cards / fields  */
+  --dossier-bg:           #F4F0E7;  /* warm cream — page background      */
+  --dossier-surface:      #FCFAF5;  /* slightly lighter — cards / fields  */
   --dossier-paper:        #F8F4EC;  /* warm yellow tint — alt surface     */
   --dossier-ink:          #1A1815;  /* dark ink — primary text            */
   --dossier-sub:          #6B655C;  /* secondary text                     */
   --dossier-muted:        #9A9286;  /* muted / captions                   */
-  --dossier-line:         #D8CDBD;  /* main ruled lines                   */
-  --dossier-line-soft:    #E5E0D8;  /* lighter dividers                   */
+  --dossier-line:         #CDBF9F;  /* main ruled lines — warmer gold     */
+  --dossier-line-soft:    #DDD5C2;  /* lighter dividers                   */
   --dossier-gold:         #8C7A4B;  /* antique gold — accent lines/labels */
   --dossier-dark:         #14120F;  /* ink-black — CTA background         */
 
@@ -51,6 +51,7 @@
   --font-jp:         var(--font-noto-sans-jp), "Hiragino Sans", "Noto Sans JP", sans-serif;
   --font-serif-en:   var(--font-eb-garamond), "EB Garamond", "Georgia", serif;
   --font-mono-doc:   var(--font-ibm-plex-mono), "Courier New", monospace;
+  --font-heading:    var(--font-shippori), "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
 
   /* Dossier colors as Tailwind utilities */
   --color-dossier-bg:           var(--dossier-bg);
@@ -83,17 +84,17 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   Dossier page — paper-tone background with subtle grain
+   Dossier page — parchment background
    Applied to diagnosis sub-pages (results, questions, detail)
 ══════════════════════════════════════════════════════════════ */
 .dossier-page {
-  background-color: var(--dossier-bg);
-  /*
-   * Subtle paper grain via SVG feTurbulence noise at 4% opacity,
-   * tiling over the warm cream base. No image file required.
-   */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
+  position: relative;
+  /* Fallback for missing image — matches parchment tone */
+  background-color: #F4EFE4;
+  background-image: url("/images/diagnoses/business-skills/textures/parchment-base.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center top;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -106,4 +107,286 @@ body {
 
 .result-fade-in {
   animation: result-fade-in 0.5s ease-out both;
+}
+
+@keyframes questionCardEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes stagePan {
+  0%, 100% { transform: scale(1.02) translateY(-3px); }
+  50%       { transform: scale(1.02) translateY(3px); }
+}
+
+/* ── Result FV: opening animation keyframes ──────────────────── */
+@keyframes resultPortraitReveal {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateY(78deg) rotate(-7deg) scale(0.88);
+    filter: blur(6px) brightness(1.18);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(900px) rotateY(0deg) rotate(0deg) scale(1);
+    filter: blur(0) brightness(1);
+  }
+}
+
+@keyframes resultShine {
+  from { transform: translateX(-130%) skewX(-12deg); }
+  to   { transform: translateX(160%)  skewX(-12deg); }
+}
+
+@keyframes resultFadeUpScale {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes resultFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-portrait-reveal {
+  animation: resultPortraitReveal 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.result-shine-overlay {
+  animation: resultShine 520ms ease-out 320ms both;
+}
+.result-type-name {
+  animation: resultFadeUpScale 420ms cubic-bezier(0.16, 1, 0.3, 1) 620ms both;
+}
+.result-en-name {
+  animation: resultFadeUp 340ms ease-out 760ms both;
+}
+.result-catch {
+  animation: resultFadeUp 340ms ease-out 880ms both;
+}
+.result-panel-reveal {
+  animation: resultFadeUp 420ms ease-out 1040ms both;
+}
+
+/* Portrait floating loop — starts after reveal completes */
+@keyframes resultPortraitFloat {
+  0%, 100% { transform: translateY(-6px) rotate(-0.35deg); }
+  50%       { transform: translateY(6px)  rotate(0.35deg); }
+}
+
+.result-portrait-float {
+  animation: resultPortraitFloat 8s ease-in-out 1.4s infinite;
+}
+
+/* Combine reveal (one-shot) + float (loop) on the same element.
+   Float listed second so it wins after reveal's fill-mode settles. */
+.result-portrait-stage {
+  animation:
+    resultPortraitReveal 720ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    resultPortraitFloat  8s   ease-in-out 1.4s infinite;
+}
+
+/* 鑑定中 diamond pulse */
+@keyframes finalizingDiamond {
+  0%, 100% { opacity: 0.18; transform: rotate(45deg) scale(0.82); }
+  50%       { opacity: 1;    transform: rotate(45deg) scale(1.12); }
+}
+
+.finalizing-diamond {
+  animation: finalizingDiamond 1.4s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Result page — responsive design utilities
+══════════════════════════════════════════════════════════════ */
+
+/* Japanese type name in FV */
+.result-type-name-heading {
+  font-size: clamp(42px, 11vw, 58px);
+  line-height: 1.18;
+}
+@media (min-width: 768px) {
+  .result-type-name-heading {
+    font-size: clamp(58px, 5.4vw, 78px);
+    line-height: 1.15;
+  }
+}
+
+/* Section big headings */
+.section-heading {
+  font-size: clamp(31px, 8.5vw, 39px);
+  line-height: 1.25;
+  margin-bottom: 22px;
+}
+@media (min-width: 768px) {
+  .section-heading {
+    font-size: clamp(44px, 4.2vw, 58px);
+    line-height: 1.18;
+    margin-bottom: 30px;
+  }
+}
+
+/* Body prose text */
+.prose-text {
+  font-size: 15.5px;
+  line-height: 1.95;
+  letter-spacing: 0.01em;
+}
+@media (min-width: 768px) {
+  .prose-text {
+    font-size: 17px;
+    line-height: 2;
+    letter-spacing: 0.015em;
+  }
+}
+
+/* Sub label (mono, gold) */
+.sub-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+}
+@media (min-width: 768px) {
+  .sub-label {
+    font-size: 11px;
+    letter-spacing: 0.28em;
+  }
+}
+
+/* Corner ornaments */
+.corner-ornament {
+  width: 68px;
+  height: 68px;
+  opacity: 0.28;
+}
+.corner-ornament-left  { top: 8px; left: 6px; }
+.corner-ornament-right { top: 8px; right: 6px; }
+@media (min-width: 768px) {
+  .corner-ornament       { width: 132px; height: 132px; opacity: 0.38; }
+  .corner-ornament-left  { top: 14px; left: 14px; }
+  .corner-ornament-right { top: 14px; right: 14px; }
+}
+@media (min-width: 1440px) {
+  .corner-ornament { width: 148px; height: 148px; }
+}
+
+/* Divider ornament */
+.divider-ornament-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 58px auto;
+}
+.divider-ornament-img {
+  display: block;
+  width: 88vw;
+  max-width: 520px;
+  opacity: 0.72;
+}
+@media (min-width: 768px) {
+  .divider-ornament-wrap { margin: 88px auto; }
+  .divider-ornament-img  { width: min(820px, 82vw); max-width: none; }
+}
+
+/* Parchment panel — border-image frame (result-frame-panel.png 1600×1100) */
+.parchment-panel {
+  border-style: solid;
+  border-width: 34px 30px;
+  border-image-source: url('/images/diagnoses/business-skills/ornaments/result-frame-panel.png');
+  border-image-slice: 8% 7% fill;
+  border-image-repeat: stretch;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  .parchment-panel {
+    border-width: 54px 58px;
+    padding: 44px 46px 42px 46px;
+  }
+}
+
+/* Parchment scroll — hero image container (result-frame-hero.png 1600×900) */
+.parchment-scroll-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+/* Text safe zone — keeps text off the rolled ends */
+.parchment-scroll-safe {
+  position: absolute;
+  inset: 15% 15% 14% 13%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+@media (min-width: 768px) {
+  .parchment-scroll-safe { inset: 15% 17% 15% 12%; }
+}
+
+/* Share section title */
+.share-title {
+  font-size: 34px;
+}
+@media (min-width: 768px) {
+  .share-title { font-size: 46px; }
+}
+
+/* 4-char style code */
+.style-code-text {
+  font-size: 22px;
+  letter-spacing: 0.26em;
+  margin-top: 16px;
+  margin-bottom: 32px;
+}
+@media (min-width: 768px) {
+  .style-code-text {
+    font-size: 28px;
+    letter-spacing: 0.32em;
+    margin-bottom: 42px;
+  }
+}
+
+/* Tribe badge Suspense fallback — matches tribe-badge-img height */
+.tribe-badge-fallback {
+  height: 68px;
+  margin-top: 16px;
+}
+@media (min-width: 768px) {
+  .tribe-badge-fallback { height: 118px; margin-top: 20px; }
+}
+@media (min-width: 1440px) {
+  .tribe-badge-fallback { height: 126px; }
+}
+
+/* Tribe badge image sizing */
+.tribe-badge-img {
+  height: 68px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+}
+@media (min-width: 768px) {
+  .tribe-badge-img { height: 118px; max-width: 240px; }
+}
+@media (min-width: 1440px) {
+  .tribe-badge-img { height: 126px; max-width: 256px; }
+}
+
+/* Normal section spacing within the same content block */
+.section-block-gap    { margin-top: 76px; }
+@media (min-width: 768px) { .section-block-gap { margin-top: 112px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .result-portrait-reveal,
+  .result-portrait-stage,
+  .result-shine-overlay,
+  .result-type-name,
+  .result-en-name,
+  .result-catch,
+  .result-panel-reveal,
+  .result-portrait-float,
+  .finalizing-diamond {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
 }
