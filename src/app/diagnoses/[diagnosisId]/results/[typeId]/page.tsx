@@ -5,8 +5,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ResultClient } from "./ResultClient";
 import { ResultShareSection } from "./ResultShareSection";
-import { ResultStyleBadge } from "./ResultStyleBadge";
-import { ResultSpecialistBadge } from "./ResultSpecialistBadge";
+import { ResultBadgeGroup } from "./ResultBadgeGroup";
 import { ResultAbilitySection } from "./ResultAbilitySection";
 import { ProseBody } from "./ProseBody";
 import { DynamicCopySlot } from "./DynamicCopySlot";
@@ -142,7 +141,7 @@ export async function generateMetadata({ params }: Props) {
     const fixedCopy = loadFixedCopy(diagnosisId);
     const fixedType = fixedCopy.types.find((t) => t.typeId === typeId);
     return {
-      title: `${type.name} — 社会人能力値診断`,
+      title: `私は「${type.name}」｜ビジマル診断`,
       description: fixedType?.catch.text ?? fixedType?.overview.text,
       robots: { index: false, follow: false },
     };
@@ -232,7 +231,7 @@ export default async function ResultPage({ params }: Props) {
           ファーストビュー
       ══════════════════════════════════════════════════════════ */}
       <section
-        className="flex flex-col items-center min-h-[calc(100vh-64px)] pt-8 md:pt-10 pb-14 md:pb-20 max-w-[1040px] mx-auto px-5 md:px-7 lg:px-8"
+        className="flex flex-col items-center min-h-[calc(100vh-64px)] pt-6 md:pt-8 pb-10 md:pb-14 max-w-[1040px] mx-auto px-5 md:px-7 lg:px-8"
         style={{ textAlign: "center" }}
       >
 
@@ -282,11 +281,11 @@ export default async function ResultPage({ params }: Props) {
         </div>
 
         {/* ②③ 動物タイプ + 日本語タイプ名 */}
-        <div className="mt-6 md:mt-8">
+        <div className="mt-4 md:mt-6">
           {typeAssets?.animalType && (
             <p
-              className="font-mono-doc sub-label mb-2 md:mb-3"
-              style={{ color: "rgba(111,85,44,0.82)" }}
+              className="font-mono-doc mb-2 md:mb-3"
+              style={{ color: "rgba(111,85,44,0.82)", fontSize: "clamp(16px, 2.2vw, 22px)", letterSpacing: "0.12em" }}
             >
               {typeAssets.animalType}
             </p>
@@ -302,12 +301,9 @@ export default async function ResultPage({ params }: Props) {
         {/* ④ 族バッジ・特化個体バッジ（日本語タイプ名の下、英語名の上） */}
         {type.axes && (
           <Suspense fallback={<div className="tribe-badge-fallback" />}>
-            <ResultStyleBadge typeAxesFallback={type.axes} />
+            <ResultBadgeGroup typeAxesFallback={type.axes} />
           </Suspense>
         )}
-        <Suspense fallback={null}>
-          <ResultSpecialistBadge />
-        </Suspense>
 
         {/* ⑤ 英語タイプ名 */}
         {resolvedEnName && (
@@ -317,7 +313,7 @@ export default async function ResultPage({ params }: Props) {
               fontSize: "clamp(1.1rem, 2.6vw, 1.65rem)",
               lineHeight: "1.3",
               color: "rgba(33,22,13,0.72)",
-              marginTop: "16px",
+              marginTop: "10px",
             }}
           >
             {resolvedEnName}
@@ -330,7 +326,7 @@ export default async function ResultPage({ params }: Props) {
           style={{
             fontSize: "clamp(1.3rem, 3.2vw, 2rem)",
             color: "#17100A",
-            marginTop: "28px",
+            marginTop: "18px",
           }}
         >
           {fixedType.catch.text}
@@ -339,7 +335,7 @@ export default async function ResultPage({ params }: Props) {
         {/* ⑦ タイプ概要 */}
         <div
           className="mx-auto w-full result-panel-reveal parchment-panel text-left"
-          style={{ maxWidth: "760px", marginTop: "40px" }}
+          style={{ maxWidth: "760px", marginTop: "24px" }}
         >
           <h2
             className="font-heading leading-[1.2] tracking-[0.04em] mb-5"
@@ -384,32 +380,16 @@ export default async function ResultPage({ params }: Props) {
         className="mx-auto px-5 md:px-7 w-full"
         style={{ maxWidth: "760px", paddingTop: "32px", paddingBottom: "8px" }}
       >
-        <h2
-          className="font-heading tracking-[0.04em] section-heading"
-          style={{ color: "#17100A" }}
-        >
-          辛辣コメント
-        </h2>
-        <div style={{ borderLeft: "2px solid #9A7350", paddingLeft: "16px" }}>
+        <div style={{ borderLeft: "3px solid #9A7350", paddingLeft: "16px" }}>
           <p
-            className="font-heading leading-[1.4] tracking-[0.03em] mb-4"
+            className="font-heading leading-[1.4] tracking-[0.03em]"
             style={{
-              fontSize: "clamp(21px, 2.3vw, 34px)",
+              fontSize: "clamp(28px, 7.5vw, 48px)",
               color: "#21160D",
             }}
           >
             {fixedType.harsh.title.text}
           </p>
-          <ProseBody
-            text={fixedType.harsh.body.text}
-            className="space-y-4"
-            paragraphClassName="font-jp"
-            style={{
-              fontSize: "clamp(15px, 1.6vw, 18px)",
-              lineHeight: "1.8",
-              color: "#21160D",
-            }}
-          />
         </div>
       </div>
 
@@ -451,11 +431,11 @@ export default async function ResultPage({ params }: Props) {
         <section>
           <h2
             className="font-heading tracking-[0.04em] section-heading"
-            style={{ color: "#17100A" }}
+            style={{ color: "#17100A", maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}
           >
             仕事の思考回路
           </h2>
-          <div style={{ maxWidth: "760px" }}>
+          <div style={{ maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}>
             <ProseBody
               text={fixedType.thinking.text}
               className="space-y-4"
@@ -483,11 +463,11 @@ export default async function ResultPage({ params }: Props) {
         >
           <h2
             className="font-heading tracking-[0.04em] section-heading"
-            style={{ color: "#17100A" }}
+            style={{ color: "#17100A", maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}
           >
             強み
           </h2>
-          <div style={{ borderLeft: "2px solid #9A7C46", paddingLeft: "20px", maxWidth: "760px" }}>
+          <div style={{ borderLeft: "2px solid #9A7C46", paddingLeft: "20px", maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}>
             <ul style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
               {fixedType.strengths.map((s) => (
                 <li key={s.title.id}>
@@ -516,11 +496,11 @@ export default async function ResultPage({ params }: Props) {
         >
           <h2
             className="font-heading tracking-[0.04em] section-heading"
-            style={{ color: "#17100A" }}
+            style={{ color: "#17100A", maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}
           >
             弱み
           </h2>
-          <div style={{ borderLeft: "2px solid #A77A70", paddingLeft: "20px", maxWidth: "760px" }}>
+          <div style={{ borderLeft: "2px solid #A77A70", paddingLeft: "20px", maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}>
             <ul style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
               {fixedType.weaknesses.map((w) => (
                 <li key={w.title.id}>
@@ -546,47 +526,36 @@ export default async function ResultPage({ params }: Props) {
         <section className="section-block-gap">
           <h2
             className="font-heading tracking-[0.04em] section-heading"
-            style={{ color: "#17100A" }}
+            style={{ color: "#17100A", maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}
           >
             致命的な弱点
           </h2>
           <div
-            className="parchment-scroll-container mx-auto"
-            style={{ maxWidth: "960px" }}
+            className="parchment-panel mx-auto"
+            style={{ maxWidth: "760px" }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`${ORN}/result-frame-hero.png`}
-              alt=""
-              aria-hidden="true"
-              className="absolute inset-0 w-full h-full pointer-events-none select-none"
-              style={{ objectFit: "fill" }}
+            <p
+              className="font-mono-doc sub-label"
+              style={{ letterSpacing: "0.32em", marginBottom: "18px", color: "rgba(116,49,40,0.72)" }}
+            >
+              CRITICAL WEAKNESS
+            </p>
+            <p
+              className="font-heading leading-[1.3]"
+              style={{
+                fontSize: "clamp(23px, 3.8vw, 46px)",
+                color: "#743128",
+                marginBottom: "24px",
+              }}
+            >
+              {fixedType.fatal.title.text}
+            </p>
+            <ProseBody
+              text={fixedType.fatal.body.text}
+              className="space-y-3"
+              paragraphClassName="font-jp prose-text"
+              style={{ color: "#4A2A10" }}
             />
-            <div className="parchment-scroll-safe">
-              <p
-                className="font-mono-doc sub-label"
-                style={{ letterSpacing: "0.32em", marginBottom: "18px", color: "rgba(116,49,40,0.72)" }}
-              >
-                CRITICAL WEAKNESS
-              </p>
-              <p
-                className="font-heading leading-[1.3]"
-                style={{
-                  fontSize: "clamp(23px, 3.8vw, 52px)",
-                  color: "#743128",
-                  maxWidth: "680px",
-                  marginBottom: "24px",
-                }}
-              >
-                {fixedType.fatal.title.text}
-              </p>
-              <ProseBody
-                text={fixedType.fatal.body.text}
-                className="space-y-3"
-                paragraphClassName="font-jp prose-text"
-                style={{ color: "#4A2A10", maxWidth: "680px" }}
-              />
-            </div>
           </div>
         </section>
 
@@ -594,17 +563,11 @@ export default async function ResultPage({ params }: Props) {
         <section className="section-block-gap">
           <h2
             className="font-heading tracking-[0.04em] section-heading"
-            style={{ color: "#17100A" }}
+            style={{ color: "#17100A", maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}
           >
             成長ヒント
           </h2>
-          <div className="parchment-panel">
-            <p
-              className="font-mono-doc sub-label mb-6"
-              style={{ letterSpacing: "0.34em", color: "rgba(111,85,44,0.78)" }}
-            >
-              RECOMMENDATION
-            </p>
+          <div style={{ maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}>
             <ol style={{ display: "flex", flexDirection: "column", gap: "34px" }}>
               {fixedType.growthTips.map((tip, i) => (
                 <li key={tip.title.id} className="flex gap-5">
@@ -648,13 +611,13 @@ export default async function ResultPage({ params }: Props) {
         <section>
           <h2
             className="font-heading tracking-[0.04em] section-heading"
-            style={{ color: "#17100A" }}
+            style={{ color: "#17100A", maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}
           >
             キャリア適性
           </h2>
 
           {/* 16/キャリア適性 本文 */}
-          <div style={{ maxWidth: "760px", marginBottom: "40px" }}>
+          <div style={{ maxWidth: "760px", marginBottom: "40px", marginLeft: "auto", marginRight: "auto" }}>
             <ProseBody
               text={fixedType.career.text}
               className="space-y-4"
@@ -675,10 +638,10 @@ export default async function ResultPage({ params }: Props) {
           </div>
 
           {/* 17/向いている仕事 */}
-          <div className="mb-8">
+          <div className="mb-8" style={{ maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}>
             <p
-              className="font-mono-doc sub-label mb-4"
-              style={{ letterSpacing: "0.24em", color: "rgba(111,85,44,0.72)" }}
+              className="font-mono-doc mb-4"
+              style={{ fontSize: "clamp(15px, 1.6vw, 18px)", fontWeight: 600, letterSpacing: "0.20em", color: "rgba(111,85,44,0.85)" }}
             >
               向いている仕事
             </p>
@@ -688,13 +651,13 @@ export default async function ResultPage({ params }: Props) {
                   key={l.id}
                   className="font-jp"
                   style={{
-                    fontSize: "15px",
-                    padding: "9px 16px",
-                    minHeight: "40px",
+                    fontSize: "clamp(17px, 1.8vw, 21px)",
+                    padding: "10px 20px",
+                    minHeight: "44px",
                     display: "inline-flex",
                     alignItems: "center",
-                    border: "1px solid rgba(155,124,70,0.42)",
-                    background: "rgba(255,250,235,0.38)",
+                    border: "1px solid rgba(210,200,185,0.80)",
+                    background: "rgba(252,250,248,0.90)",
                     borderRadius: "3px",
                     color: "#21160D",
                   }}
@@ -712,10 +675,10 @@ export default async function ResultPage({ params }: Props) {
           </div>
 
           {/* 18/避けたい仕事 */}
-          <div>
+          <div style={{ maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}>
             <p
-              className="font-mono-doc sub-label mb-4"
-              style={{ letterSpacing: "0.24em", color: "rgba(111,85,44,0.72)" }}
+              className="font-mono-doc mb-4"
+              style={{ fontSize: "clamp(15px, 1.6vw, 18px)", fontWeight: 600, letterSpacing: "0.20em", color: "rgba(111,85,44,0.85)" }}
             >
               避けたい仕事
             </p>
@@ -725,13 +688,13 @@ export default async function ResultPage({ params }: Props) {
                   key={l.id}
                   className="font-jp"
                   style={{
-                    fontSize: "15px",
-                    padding: "9px 16px",
-                    minHeight: "40px",
+                    fontSize: "clamp(17px, 1.8vw, 21px)",
+                    padding: "10px 20px",
+                    minHeight: "44px",
                     display: "inline-flex",
                     alignItems: "center",
-                    border: "1px solid rgba(155,124,70,0.42)",
-                    background: "rgba(255,250,235,0.38)",
+                    border: "1px solid rgba(210,200,185,0.80)",
+                    background: "rgba(252,250,248,0.90)",
                     borderRadius: "3px",
                     color: "#21160D",
                   }}
@@ -760,11 +723,11 @@ export default async function ResultPage({ params }: Props) {
         <section>
           <h2
             className="font-heading tracking-[0.04em] section-heading"
-            style={{ color: "#17100A" }}
+            style={{ color: "#17100A", maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}
           >
             人間関係
           </h2>
-          <div style={{ maxWidth: "760px" }}>
+          <div style={{ maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}>
             <ProseBody
               text={fixedType.relationships.text}
               className="space-y-4"
@@ -791,8 +754,8 @@ export default async function ResultPage({ params }: Props) {
           style={{ maxWidth: "760px" }}
         >
           <p
-            className="font-mono-doc sub-label mb-6"
-            style={{ letterSpacing: "0.24em", color: "rgba(111,85,44,0.72)" }}
+            className="font-mono-doc mb-6"
+            style={{ fontSize: "clamp(15px, 1.6vw, 18px)", fontWeight: 600, letterSpacing: "0.20em", color: "rgba(111,85,44,0.85)" }}
           >
             チームでの役割
           </p>
@@ -811,11 +774,20 @@ export default async function ResultPage({ params }: Props) {
         >
           <h2
             className="font-heading tracking-[0.04em] section-heading"
-            style={{ color: "#17100A" }}
+            style={{ color: "#17100A", maxWidth: "760px", marginLeft: "auto", marginRight: "auto" }}
           >
             結論
           </h2>
-          <div style={{ maxWidth: "760px" }}>
+          <div
+            style={{
+              maxWidth: "760px",
+              marginLeft: "auto",
+              marginRight: "auto",
+              backgroundImage: "url('/images/diagnoses/business-skills/ornaments/result-frame-hero.png')",
+              backgroundSize: "100% 100%",
+              padding: "72px 15% 66px 13%",
+            }}
+          >
             <ProseBody
               text={fixedType.conclusion.text}
               className="space-y-4"
@@ -869,92 +841,41 @@ export default async function ResultPage({ params }: Props) {
           {/* ブランド */}
           <div>
             <p
-              className="font-heading text-[2rem] md:text-[3rem] leading-[1.1] tracking-[0.04em] mb-2"
+              className="font-heading text-[2rem] md:text-[3rem] leading-[1.1] tracking-[0.04em] mb-4"
               style={{ color: "#17100A" }}
             >
-              Human OS
-            </p>
-            <p
-              className="font-jp text-sm md:text-base mb-5"
-              style={{ color: "rgba(33,22,13,0.74)" }}
-            >
-              ビジマル診断
+              Human-OS
             </p>
             <p
               className="font-jp text-sm md:text-base leading-[1.8] max-w-sm"
               style={{ color: "rgba(33,22,13,0.74)" }}
             >
-              社会人の能力値と働き方の傾向を読み解く、ビジネスアニマル診断。
+              さまざまな診断を重ね、あなたという人間の「設計図」をつくる診断プラットフォーム。
             </p>
           </div>
 
-          {/* リンクグリッド */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-
-            {/* コンテンツ */}
-            <div>
-              <p className="font-mono-doc text-xs tracking-[0.22em] mb-4" style={{ color: "rgba(111,85,44,0.78)" }}>
-                コンテンツ
-              </p>
-              <ul className="space-y-3">
-                <li>
-                  <Link href={`/diagnoses/${diagnosisId}`} className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
-                    診断トップ
-                  </Link>
-                </li>
-                <li>
-                  <Link href={`/diagnoses/${diagnosisId}/questions`} className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
-                    診断を受ける
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
-                    16タイプ一覧
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* 機能 */}
-            <div>
-              <p className="font-mono-doc text-xs tracking-[0.22em] mb-4" style={{ color: "rgba(111,85,44,0.78)" }}>
-                機能
-              </p>
-              <ul className="space-y-3">
-                <li>
-                  <span className="font-jp text-sm md:text-base" style={{ color: "rgba(33,22,13,0.44)" }}>
-                    結果をシェア
-                  </span>
-                </li>
-                <li>
-                  <Link href={`/diagnoses/${diagnosisId}/questions`} className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
-                    もう一度診断する
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* サポート */}
-            <div>
-              <p className="font-mono-doc text-xs tracking-[0.22em] mb-4" style={{ color: "rgba(111,85,44,0.78)" }}>
-                サポート
-              </p>
-              <ul className="space-y-3">
-                {[
-                  { label: "よくある質問" },
-                  { label: "お問い合わせ" },
-                  { label: "利用規約" },
-                  { label: "プライバシーポリシー" },
-                ].map(({ label }) => (
-                  <li key={label}>
-                    <Link href="#" className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
+          {/* リンク */}
+          <div>
+            <p className="font-mono-doc text-xs tracking-[0.22em] mb-4" style={{ color: "rgba(111,85,44,0.78)" }}>
+              コンテンツ
+            </p>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/terms" className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
+                  利用規約
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
+                  プライバシーポリシー
+                </Link>
+              </li>
+              <li>
+                <Link href="/diagnoses/business-skills/types" className="font-jp text-sm md:text-base hover:underline" style={{ color: "rgba(33,22,13,0.78)" }}>
+                  ビジマル16タイプ図鑑
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -963,7 +884,7 @@ export default async function ResultPage({ params }: Props) {
           style={{ borderTop: "1px solid rgba(111,85,44,0.16)" }}
         >
           <p className="font-mono-doc text-xs" style={{ color: "rgba(33,22,13,0.38)" }}>
-            © 2026 Human OS. All rights reserved.
+            © 2026 Human-OS
           </p>
         </div>
       </footer>

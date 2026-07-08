@@ -61,16 +61,14 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Human OS — 人間を可視化するAI診断プラットフォーム",
-    template: "%s | Human OS",
+    default: "Human-OS｜人間の全てを可視化する診断プラットフォーム",
+    template: "%s｜Human-OS",
   },
   description:
-    "Human OS は100種類以上の診断を提供するAI診断プラットフォームです。固定タイプで結果を共有し、自分を深く知ることができます。",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
-  ),
+    "Human-OSは、複数の診断を通じて、人の特性や行動傾向を多面的に読み解く診断プラットフォームです。V1では、仕事における思考・行動・判断・役割傾向を扱う「ビジマル診断」を公開しています。",
+  metadataBase: new URL("https://human-os.site"),
   openGraph: {
-    siteName: "Human OS",
+    siteName: "Human-OS",
     locale: "ja_JP",
     type: "website",
   },

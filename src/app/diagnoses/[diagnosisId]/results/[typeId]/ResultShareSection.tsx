@@ -34,7 +34,7 @@ export function ResultShareSection({ typeName }: Props) {
   return (
     <div
       className="mx-auto px-5 md:px-0"
-      style={{ maxWidth: "760px" }}
+      style={{ maxWidth: "520px" }}
     >
       {/* ── シェアカード */}
       <div
@@ -58,15 +58,15 @@ export function ResultShareSection({ typeName }: Props) {
         </p>
 
         {/* ── シェアボタン ──────────────────────────────────────────── */}
-        <div className="flex flex-col md:flex-row gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {/* X */}
           <a
             href={currentUrl ? xUrl : undefined}
             target="_blank"
             rel="noopener noreferrer"
             aria-disabled={!currentUrl}
-            className="flex items-center justify-center gap-2 h-14 md:h-[60px]
-                       text-sm md:text-base font-semibold font-jp
+            className="w-full flex items-center justify-center gap-2 h-14 md:h-[60px]
+                       text-sm md:text-base font-medium font-jp
                        transition-opacity hover:opacity-80"
             style={{ background: "#11100D", color: "#F4EFE4" }}
           >
@@ -79,8 +79,8 @@ export function ResultShareSection({ typeName }: Props) {
             target="_blank"
             rel="noopener noreferrer"
             aria-disabled={!currentUrl}
-            className="flex items-center justify-center gap-2 h-14 md:h-[60px]
-                       text-sm md:text-base font-semibold font-jp
+            className="w-full flex items-center justify-center gap-2 h-14 md:h-[60px]
+                       text-sm md:text-base font-medium font-jp
                        transition-opacity hover:opacity-80"
             style={{ background: "#06C755", color: "white" }}
           >
@@ -91,8 +91,8 @@ export function ResultShareSection({ typeName }: Props) {
           <button
             onClick={handleCopy}
             disabled={!currentUrl}
-            className="flex items-center justify-center gap-2 h-14 md:h-[60px]
-                       text-sm md:text-base font-semibold font-jp
+            className="w-full flex items-center justify-center gap-2 h-14 md:h-[60px]
+                       text-sm md:text-base font-medium font-jp
                        transition-opacity hover:opacity-80 disabled:opacity-40"
             style={{ background: "#5A4A2A", color: "white" }}
           >

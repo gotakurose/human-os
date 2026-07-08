@@ -62,6 +62,13 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
     null;
   const indicator = currentAnswer ? (INDICATOR_CONFIG[currentAnswer] ?? null) : null;
 
+  const promptLen      = (currentQuestion?.prompt ?? "").length;
+  const promptFontSize = promptLen >= 28 ? "clamp(16px,1.8vw,1.0625rem)" : "1.0625rem";
+  const optALen        = (currentQuestion?.optionA ?? "").length;
+  const optBLen        = (currentQuestion?.optionB ?? "").length;
+  const optAClamp      = optALen >= 31 ? "clamp(14px,1.8vw,1.0625rem)" : optALen >= 27 ? "clamp(15px,1.8vw,1.0625rem)" : "clamp(16px,1.8vw,1.0625rem)";
+  const optBClamp      = optBLen >= 31 ? "clamp(14px,1.8vw,1.0625rem)" : optBLen >= 27 ? "clamp(15px,1.8vw,1.0625rem)" : "clamp(16px,1.8vw,1.0625rem)";
+
   function handleChoice(choiceId: string) {
     if (isFinalizing) return;
 
@@ -148,7 +155,7 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
 
       {/* ── Stage header ─────────────────────────────────────────── */}
       <div
-        className="relative overflow-hidden h-[240px] md:h-[320px]"
+        className="relative overflow-hidden h-[190px] md:h-[320px]"
         style={{ backgroundColor: hasImage ? "var(--dossier-dark)" : "var(--dossier-bg)" }}
       >
         {/* Background image — slow horizontal pan animation */}
@@ -221,7 +228,7 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
       </div>
 
       {/* ── Question card — animates in on each question change ──── */}
-      <div className="max-w-3xl mx-auto px-5 pb-24" style={{ marginTop: "-4rem" }}>
+      <div className="max-w-3xl mx-auto px-5 pb-4 md:pb-8" style={{ marginTop: "-4rem" }}>
         <div
           key={currentIndex}
           className="relative z-20"
@@ -229,14 +236,15 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
             background: "var(--dossier-surface)",
             border: "1px solid var(--dossier-line)",
             borderRadius: "12px",
-            padding: "1.75rem 1.75rem 1.5rem",
+            padding: "1rem 1rem 0",
             boxShadow: "0 2px 20px rgba(26,24,21,0.07), 0 1px 4px rgba(26,24,21,0.04)",
+            overflow: "hidden",
             animation: "questionCardEnter 240ms ease-out both",
           }}
         >
           {/* Instruction */}
           <p
-            className="text-xs font-jp leading-relaxed mb-5"
+            className="text-xs font-jp leading-relaxed mb-3"
             style={{
               color: "var(--dossier-muted)",
               borderLeft: "2px solid var(--dossier-line)",
@@ -247,51 +255,48 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
           </p>
 
           {/* Q number */}
-          <p className="text-[11px] font-mono-doc mb-2.5" style={{ color: "var(--dossier-gold)" }}>
+          <p className="text-[11px] font-mono-doc mb-2" style={{ color: "var(--dossier-gold)" }}>
             Q{currentIndex + 1}
           </p>
 
           {/* Question text */}
-          <p
-            className="font-jp font-medium leading-relaxed mb-5"
-            style={{
-              fontSize: "1.0625rem",
-              color: "#21160D",
-              minHeight: "3.25rem",
-            }}
-          >
-            {currentQuestion.prompt}
-          </p>
+          <div className="mb-3 h-[60px] md:h-auto flex items-center md:items-start">
+            <p
+              className="font-jp font-medium leading-relaxed"
+              style={{ fontSize: promptFontSize, lineHeight: "1.60", color: "#21160D" }}
+            >
+              {currentQuestion.prompt}
+            </p>
+          </div>
 
           {/* Ruled divider */}
-          <div className="mb-5" style={{ borderTop: "1px solid var(--dossier-line-soft)" }} />
+          <div className="mb-3" style={{ borderTop: "1px solid var(--dossier-line-soft)" }} />
 
           {/* A / B comparison cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 sm:items-stretch gap-3 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:items-stretch gap-2 mb-3">
             {/* A card */}
             <div
-              className="flex flex-col"
+              className="flex flex-col h-[112px] md:h-auto"
               style={{
-                padding: "1.25rem 1.5rem",
+                padding: "0.75rem 1rem",
                 border: "1px solid " + (selectedSide === "a" ? "rgba(140,122,75,0.55)" : "var(--dossier-line)"),
                 borderLeft: selectedSide === "a"
                   ? "4px solid var(--dossier-gold)"
                   : "2px solid rgba(140,122,75,0.55)",
                 borderRadius: "6px",
                 background: selectedSide === "a" ? "rgba(237,232,223,0.92)" : "rgba(252,251,249,0.78)",
-                minHeight: "150px",
                 transition: "background 200ms ease, border-color 200ms ease",
               }}
             >
               <span
-                className="font-mono-doc block mb-4"
+                className="font-mono-doc block mb-2"
                 style={{ fontSize: "11px", letterSpacing: "0.22em", color: "var(--dossier-gold)" }}
               >
                 A
               </span>
               <p
-                className="font-jp leading-[1.85] flex-1"
-                style={{ fontSize: "clamp(0.9375rem, 1.8vw, 1.0625rem)", color: "#21160D" }}
+                className="font-jp leading-[1.60] flex-1"
+                style={{ fontSize: optAClamp, color: "#21160D" }}
               >
                 {currentQuestion.optionA}
               </p>
@@ -299,103 +304,96 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
 
             {/* B card */}
             <div
-              className="flex flex-col"
+              className="flex flex-col h-[112px] md:h-auto"
               style={{
-                padding: "1.25rem 1.5rem",
+                padding: "0.75rem 1rem",
                 border: "1px solid " + (selectedSide === "b" ? "rgba(140,122,75,0.55)" : "var(--dossier-line)"),
                 borderLeft: selectedSide === "b"
                   ? "4px solid var(--dossier-gold)"
                   : "2px solid rgba(140,122,75,0.55)",
                 borderRadius: "6px",
                 background: selectedSide === "b" ? "rgba(237,232,223,0.92)" : "rgba(252,251,249,0.78)",
-                minHeight: "150px",
                 transition: "background 200ms ease, border-color 200ms ease",
               }}
             >
               <span
-                className="font-mono-doc block mb-4"
+                className="font-mono-doc block mb-2"
                 style={{ fontSize: "11px", letterSpacing: "0.22em", color: "var(--dossier-muted)" }}
               >
                 B
               </span>
               <p
-                className="font-jp leading-[1.85] flex-1"
-                style={{ fontSize: "clamp(0.9375rem, 1.8vw, 1.0625rem)", color: "#21160D" }}
+                className="font-jp leading-[1.60] flex-1"
+                style={{ fontSize: optBClamp, color: "#21160D" }}
               >
                 {currentQuestion.optionB}
               </p>
             </div>
           </div>
 
-          {/* ── Measurement bar + 4-choice buttons ──────────────── */}
+          {/* ── Measurement bar (indicator only — buttons are in sticky footer) ── */}
           <div>
-            {/* Side labels */}
             <div className="flex justify-between mb-2 px-0.5">
               <span className="text-xs font-mono-doc" style={{ color: "rgba(65,55,40,0.62)", letterSpacing: "0.12em" }}>A側</span>
               <span className="text-xs font-mono-doc" style={{ color: "rgba(65,55,40,0.62)", letterSpacing: "0.12em" }}>B側</span>
             </div>
-
-            {/* Measurement container with rounded corners */}
-            <div style={{ borderRadius: "4px", overflow: "hidden" }}>
-
-              {/* Measurement line — gold indicator extends from center */}
-              <div className="relative h-[3px]" style={{ background: "rgba(190,174,137,0.72)" }}>
-                {/* Center reference diamond — visible before selection */}
+            <div className="relative h-[3px]" style={{ background: "rgba(190,174,137,0.72)", borderRadius: "2px" }}>
+              <div
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  width: "6px",
+                  height: "6px",
+                  transform: "translate(-50%, -50%)",
+                  background: "rgba(140,122,75,0.38)",
+                  clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+                }}
+              />
+              {indicator && (
                 <div
+                  className="absolute inset-y-0"
                   style={{
-                    position: "absolute",
-                    left: "50%",
-                    top: "50%",
-                    width: "6px",
-                    height: "6px",
-                    transform: "translate(-50%, -50%)",
-                    background: "rgba(140,122,75,0.38)",
-                    clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+                    left: indicator.left,
+                    width: indicator.width,
+                    background: "var(--dossier-gold)",
+                    transition: "left 260ms ease, width 260ms ease",
+                    borderRadius: "2px",
                   }}
                 />
-                {indicator && (
-                  <div
-                    className="absolute inset-y-0"
-                    style={{
-                      left: indicator.left,
-                      width: indicator.width,
-                      background: "var(--dossier-gold)",
-                      transition: "left 260ms ease, width 260ms ease",
-                    }}
-                  />
-                )}
-              </div>
-
-              {/* 4-choice button row */}
-              <div
-                className="grid grid-cols-4"
-                style={{ borderTop: "1px solid var(--dossier-line)" }}
-              >
-                {CHOICES.map((choice, idx) => {
-                  const isSelected = currentAnswer === choice.id;
-                  return (
-                    <button
-                      key={choice.id}
-                      onClick={() => handleChoice(choice.id)}
-                      className="flex items-center justify-center font-semibold font-jp h-16 md:h-[72px] transition-colors active:scale-[0.99]"
-                      style={{
-                        fontSize: "clamp(0.8125rem, 1.6vw, 1rem)",
-                        background: isSelected ? "rgba(140,122,75,0.10)" : "rgba(252,251,249,0.28)",
-                        color: isSelected ? "#21160D" : "var(--dossier-sub)",
-                        borderLeft: idx > 0 ? "1px solid rgba(216,205,189,0.65)" : "none",
-                        borderBottom: isSelected
-                          ? "2px solid var(--dossier-gold)"
-                          : "2px solid transparent",
-                        transition: "background 160ms ease, color 160ms ease",
-                      }}
-                    >
-                      {choice.label}
-                    </button>
-                  );
-                })}
-              </div>
-
+              )}
             </div>
+          </div>
+
+          {/* ── 4-choice buttons — inside card, flush with card edges */}
+          <div
+            className="grid grid-cols-4 mt-4"
+            style={{ marginLeft: "-1rem", marginRight: "-1rem" }}
+          >
+            {CHOICES.map((choice, idx) => {
+              const isSelected = currentAnswer === choice.id;
+              return (
+                <button
+                  key={choice.id}
+                  onClick={() => handleChoice(choice.id)}
+                  className="flex items-center justify-center font-semibold font-jp active:scale-[0.99]"
+                  style={{
+                    height: "56px",
+                    fontSize: "clamp(0.8125rem, 1.6vw, 0.9375rem)",
+                    background: isSelected ? "rgba(140,122,75,0.10)" : "transparent",
+                    color: isSelected ? "#21160D" : "var(--dossier-sub)",
+                    borderLeft: idx > 0 ? "1px solid rgba(216,205,189,0.65)" : "none",
+                    borderTop: "1px solid var(--dossier-line-soft)",
+                    borderBottom: isSelected
+                      ? "3px solid var(--dossier-gold)"
+                      : "3px solid transparent",
+                    transition: "background 160ms ease, color 160ms ease",
+                  }}
+                >
+                  {choice.label}
+                </button>
+              );
+            })}
           </div>
 
         </div>

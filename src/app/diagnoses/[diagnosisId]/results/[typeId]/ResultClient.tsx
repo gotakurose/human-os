@@ -16,17 +16,17 @@ interface Props {
 }
 
 const STYLE_AXES_SLIDER = [
-  { key: "thinking_action"      as const, leftLabel: "思考型",   rightLabel: "行動型"   },
-  { key: "offensive_stable"     as const, leftLabel: "攻め型",   rightLabel: "安定型"   },
-  { key: "solo_team"            as const, leftLabel: "個人突破", rightLabel: "組織推進" },
-  { key: "divergent_convergent" as const, leftLabel: "発散型",   rightLabel: "収束型"   },
+  { key: "thinking_action"      as const, leftLabel: "思考型",   rightLabel: "行動型",   leftEnglish: "Think",      rightEnglish: "Act"       },
+  { key: "offensive_stable"     as const, leftLabel: "攻め型",   rightLabel: "安定型",   leftEnglish: "Offense",    rightEnglish: "Stability" },
+  { key: "solo_team"            as const, leftLabel: "個人突破", rightLabel: "組織推進", leftEnglish: "Individual", rightEnglish: "Group"     },
+  { key: "divergent_convergent" as const, leftLabel: "発散型",   rightLabel: "収束型",   leftEnglish: "Expand",     rightEnglish: "Focus"     },
 ];
 
 const STYLE_AXES_DEF = [
-  { key: "thinkingAction"      as const, leftLabel: "思考型",   rightLabel: "行動型"   },
-  { key: "offensiveStable"     as const, leftLabel: "攻め型",   rightLabel: "安定型"   },
-  { key: "soloTeam"            as const, leftLabel: "個人突破", rightLabel: "組織推進" },
-  { key: "divergentConvergent" as const, leftLabel: "発散型",   rightLabel: "収束型"   },
+  { key: "thinkingAction"      as const, leftLabel: "思考型",   rightLabel: "行動型",   leftEnglish: "Think",      rightEnglish: "Act"       },
+  { key: "offensiveStable"     as const, leftLabel: "攻め型",   rightLabel: "安定型",   leftEnglish: "Offense",    rightEnglish: "Stability" },
+  { key: "soloTeam"            as const, leftLabel: "個人突破", rightLabel: "組織推進", leftEnglish: "Individual", rightEnglish: "Group"     },
+  { key: "divergentConvergent" as const, leftLabel: "発散型",   rightLabel: "収束型",   leftEnglish: "Expand",     rightEnglish: "Focus"     },
 ];
 
 // ── Shared style bar row ──────────────────────────────────────────────────────
@@ -34,22 +34,41 @@ const STYLE_AXES_DEF = [
 function StyleBar({
   leftLabel,
   rightLabel,
+  leftEnglish,
+  rightEnglish,
   markerLeft,
   valueText,
 }: {
   leftLabel: string;
   rightLabel: string;
+  leftEnglish: string;
+  rightEnglish: string;
   markerLeft: number;
   valueText?: string;
 }) {
+  const leftActive  = markerLeft <= 50;
+  const rightActive = markerLeft >= 50;
+  const leftEngColor  = leftActive  ? "#6B4E20" : "rgba(95,72,40,0.55)";
+  const rightEngColor = rightActive ? "#6B4E20" : "rgba(95,72,40,0.55)";
+  const leftJpColor   = leftActive  ? "rgba(33,22,13,0.82)" : "rgba(33,22,13,0.48)";
+  const rightJpColor  = rightActive ? "rgba(33,22,13,0.82)" : "rgba(33,22,13,0.48)";
+
   return (
-    <div className="grid grid-cols-[80px_1fr_80px] md:grid-cols-[120px_1fr_120px] items-center gap-3 md:gap-6 min-h-[74px] md:min-h-[82px]">
-      <span
-        className="text-sm md:text-base font-jp font-semibold text-right"
-        style={{ color: markerLeft < 50 ? "#21160D" : "rgba(33,22,13,0.28)" }}
-      >
-        {leftLabel}
-      </span>
+    <div className="grid grid-cols-[88px_1fr_88px] md:grid-cols-[130px_1fr_130px] items-center gap-2 md:gap-5 min-h-[72px] md:min-h-[80px]">
+      <div className="text-right">
+        <span
+          className="font-serif-en block leading-[1.1]"
+          style={{ fontSize: "clamp(14px,1.7vw,17px)", fontWeight: 600, letterSpacing: "0.08em", color: leftEngColor }}
+        >
+          {leftEnglish}
+        </span>
+        <span
+          className="font-jp block"
+          style={{ fontSize: "clamp(12px,1.4vw,14px)", fontWeight: 500, color: leftJpColor, marginTop: "3px" }}
+        >
+          {leftLabel}
+        </span>
+      </div>
 
       <div>
         <div
@@ -90,12 +109,20 @@ function StyleBar({
         )}
       </div>
 
-      <span
-        className="text-sm md:text-base font-jp font-semibold"
-        style={{ color: markerLeft >= 50 ? "#21160D" : "rgba(33,22,13,0.28)" }}
-      >
-        {rightLabel}
-      </span>
+      <div>
+        <span
+          className="font-serif-en block leading-[1.1]"
+          style={{ fontSize: "clamp(14px,1.7vw,17px)", fontWeight: 600, letterSpacing: "0.08em", color: rightEngColor }}
+        >
+          {rightEnglish}
+        </span>
+        <span
+          className="font-jp block"
+          style={{ fontSize: "clamp(12px,1.4vw,14px)", fontWeight: 500, color: rightJpColor, marginTop: "3px" }}
+        >
+          {rightLabel}
+        </span>
+      </div>
     </div>
   );
 }
@@ -123,27 +150,20 @@ export function ResultClient({ styleAxesFallback }: Props) {
       {(hasIndividualStyle || styleAxesFallback) && (
         <div>
           <h2
-            className="font-heading text-[2.4rem] md:text-[4rem] leading-[1.1] tracking-[0.04em] mb-3"
+            className="font-heading tracking-[0.04em] section-heading"
             style={{ color: "#17100A" }}
           >
-            スタイル傾向
+            ビジネススタイル
           </h2>
 
           {resolvedStyle && (
             <p
-              className="font-mono-doc text-center style-code-text"
-              style={{ color: "#8A713C" }}
+              className="font-serif-en text-center style-code-text"
+              style={{ color: "#8A713C", fontWeight: 550 }}
             >
               {resolvedStyle.code}
             </p>
           )}
-
-          <p
-            className="font-mono-doc text-[11px] tracking-[0.24em] mb-7"
-            style={{ color: "rgba(111,85,44,0.72)" }}
-          >
-            {hasIndividualStyle ? "あなたのスタイル傾向" : "このタイプの代表的な傾向"}
-          </p>
 
           <div
             className="px-5 py-5 md:px-8 md:py-6"
@@ -154,7 +174,7 @@ export function ResultClient({ styleAxesFallback }: Props) {
           >
             <div className="divide-y" style={{ borderColor: "rgba(111,85,44,0.14)" }}>
               {hasIndividualStyle && styleScores
-                ? STYLE_AXES_SLIDER.map(({ key, leftLabel, rightLabel }) => {
+                ? STYLE_AXES_SLIDER.map(({ key, leftLabel, rightLabel, leftEnglish, rightEnglish }) => {
                     const score = styleScores[key];
                     const leftwardPct  = Math.round((1 + score) / 2 * 100);
                     const rightwardPct = 100 - leftwardPct;
@@ -163,13 +183,15 @@ export function ResultClient({ styleAxesFallback }: Props) {
                         key={key}
                         leftLabel={leftLabel}
                         rightLabel={rightLabel}
+                        leftEnglish={leftEnglish}
+                        rightEnglish={rightEnglish}
                         markerLeft={rightwardPct}
                         valueText={`${leftwardPct} / ${rightwardPct}`}
                       />
                     );
                   })
                 : styleAxesFallback
-                ? STYLE_AXES_DEF.map(({ key, leftLabel, rightLabel }) => {
+                ? STYLE_AXES_DEF.map(({ key, leftLabel, rightLabel, leftEnglish, rightEnglish }) => {
                     const value = styleAxesFallback[key];
                     const markerLeft = Math.round((value - 0.5) / 4 * 100);
                     return (
@@ -177,6 +199,8 @@ export function ResultClient({ styleAxesFallback }: Props) {
                         key={key}
                         leftLabel={leftLabel}
                         rightLabel={rightLabel}
+                        leftEnglish={leftEnglish}
+                        rightEnglish={rightEnglish}
                         markerLeft={markerLeft}
                       />
                     );

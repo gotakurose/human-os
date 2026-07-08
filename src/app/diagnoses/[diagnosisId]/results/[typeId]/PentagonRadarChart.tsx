@@ -54,7 +54,7 @@ export function PentagonRadarChart({ scores }: Props) {
       viewBox="0 0 320 280"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      style={{ width: "100%", maxWidth: "340px", display: "block", margin: "0 auto" }}
+      style={{ width: "100%", display: "block", margin: "0 auto" }}
     >
       {/* Grid rings */}
       {gridRadii.map((gr, gi) => (
@@ -102,8 +102,8 @@ export function PentagonRadarChart({ scores }: Props) {
       {/* Labels and scores */}
       {AXES.map(({ key, labelJp }, i) => {
         const a       = axisAngle(i);
-        const labelR  = R + 27;
-        const scoreR  = R + 13;
+        const labelR  = R + 30;
+        const scoreR  = R + 15;
         const lx      = CX + labelR * Math.cos(a);
         const ly      = CY + labelR * Math.sin(a);
         const sx      = CX + scoreR * Math.cos(a);
@@ -118,7 +118,7 @@ export function PentagonRadarChart({ scores }: Props) {
               x={lx} y={ly + dy}
               textAnchor={anchor}
               dominantBaseline="middle"
-              fontSize="11"
+              fontSize="13"
               fontFamily="serif"
               fill={LABEL_COLOR}
               style={{ fontWeight: 600, letterSpacing: "0.04em" }}
@@ -130,7 +130,7 @@ export function PentagonRadarChart({ scores }: Props) {
               x={sx} y={sy}
               textAnchor={anchor}
               dominantBaseline="middle"
-              fontSize="9"
+              fontSize="11"
               fontFamily="monospace"
               fill={SCORE_COLOR}
             >

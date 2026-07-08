@@ -16,6 +16,13 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props) {
   const { diagnosisId } = await params;
+  if (diagnosisId === "business-skills") {
+    return {
+      title: "ビジマル診断｜280万通り以上から仕事タイプを多面的に診断",
+      description:
+        "40問から、16タイプ・5つの能力値・4つのスタイル軸を分析。280万通り以上の組み合わせから、あなたの仕事タイプを多面的に診断します。",
+    };
+  }
   try {
     const meta = loadMeta(diagnosisId);
     return { title: meta.title, description: meta.description };
@@ -48,28 +55,28 @@ const DIAGNOSIS_HERO: Record<string, {
   "business-skills": {
     heroImage: "/images/diagnoses/business-skills/hero-top-temp.png",
     displayTitle: "ビジマル診断",
-    subtitle: "40問であなたのビジネスアニマル16タイプを判定します。",
-    ctaLabel: "診断を受ける",
-    tagline: "BIZMARU SHINDAN",
+    subtitle: "40問から、16タイプ・5つの能力値・4つのスタイル軸を分析。\n280万通り以上の組み合わせから、仕事で現れるあなたの個体差を読み解きます。",
+    ctaLabel: "診断を始める",
+    tagline: "BUSINESS ANIMAL DIAGNOSIS",
     features: {
       heading: "この診断でわかること",
-      lead: "ビジネスアニマル16タイプと4つのスタイル傾向から、あなたの社会人OSを読み解きます。",
+      lead: "タイプ名だけで終わらない。\n能力値や4軸の強弱、仕事上の癖まで組み合わせ、あなた固有のビジネスプロフィールを読み解きます。",
       items: [
         {
-          title: "ビジネスアニマル16タイプ",
-          body: "仕事で出やすい思考・行動パターンを16タイプで判定。",
+          title: "16タイプ",
+          body: "4軸の組み合わせから、仕事上の中心傾向をビジネスアニマルとして表示します。",
         },
         {
-          title: "タイプ鑑定書",
-          body: "強み・弱み・キャリア・成長ヒント・結論など21項目のタイプ詳細を表示。",
+          title: "4軸",
+          body: "Think / Act、Offense / Stability、Individual / Group、Expand / Focusの傾向を表示します。",
         },
         {
-          title: "4つのスタイル傾向",
-          body: "思考型/行動型、攻め型/安定型など、働き方の軸を分析。",
+          title: "5能力値",
+          body: "論理力、実行力、営業力、創造力、管理力について、回答から観測された仕事上の行動傾向を0〜100で表示します。",
         },
         {
-          title: "強みと成長ヒント",
-          body: "強み・弱み・向いている役割・相性まで、鑑定書として表示。",
+          title: "詳細な結果文章",
+          body: "強み、弱み、致命的弱点、成長ヒント、キャリア適性、人間関係、チームでの役割を表示します。",
         },
       ],
     },
@@ -137,8 +144,13 @@ export default async function DiagnosisPage({ params }: Props) {
           <div className="absolute inset-x-0 bottom-[10%] md:bottom-[12%] z-10">
             <div className="max-w-4xl mx-auto px-6 md:px-10 text-center">
               <p
-                className="font-mono-doc tracking-[0.32em] mb-5"
-                style={{ fontSize: "0.6875rem", color: "rgba(184,160,106,0.85)" }}
+                className="font-serif-en tracking-[0.15em] mb-5"
+                style={{
+                  fontSize: "clamp(13px,1.6vw,17px)",
+                  fontWeight: 600,
+                  color: "rgba(245,243,239,0.90)",
+                  textShadow: "0 1px 3px rgba(0,0,0,0.35)",
+                }}
               >
                 {hero.tagline}
               </p>
@@ -158,6 +170,7 @@ export default async function DiagnosisPage({ params }: Props) {
                   fontSize: "clamp(0.9375rem, 1.8vw, 1.0625rem)",
                   color: "rgba(245,243,239,0.82)",
                   maxWidth: "30rem",
+                  whiteSpace: "pre-line",
                 }}
               >
                 {hero.subtitle}
@@ -203,6 +216,7 @@ export default async function DiagnosisPage({ params }: Props) {
                     fontSize: "clamp(0.875rem, 1.6vw, 1rem)",
                     color: "var(--dossier-sub)",
                     maxWidth: "36rem",
+                    whiteSpace: "pre-line",
                   }}
                 >
                   {hero.features.lead}
@@ -246,6 +260,41 @@ export default async function DiagnosisPage({ params }: Props) {
             </section>
           </div>
         )}
+
+        {/* ── フッター ── */}
+        <footer
+          className="px-6 md:px-10 py-10"
+          style={{ borderTop: "1px solid rgba(111,85,44,0.20)" }}
+        >
+          <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-start gap-4">
+            <p className="font-mono-doc text-xs" style={{ color: "rgba(33,22,13,0.38)" }}>
+              © 2026 Human-OS
+            </p>
+            <nav className="flex flex-wrap gap-5">
+              <Link
+                href="/terms"
+                className="font-jp text-xs hover:underline"
+                style={{ color: "rgba(33,22,13,0.60)" }}
+              >
+                利用規約
+              </Link>
+              <Link
+                href="/privacy"
+                className="font-jp text-xs hover:underline"
+                style={{ color: "rgba(33,22,13,0.60)" }}
+              >
+                プライバシーポリシー
+              </Link>
+              <Link
+                href="/diagnoses/business-skills/types"
+                className="font-jp text-xs hover:underline"
+                style={{ color: "rgba(33,22,13,0.60)" }}
+              >
+                ビジマル16タイプ図鑑
+              </Link>
+            </nav>
+          </div>
+        </footer>
 
       </main>
     );
