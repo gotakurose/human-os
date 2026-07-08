@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import {
   Geist,
   Geist_Mono,
@@ -99,6 +100,12 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white text-neutral-900">
         {children}
       </body>
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8046568622019006"
+        crossOrigin="anonymous"
+        strategy="beforeInteractive"
+      />
     </html>
   );
 }
