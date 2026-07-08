@@ -11,6 +11,10 @@ import { notFound } from "next/navigation";
 import { QuestionFlow } from "./QuestionFlow";
 import { StyleAxisQuestionFlow } from "./StyleAxisQuestionFlow";
 
+export const metadata = {
+  robots: { index: false, follow: true },
+};
+
 interface Props {
   params: Promise<{ diagnosisId: string }>;
 }
