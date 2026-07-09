@@ -1,5 +1,5 @@
 // Pure SVG pentagon radar chart for 5-ability scores.
-// Accepts V_k values (0–100 each); no side effects, no hooks.
+// Accepts display scores (50–100); not internal V_k or specialist threshold values.
 
 import type { AbilityVScores } from "@/engine/ability-scorer";
 

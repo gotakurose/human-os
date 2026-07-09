@@ -750,7 +750,7 @@ export default async function ResultPage({ params }: Props) {
 
         {/* ─ 20/チームでの役割 ──────────────────────────────────── */}
         <section
-          className="section-block-gap text-center mx-auto"
+          className="section-block-gap mx-auto"
           style={{ maxWidth: "760px" }}
         >
           <p

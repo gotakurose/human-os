@@ -44,7 +44,7 @@ export function uToV(u: number, n: number): number {
   return Math.round((50 * u) / n);
 }
 
-/** Convert raw U_k scores to display V_k scores (0–100). */
+/** Convert raw U_k scores to internal normalized V_k scores (0–100). */
 export function uScoresToV(u: AbilityUScores): AbilityVScores {
   return {
     logic:      uToV(u.logic,      ABILITY_N.logic),
@@ -52,6 +52,26 @@ export function uScoresToV(u: AbilityUScores): AbilityVScores {
     sales:      uToV(u.sales,      ABILITY_N.sales),
     creativity: uToV(u.creativity, ABILITY_N.creativity),
     management: uToV(u.management, ABILITY_N.management),
+  };
+}
+
+/** Converts internal V_k (0–100) to screen display score (50–100). */
+export function vToDisplayScore(v: number): number {
+  return 50 + Math.round(v * 0.5);
+}
+
+/**
+ * Converts raw U_k scores to screen display scores (50–100).
+ * Use for rendering only — not for specialist judgment or URL params.
+ */
+export function uScoresToDisplayScores(u: AbilityUScores): AbilityVScores {
+  const v = uScoresToV(u);
+  return {
+    logic:      vToDisplayScore(v.logic),
+    execution:  vToDisplayScore(v.execution),
+    sales:      vToDisplayScore(v.sales),
+    creativity: vToDisplayScore(v.creativity),
+    management: vToDisplayScore(v.management),
   };
 }
 

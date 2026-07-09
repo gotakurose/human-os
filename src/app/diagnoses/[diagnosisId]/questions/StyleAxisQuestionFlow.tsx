@@ -161,7 +161,7 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
         {/* Background image — slow horizontal pan animation */}
         {stageBg && (
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 pointer-events-none"
             style={{
               backgroundImage: `url(${stageBg})`,
               backgroundSize: "cover",
@@ -174,7 +174,7 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
         {/* Gradient: image stays visible top → fades to dossier-bg at bottom */}
         {hasImage && (
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 pointer-events-none"
             style={{
               background:
                 "linear-gradient(to bottom, rgba(245,243,239,0.05) 0%, rgba(245,243,239,0.28) 58%, var(--dossier-bg) 100%)",
@@ -191,8 +191,9 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
           {/* Back navigation: ← 前の質問 on Q2+, ← 説明へ戻る on Q1 */}
           {currentIndex > 0 ? (
             <button
+              type="button"
               onClick={handleBack}
-              className="text-sm font-jp transition-opacity hover:opacity-70 inline-block mb-7"
+              className="text-sm font-jp transition-opacity hover:opacity-70 inline-block mb-7 touch-manipulation"
               style={{ color: navColor }}
             >
               ← 前の質問
@@ -228,17 +229,16 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
       </div>
 
       {/* ── Question card — animates in on each question change ──── */}
-      <div className="max-w-3xl mx-auto px-5 pb-4 md:pb-8" style={{ marginTop: "-4rem" }}>
+      <div className="relative z-30 isolate pointer-events-auto max-w-3xl mx-auto px-5 pb-4 md:pb-8" style={{ marginTop: "-4rem" }}>
         <div
           key={currentIndex}
-          className="relative z-20"
+          className="relative z-20 pointer-events-auto"
           style={{
             background: "var(--dossier-surface)",
             border: "1px solid var(--dossier-line)",
             borderRadius: "12px",
             padding: "1rem 1rem 0",
             boxShadow: "0 2px 20px rgba(26,24,21,0.07), 0 1px 4px rgba(26,24,21,0.04)",
-            overflow: "hidden",
             animation: "questionCardEnter 240ms ease-out both",
           }}
         >
@@ -260,10 +260,10 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
           </p>
 
           {/* Question text */}
-          <div className="mb-3 h-[60px] md:h-auto flex items-center md:items-start">
+          <div className="mb-3 flex items-start">
             <p
               className="font-jp font-medium leading-relaxed"
-              style={{ fontSize: promptFontSize, lineHeight: "1.60", color: "#21160D" }}
+              style={{ fontSize: promptFontSize, lineHeight: "1.60", minHeight: "3.2em", color: "#21160D" }}
             >
               {currentQuestion.prompt}
             </p>
@@ -276,7 +276,7 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
           <div className="grid grid-cols-1 sm:grid-cols-2 sm:items-stretch gap-2 mb-3">
             {/* A card */}
             <div
-              className="flex flex-col h-[112px] md:h-auto"
+              className="flex flex-col min-h-[112px]"
               style={{
                 padding: "0.75rem 1rem",
                 border: "1px solid " + (selectedSide === "a" ? "rgba(140,122,75,0.55)" : "var(--dossier-line)"),
@@ -304,7 +304,7 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
 
             {/* B card */}
             <div
-              className="flex flex-col h-[112px] md:h-auto"
+              className="flex flex-col min-h-[112px]"
               style={{
                 padding: "0.75rem 1rem",
                 border: "1px solid " + (selectedSide === "b" ? "rgba(140,122,75,0.55)" : "var(--dossier-line)"),
@@ -348,11 +348,12 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
                   transform: "translate(-50%, -50%)",
                   background: "rgba(140,122,75,0.38)",
                   clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+                  pointerEvents: "none",
                 }}
               />
               {indicator && (
                 <div
-                  className="absolute inset-y-0"
+                  className="absolute inset-y-0 pointer-events-none"
                   style={{
                     left: indicator.left,
                     width: indicator.width,
@@ -368,15 +369,22 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
           {/* ── 4-choice buttons — inside card, flush with card edges */}
           <div
             className="grid grid-cols-4 mt-4"
-            style={{ marginLeft: "-1rem", marginRight: "-1rem" }}
+            style={{
+              marginLeft: "-1rem",
+              marginRight: "-1rem",
+              overflow: "hidden",
+              borderBottomLeftRadius: "11px",
+              borderBottomRightRadius: "11px",
+            }}
           >
             {CHOICES.map((choice, idx) => {
               const isSelected = currentAnswer === choice.id;
               return (
                 <button
                   key={choice.id}
+                  type="button"
                   onClick={() => handleChoice(choice.id)}
-                  className="flex items-center justify-center font-semibold font-jp active:scale-[0.99]"
+                  className="relative z-40 flex items-center justify-center font-semibold font-jp active:scale-[0.99] pointer-events-auto touch-manipulation select-none"
                   style={{
                     height: "56px",
                     fontSize: "clamp(0.8125rem, 1.6vw, 0.9375rem)",
@@ -388,6 +396,9 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
                       ? "3px solid var(--dossier-gold)"
                       : "3px solid transparent",
                     transition: "background 160ms ease, color 160ms ease",
+                    cursor: "pointer",
+                    touchAction: "manipulation",
+                    WebkitTapHighlightColor: "transparent",
                   }}
                 >
                   {choice.label}

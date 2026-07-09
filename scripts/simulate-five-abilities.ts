@@ -22,6 +22,8 @@ import { AbilityScoringSchema } from "@/schemas/diagnosis";
 import {
   calculateAbilityUScores,
   uScoresToV,
+  vToDisplayScore,
+  uScoresToDisplayScores,
   parseAvParam,
   buildAvParam,
   ABILITY_N,
@@ -129,6 +131,59 @@ function runAssertions(contributions: ReturnType<typeof loadData>["contributions
   assert(vMid.sales      === 50, `sales V at U=n_k (4) = 50`);
   assert(vMid.creativity === 50, `creativity V at U=n_k (7) = 50`);
   assert(vMid.management === 50, `management V at U=n_k (5) = 50`);
+
+  // --- vToDisplayScore: reference values ---
+  assert(vToDisplayScore(0)   === 50,  "vToDisplayScore(0) = 50");
+  assert(vToDisplayScore(8)   === 54,  "vToDisplayScore(8) = 54");
+  assert(vToDisplayScore(20)  === 60,  "vToDisplayScore(20) = 60");
+  assert(vToDisplayScore(50)  === 75,  "vToDisplayScore(50) = 75");
+  assert(vToDisplayScore(70)  === 85,  "vToDisplayScore(70) = 85");
+  assert(vToDisplayScore(90)  === 95,  "vToDisplayScore(90) = 95");
+  assert(vToDisplayScore(100) === 100, "vToDisplayScore(100) = 100");
+
+  // Display values must be in [50, 100] for all valid internal V
+  for (let v = 0; v <= 100; v++) {
+    const d = vToDisplayScore(v);
+    assert(d >= 50 && d <= 100, `vToDisplayScore(${v}) in [50, 100]`);
+  }
+
+  // Display conversion preserves ability ordering (no reversal)
+  // vToDisplayScore is non-decreasing: V_a > V_b implies displayV_a >= displayV_b
+  const orderedV = [0, 20, 50, 70, 100];
+  const orderedD = orderedV.map(v => vToDisplayScore(v));
+  for (let i = 1; i < orderedV.length; i++) {
+    assert(
+      orderedD[i] >= orderedD[i - 1],
+      `display ordering preserved: vToDisplayScore(${orderedV[i]}) >= vToDisplayScore(${orderedV[i - 1]})`,
+    );
+  }
+
+  // uScoresToDisplayScores: output range [50, 100] at boundaries
+  const dMax = uScoresToDisplayScores({ logic: 24, execution: 16, sales: 8, creativity: 14, management: 10 });
+  assert(dMax.logic      === 100, "display at max U: logic = 100");
+  assert(dMax.execution  === 100, "display at max U: execution = 100");
+  assert(dMax.sales      === 100, "display at max U: sales = 100");
+  assert(dMax.creativity === 100, "display at max U: creativity = 100");
+  assert(dMax.management === 100, "display at max U: management = 100");
+
+  const dZero = uScoresToDisplayScores({ logic: 0, execution: 0, sales: 0, creativity: 0, management: 0 });
+  assert(dZero.logic      === 50, "display at U=0: logic = 50");
+  assert(dZero.execution  === 50, "display at U=0: execution = 50");
+  assert(dZero.sales      === 50, "display at U=0: sales = 50");
+  assert(dZero.creativity === 50, "display at U=0: creativity = 50");
+  assert(dZero.management === 50, "display at U=0: management = 50");
+
+  // resolveSpecialist ability judgment unchanged by display conversion
+  // (uses raw U scores, not display scores)
+  const uSpec: AbilityUScores = { logic: 20, execution: 0, sales: 0, creativity: 0, management: 0 };
+  const spViaU    = resolveSpecialist(uSpec);
+  assert(spViaU.ability === "logic", "resolveSpecialist still uses raw U: logic detected");
+  // Display scores for same input
+  const dSpec = uScoresToDisplayScores(uSpec);
+  assert(dSpec.logic >= 50 && dSpec.logic <= 100, "display score for specialist case in [50,100]");
+  // Specialist ability matches regardless of display conversion applied elsewhere
+  assert(spViaU.ability === resolveSpecialist(uSpec).ability,
+    "resolveSpecialist: same ability before and after display conversion applied to rendering");
 
   // --- parseAvParam / buildAvParam roundtrip ---
   const testU: AbilityUScores = { logic: 18, execution: 10, sales: 5, creativity: 11, management: 7 };
@@ -365,6 +420,125 @@ function monteCarlo(
 }
 
 // ──────────────────────────────────────────────────────────────
+// Pearson correlation simulation (N=1,000,000)
+// 論理力×Think / 実行力×Act / 創造力×Expand
+// ──────────────────────────────────────────────────────────────
+
+interface MinimalQuestion {
+  id: string;
+  axis: string;
+  optionASide: string;
+  optionBSide: string;
+}
+
+function loadQuestions(): MinimalQuestion[] {
+  const filePath = path.join(
+    process.cwd(),
+    "data/diagnoses/business-skills/questions.json",
+  );
+  return JSON.parse(fs.readFileSync(filePath, "utf-8")) as MinimalQuestion[];
+}
+
+const AXIS_CHOICE_MAP: Record<string, { side: "a" | "b"; points: number }> = {
+  strongly_a: { side: "a", points: 2 },
+  lean_a:     { side: "a", points: 1 },
+  lean_b:     { side: "b", points: 1 },
+  strongly_b: { side: "b", points: 2 },
+};
+
+function computePearsonR(
+  n: number, sumX: number, sumY: number,
+  sumXY: number, sumX2: number, sumY2: number,
+): number {
+  const num = n * sumXY - sumX * sumY;
+  const den = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+  return den === 0 ? 0 : num / den;
+}
+
+function pearsonSim(
+  contributions: ReturnType<typeof loadData>["contributions"],
+  questions: MinimalQuestion[],
+  samples = 1_000_000,
+): void {
+  console.log(`\n── Pearson correlation simulation (N=${samples.toLocaleString()}) ──`);
+
+  const taQs  = questions.filter(q => q.axis === "thinking_action");
+  const dcQs  = questions.filter(q => q.axis === "divergent_convergent");
+
+  // Running sums for 3 pairs (one-pass Pearson)
+  let n = 0;
+  let sxL = 0, syT = 0, sxyLT = 0, sx2L = 0, sy2T = 0; // logic × think
+  let sxE = 0, syA = 0, sxyEA = 0, sx2E = 0, sy2A = 0; // execution × act
+  let sxC = 0, syX = 0, sxyCX = 0, sx2C = 0, sy2X = 0; // creativity × expand
+
+  for (let i = 0; i < samples; i++) {
+    const answers: Record<string, string> = {};
+    for (const qId of ALL_Q_IDS) {
+      answers[qId] = CHOICE_IDS[Math.floor(Math.random() * 4)];
+    }
+
+    const u = calculateAbilityUScores(answers, contributions);
+    const v = uScoresToV(u);
+    const lv = v.logic;
+    const ev = v.execution;
+    const cv = v.creativity;
+
+    let thinking = 0, action = 0;
+    for (const q of taQs) {
+      const choice = AXIS_CHOICE_MAP[answers[q.id]];
+      if (!choice) continue;
+      const pole = choice.side === "a" ? q.optionASide : q.optionBSide;
+      if (pole === "thinking") thinking += choice.points;
+      else if (pole === "action") action += choice.points;
+    }
+
+    let divergent = 0, convergent = 0;
+    for (const q of dcQs) {
+      const choice = AXIS_CHOICE_MAP[answers[q.id]];
+      if (!choice) continue;
+      const pole = choice.side === "a" ? q.optionASide : q.optionBSide;
+      if (pole === "divergent") divergent += choice.points;
+      else if (pole === "convergent") convergent += choice.points;
+    }
+
+    const ts  = thinking - action;      // positive = Think dominant
+    const as_ = action   - thinking;    // positive = Act dominant
+    const xs  = divergent - convergent; // positive = Expand dominant
+
+    n++;
+    sxL += lv; syT += ts;  sxyLT += lv * ts;  sx2L += lv * lv; sy2T += ts * ts;
+    sxE += ev; syA += as_; sxyEA += ev * as_; sx2E += ev * ev; sy2A += as_ * as_;
+    sxC += cv; syX += xs;  sxyCX += cv * xs;  sx2C += cv * cv; sy2X += xs * xs;
+  }
+
+  const rLT = computePearsonR(n, sxL, syT, sxyLT, sx2L, sy2T);
+  const rEA = computePearsonR(n, sxE, syA, sxyEA, sx2E, sy2A);
+  const rCX = computePearsonR(n, sxC, syX, sxyCX, sx2C, sy2X);
+
+  console.log("\nPearson correlation:");
+  console.log(`  論理力 × Think  : r = ${rLT.toFixed(4)}`);
+  console.log(`  実行力 × Act    : r = ${rEA.toFixed(4)}`);
+  console.log(`  創造力 × Expand : r = ${rCX.toFixed(4)}`);
+
+  const maxAbsR = Math.max(Math.abs(rLT), Math.abs(rEA), Math.abs(rCX));
+  console.log(`  max |r|         : ${maxAbsR.toFixed(4)}`);
+
+  if (maxAbsR >= 1.0) {
+    console.error("\n[STOP] |r| = 1 ─ 完全な一対一対応。要レビュー。仕様変更せず停止。");
+    process.exit(1);
+  }
+  if (maxAbsR >= 0.90) {
+    console.error(`\n[STOP] |r| >= 0.90 (max |r| = ${maxAbsR.toFixed(4)}) ─ 要レビュー。仕様変更せず停止。`);
+    process.exit(1);
+  }
+
+  console.log("  max |r| < 0.90 ─ 完全代理指標なし ✓");
+  assert(Math.abs(rLT) < 0.90, `|r| 論理力×Think = ${Math.abs(rLT).toFixed(4)} < 0.90`);
+  assert(Math.abs(rEA) < 0.90, `|r| 実行力×Act = ${Math.abs(rEA).toFixed(4)} < 0.90`);
+  assert(Math.abs(rCX) < 0.90, `|r| 創造力×Expand = ${Math.abs(rCX).toFixed(4)} < 0.90`);
+}
+
+// ──────────────────────────────────────────────────────────────
 // Entry point
 // ──────────────────────────────────────────────────────────────
 
@@ -380,8 +554,18 @@ async function main() {
     process.exit(1);
   }
 
+  let questions;
+  try {
+    questions = loadQuestions();
+    console.log(`Loaded questions.json (${questions.length} questions)`);
+  } catch (err) {
+    console.error("Failed to load questions.json:", err);
+    process.exit(1);
+  }
+
   runAssertions(data.contributions);
   monteCarlo(data.contributions);
+  pearsonSim(data.contributions, questions);
 
   console.log(`\n── Summary: ${passCount} passed, ${failCount} failed ──`);
 

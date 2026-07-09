@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import { parseAvParam, uScoresToV } from "@/engine/ability-scorer";
+import { parseAvParam, uScoresToDisplayScores } from "@/engine/ability-scorer";
 import { PentagonRadarChart } from "./PentagonRadarChart";
 
 export function ResultAbilitySection() {
@@ -11,7 +11,7 @@ export function ResultAbilitySection() {
   const vScores = useMemo(() => {
     const u = parseAvParam(searchParams.get("av"));
     if (!u) return null;
-    return uScoresToV(u);
+    return uScoresToDisplayScores(u);
   }, [searchParams]);
 
   if (!vScores) return null;
@@ -32,6 +32,18 @@ export function ResultAbilitySection() {
           <PentagonRadarChart scores={vScores} />
         </div>
       </div>
+
+      <p
+        className="font-jp mx-auto mt-4"
+        style={{
+          maxWidth: "760px",
+          fontSize: "clamp(12px, 1.3vw, 14px)",
+          color: "rgba(33,22,13,0.52)",
+          lineHeight: "1.75",
+        }}
+      >
+        回答から観測された仕事上の行動傾向を、比較しやすい50〜100の表示スコアで示しています。実技能の達成率や順位ではなく、50も能力不足を意味しません。
+      </p>
     </div>
   );
 }
