@@ -33,17 +33,6 @@ export function ResultAbilitySection() {
         </div>
       </div>
 
-      <p
-        className="font-jp mx-auto mt-4"
-        style={{
-          maxWidth: "760px",
-          fontSize: "clamp(12px, 1.3vw, 14px)",
-          color: "rgba(33,22,13,0.52)",
-          lineHeight: "1.75",
-        }}
-      >
-        回答から観測された仕事上の行動傾向を、比較しやすい50〜100の表示スコアで示しています。実技能の達成率や順位ではなく、50も能力不足を意味しません。
-      </p>
     </div>
   );
 }
