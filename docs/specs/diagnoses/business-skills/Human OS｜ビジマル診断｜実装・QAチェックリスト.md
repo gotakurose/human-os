@@ -1,7 +1,7 @@
 ﻿# Human OS｜ビジマル診断｜実装・QAチェックリスト
 
 > 文書状態：正本・実装済み
-> 更新日：2026年7月10日
+> 更新日：2026年7月13日
 > 対象：Human OS / ビジマル診断
 
 ---
@@ -23,7 +23,7 @@
 
 ### データ
 
-- [x] 質問文 v4-final（`data/diagnoses/business-skills/questions.json`）
+- [x] 質問文 v5-final（`data/diagnoses/business-skills/questions.json`）
 - [x] 固定文章 v7-final（`data/diagnoses/business-skills/fixed-copy.json`）
 - [x] 4軸動的文章 v3-final（`data/diagnoses/business-skills/dynamic-copy.json`）
 - [x] 16タイプ定義（`data/diagnoses/business-skills/types.json`）
@@ -31,7 +31,7 @@
 ### UI
 
 - [x] 診断 LP（`/diagnoses/business-skills`）
-- [x] 質問フロー（`/diagnoses/business-skills/questions`）
+- [x] 質問フロー（`/diagnoses/business-skills/questions`）— ダイアモンドボタン UI（`style-axis-question-flow.module.css`）
 - [x] 16タイプ結果ページ（`/diagnoses/business-skills/results/{typeId}`）
 - [x] 五角形レーダーチャート（`PentagonRadarChart.tsx`）
 - [x] 表示スコア D（50〜100）適用（`ResultAbilitySection.tsx`）

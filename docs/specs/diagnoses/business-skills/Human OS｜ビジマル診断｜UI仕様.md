@@ -1,7 +1,7 @@
 ﻿# Human OS｜ビジマル診断｜UI仕様
 
 > 文書状態：正本・実装済み
-> 更新日：2026年7月10日
+> 更新日：2026年7月13日
 > 対象：Human OS / ビジマル診断
 
 プラットフォーム共通の仕様（ドメイン、共通フッター、利用規約、プライバシーポリシー、robots.txt、sitemap.xml）は
@@ -113,32 +113,50 @@ description: 40問から、16タイプ・5つの能力値・4つのスタイル�
 ## 6. 質問フロー（`/diagnoses/business-skills/questions`）
 
 実装ファイル：`src/app/diagnoses/[diagnosisId]/questions/StyleAxisQuestionFlow.tsx`
+CSS：`src/app/diagnoses/[diagnosisId]/questions/style-axis-question-flow.module.css`
 
 ### ページ構成
 
 | 要素 | 仕様 |
 |---|---|
-| 進捗表示 | `{n}/40` 右上表示 |
-| 戻るボタン | 左上。最初の問は非表示。`type="button"` |
-| ステージ背景 | `/images/diagnoses/business-skills/hero-question-temp.png`。`pointer-events-none` |
-| 質問カード | `relative z-30 isolate pointer-events-auto`、`max-w-3xl mx-auto px-5` |
-| 質問文 | `font-zen`、`fontSize: clamp(1rem, 2.5vw, 1.125rem)`、`lineHeight: 1.60`、`minHeight: 3.2em` |
-| A/B カード | 「A：{テキスト}」「B：{テキスト}」縦並び2枚。`min-h-[112px]` |
-| 測定バー | A↔B を示す帯。金のインジケーター（diamond）。`pointer-events: none` |
-| 選択ボタン | 4択：強くA / ややA / ややB / 強くB。横並び4列。高さ `56px` |
-| 選択状態 | 選択済み：ゴールドボーダー下線 + 背景 `rgba(140,122,75,0.10)` |
+| 背景 | `/images/diagnoses/business-skills/hero-question-temp.png` を `position:fixed` で全画面に敷く。上から `rgba(244,240,231,0.88)` の固定オーバーレイ |
+| コンテナ | `max-width: 720px`、中央寄せ |
+| 戻るボタン | Q1: 「← 説明へ戻る」（LP へ Link）。Q2+: 「← 前の質問」（`type="button"`） |
+| 進捗 | `Q.{nn} / 40` + パーセント表示。アンティークゴールド（`var(--dossier-gold)`）の 1px プログレスバー |
+| コンテンツパネル | PC（≥768px）: `height: 448px; box-sizing: border-box`。モバイル: 高さ自動 |
 
-### 選択ボタン仕様
+### 質問・A/B レイアウト
 
-- `type="button"`（フォーム送信防止）
-- `touch-action: manipulation`、`WebkitTapHighlightColor: transparent`
-- `z-index: 40`、`pointer-events: auto`
-- iOS Safari 対応：stage 背景は `pointer-events-none`、カードは `isolate`
+| 要素 | 仕様 |
+|---|---|
+| 質問文 | `var(--font-heading)` / 24px（PC: 26px）/ `font-weight: 600` / 左揃え（モバイル）/ 中央揃え（PC） |
+| 区切り飾り | `/images/diagnoses/business-skills/ornaments/divider-ornament.png`。両脇に `rgba(205,191,159,0.63)` の水平線 |
+| A/B ブロック（モバイル） | 縦並び。A・B ともに左端に 4px カラーレール |
+| A/B ブロック（PC） | 横2カラムグリッド（`column-gap: 42px`）。A: 左端レール、B: 右端レール |
+| A レール | `#526657`（`border-radius: 999px`） |
+| B レール | `#745647`（`border-radius: 999px`） |
+| A/B ラベル | `var(--font-heading)` / 18px（PC: 21px）/ A: `#526657`、B: `#745647` |
+| A/B テキスト | `var(--font-heading)` / 17px（PC: 18px）/ `line-height: 1.75`（PC: 1.8） |
+
+### 選択ボタン
+
+| 要素 | 仕様 |
+|---|---|
+| 配置 | コンテンツパネル下部。横並び4択。フェードゾーン外（選択後もそのまま残る） |
+| ボタンサイズ | `height: 72px` / `border-radius: 10px` / `flex: 1` |
+| 背景色 | CSS 変数 `--btn-bg`（ボタン別）: 強くA `#CBD2C5` / ややA `#E1E5DD` / ややB `#E9E1DA` / 強くB `#D8CBC0` |
+| ダイアモンド | 16×16px の回転正方形（`transform: rotate(45deg)`）/ `border: 1.5px solid var(--diamond-border)` / `background: #FFFDF8` |
+| ダイアモンド枠色 | A 側: `#65705F` / B 側: `#7B6658` |
+| 選択済み | `translateY(1px)` + 内側アウトライン `2px solid rgba(26,24,21,0.65)` + ダイアモンド中央に 5px ドット |
+| 未選択（他選択時） | `opacity: 0.82` |
+| ボタンテキスト | `var(--font-jp)` / 14px / `color: #292722` |
+| iOS Safari 対応 | `touch-action: manipulation` / `-webkit-tap-highlight-color: transparent` / `type="button"` |
 
 ### 回答後の動作
 
-- 選択直後に次の質問へ遷移（即座・アニメーションなし）
-- 40問完了後：採点 → 結果 URL へ `router.push()`
+- 選択後 180ms ホールド → コンテンツ（質問文・区切り・A/B）フェードアウト 80ms → 次問へ遷移
+- 40問完了後：採点 → 鑑定中画面（ダイアモンドパルス、1400ms）→ 結果 URL へ `router.push()`
+- `prefers-reduced-motion` 時は鑑定中 200ms に短縮
 
 ### noindex
 

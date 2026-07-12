@@ -1,7 +1,7 @@
 ﻿# Human OS｜ビジマル診断｜総合・運用マスター
 
 > 文書状態：正本・実装済み
-> 更新日：2026年7月10日
+> 更新日：2026年7月13日
 > 対象：Human OS / ビジマル診断
 
 ---
@@ -82,7 +82,7 @@ Human OS とビジマル診断を同一名称として扱わない。Human OS �
 
 ## 4. V1 改修 FIX で変更したもの
 
-実施済み（2026年7月10日時点）：
+実施済み（2026年7月13日時点）：
 
 1. 質問文40問を、軸・ファセット・A/B極性・能力寄与を変えず読みやすくした（v4-final）
 2. 16タイプ固定文章を全面改修した（v7-final）
@@ -96,6 +96,8 @@ Human OS とビジマル診断を同一名称として扱わない。Human OS �
 10. `ResultAbilitySection.tsx` にて表示スコア 50〜100 を適用
 11. 診断説明ページの能力値注記を更新
 12. iPhone タップ対策（pointer-events、touch-action、z-index、hydration エラー修正）
+13. 質問文40問を v5-final へ更新（v4-final からテキストのみ変更。軸・極性・寄与・順番は不変）
+14. 質問フロー UI をダイアモンドボタン方式へ全面改修（`StyleAxisQuestionFlow.tsx` + `style-axis-question-flow.module.css`）
 
 ### 変更しなかったもの
 

@@ -1,0 +1,441 @@
+/* ═══════════════════════════════════════════════════════════
+   StyleAxisQuestionFlow — production CSS module
+   Based on questions-demo-final (approved design).
+   Do NOT import from globals.css beyond CSS variables.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Page ────────────────────────────────────────────────── */
+.page {
+  min-height: 100svh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Fixed background — position:fixed, no transform/animation on iOS */
+.bgLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/images/diagnoses/business-skills/hero-question-temp.png");
+  background-size: cover;
+  background-position: center center;
+}
+
+.bgOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: rgba(244, 240, 231, 0.88);
+}
+
+/* ── Scroll container ────────────────────────────────────── */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  box-sizing: border-box;
+  padding: 24px 16px 32px;
+}
+
+/* ── Back button / return link — var(--font-jp) ──────────── */
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-family: var(--font-jp);
+  color: var(--dossier-sub);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 12px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1.3;
+  transition: color 100ms ease;
+  text-decoration: none;
+}
+.backBtn:hover {
+  color: var(--dossier-ink);
+}
+
+/* ── Progress — var(--font-mono-doc) ────────────────────── */
+.progressWrap {
+  margin-bottom: 14px;
+}
+.progressRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+}
+.progressLabel {
+  font-size: 12px;
+  line-height: 1.4;
+  font-family: var(--font-mono-doc);
+  color: var(--dossier-sub);
+}
+.progressTrack {
+  height: 1px;
+  position: relative;
+  background: rgba(26, 24, 21, 0.18);
+}
+.progressFill {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  background: var(--dossier-gold);
+  transition: width 200ms ease;
+}
+
+/* ── Paper sheet ─────────────────────────────────────────── */
+.contentSheet {
+  background: var(--dossier-surface, rgba(252, 250, 245, 0.98));
+  border: 1px solid rgba(26, 24, 21, 0.08);
+  border-radius: 12px;
+  padding: 24px 20px 20px;
+  box-shadow: 0 1px 4px rgba(26, 24, 21, 0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Fading zone ─────────────────────────────────────────── */
+.qContent {
+  transition: opacity 80ms ease;
+}
+.qFading {
+  opacity: 0;
+}
+
+/* ── Question text — var(--font-heading) ─────────────────── */
+.questionText {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.55;
+  letter-spacing: 0;
+  color: var(--dossier-ink);
+  margin: 0 0 18px;
+  text-align: left;
+}
+
+/* ── Divider ornament ────────────────────────────────────── */
+.dividerWrap {
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  margin-bottom: 20px;
+}
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background: rgba(205, 191, 159, 0.63);
+  align-self: center;
+}
+.dividerImg {
+  width: 68px;
+  height: auto;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* ── A/B section — mobile: stacked, both left-aligned ─────── */
+.abSection {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/*
+ * Each block: 4px rail | content, aligned by grid.
+ * Rail and content both stretch to the full block height.
+ * Mobile: both A and B have left rail at same X position.
+ */
+.abBlockA,
+.abBlockB {
+  display: grid;
+  grid-template-columns: 4px minmax(0, 1fr);
+  column-gap: 14px;
+  align-items: stretch;
+  min-height: 82px;
+}
+
+.railA {
+  background: #526657;
+  border-radius: 999px;
+}
+
+.railB {
+  background: #745647;
+  border-radius: 999px;
+}
+
+/* ── A/B inner content (label + text) ───────────────────── */
+.abContentA,
+.abContentB {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* ── A/B labels — var(--font-heading) ───────────────────── */
+.aLabel {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  color: #526657;
+}
+
+.bLabel {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  color: #745647;
+}
+
+/* ── A/B text — var(--font-heading) ─────────────────────── */
+.abText {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.75;
+  color: var(--dossier-ink);
+  margin: 0;
+  text-align: left;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* ── Answer section — non-fading ────────────────────────── */
+.answerSection {
+  margin-top: 24px;
+  flex-shrink: 0;
+}
+
+.answerRow {
+  display: flex;
+  gap: 6px;
+}
+
+/* Unselected buttons dim slightly when a choice is made */
+.hasSelection .answerBtn:not(.answerBtnSelected) {
+  opacity: 0.82;
+}
+
+/* ── Answer button ───────────────────────────────────────── */
+.answerBtn {
+  flex: 1;
+  min-width: 0;
+  height: 72px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--btn-bg);
+  color: #292722;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+  transition:
+    opacity   150ms ease,
+    transform 100ms ease,
+    filter    100ms ease;
+}
+
+.answerBtn:disabled {
+  cursor: default;
+}
+
+.answerBtn:focus-visible {
+  outline: 2px solid var(--dossier-gold);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .answerBtn:not(:disabled):not(.answerBtnSelected):hover {
+    filter: brightness(0.97);
+    transform: translateY(-1px);
+  }
+}
+
+/* ── Selected state ──────────────────────────────────────── */
+.answerBtnSelected {
+  transform: translateY(1px);
+  outline: 2px solid rgba(26, 24, 21, 0.65);
+  outline-offset: -2px;
+  font-weight: 700;
+}
+
+/* ── Diamond (16×16, rotated square) ────────────────────── */
+.diamond {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transform: rotate(45deg);
+  border: 1.5px solid var(--diamond-border);
+  background: #FFFDF8;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Inner dot — appears only when button is selected */
+.answerBtnSelected .diamond::before {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(26, 24, 21, 0.50);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Button label — var(--font-jp) ──────────────────────── */
+.btnLabel {
+  font-family: var(--font-jp);
+  font-size: 14px;
+  font-weight: inherit;
+  line-height: 1;
+  white-space: nowrap;
+  color: #292722;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PC ≥ 768px
+   ══════════════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+  .container {
+    padding: 32px 0 48px;
+  }
+
+  /*
+   * Fixed panel height (border-box so padding is included).
+   * Flex layout distributes space between qContent and buttons.
+   */
+  .contentSheet {
+    box-sizing: border-box;
+    height: 448px;
+    padding: 28px 28px 24px;
+  }
+
+  /* qContent grows to fill remaining height after buttons */
+  .qContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .questionText {
+    font-size: 26px;
+    text-align: center;
+    margin: 0 0 20px;
+    flex-shrink: 0;
+  }
+
+  .dividerWrap {
+    flex-shrink: 0;
+    margin-bottom: 22px;
+  }
+
+  .dividerImg {
+    width: 86px;
+  }
+
+  /*
+   * A/B: horizontal 2-column grid.
+   * flex: 1 makes it fill remaining height in qContent.
+   */
+  .abSection {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 42px;
+    align-items: stretch;
+    gap: 0;
+    min-height: 128px;
+  }
+
+  /* A block: rail on left — same as mobile */
+  .abBlockA {
+    min-height: 128px;
+  }
+
+  /*
+   * B block: rail on right on PC.
+   * Override column template so content gets col 1, rail gets col 2.
+   */
+  .abBlockB {
+    grid-template-columns: minmax(0, 1fr) 4px;
+    min-height: 128px;
+  }
+
+  .abBlockB .railB {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .abBlockB .abContentB {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .aLabel,
+  .bLabel {
+    font-size: 21px;
+  }
+
+  .abText {
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  .answerRow {
+    gap: 8px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   Small screens ≤ 360px
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .container {
+    padding: 20px 12px 28px;
+  }
+
+  .contentSheet {
+    padding: 20px 16px 16px;
+  }
+
+  .questionText {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  .abText {
+    font-size: 15px;
+  }
+
+  .btnLabel {
+    font-size: 13px;
+  }
+}
