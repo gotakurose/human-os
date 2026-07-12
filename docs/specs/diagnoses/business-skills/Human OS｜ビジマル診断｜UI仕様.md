@@ -123,7 +123,7 @@ CSS：`src/app/diagnoses/[diagnosisId]/questions/style-axis-question-flow.module
 | コンテナ | `max-width: 720px`、中央寄せ |
 | 戻るボタン | Q1: 「← 説明へ戻る」（LP へ Link）。Q2+: 「← 前の質問」（`type="button"`） |
 | 進捗 | `Q.{nn} / 40` + パーセント表示。アンティークゴールド（`var(--dossier-gold)`）の 1px プログレスバー |
-| コンテンツパネル | PC（≥768px）: 4行固定グリッドで全40問同一高（398px相当）。モバイル（< 768px）: CSS Grid 固定3行 + `height: var(--mobile-panel-height)` で全40問同一高（520px） |
+| コンテンツパネル | PC（≥768px）: 4行固定グリッドで全40問同一高（398px相当）。モバイル（< 768px）: CSS Grid 固定3行 + `height: var(--mobile-panel-height)` で全40問同一高（510px） |
 
 ### モバイル固定グリッド仕様（< 768px）
 
@@ -131,16 +131,17 @@ CSS：`src/app/diagnoses/[diagnosisId]/questions/style-axis-question-flow.module
 全40問で質問文・区切り・A/B 領域・回答ボタンの Y 座標が完全一致する。
 
 ```css
---mobile-prompt-height:     120px;  /* 大問領域（3行対応） */
+--mobile-prompt-height:     110px;  /* 大問領域（3行対応）: Q24 37文字 3行 = 102px + 8px buffer */
 --mobile-divider-height:    44px;   /* 区切り線 */
 --mobile-option-height:     100px;  /* A・B 各ブロック（2行対応） */
 --mobile-ab-section-height: 220px;  /* 100 + 20px gap + 100 */
---mobile-panel-height:      520px;  /* パネル全体固定高 */
+--mobile-panel-height:      510px;  /* パネル全体固定高 */
 ```
 
 - フォントサイズは全幅（≤360px を含む）で 22px 統一
-- 大問テキスト最大3行（Q14: 32文字 / 360px 幅 ≈ 102px ＜ 120px）
-- A/B テキスト最大2行（Q04 optionB: 24文字 / 360px 幅 ≈ 84px ＜ 100px）
+- 大問テキストは固定トラック内で `display:flex; align-items:center` により縦中央揃え（1行〜3行すべて対応）
+- 大問テキスト最大3行（Q24: 37文字 / 360px 幅 ≈ 102px ＜ 110px）
+- A/B テキスト最大2行（Q24 optionB: 25文字 / 360px 幅 ≈ 84px ＜ 100px）
 - `overflow: hidden` で各行からのはみ出しをクリップ
 - ページはコンテンツパネル外側でスクロール可（バックボタン・プログレスは固定高外）
 

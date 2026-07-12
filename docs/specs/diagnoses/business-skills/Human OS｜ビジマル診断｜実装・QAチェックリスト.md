@@ -126,10 +126,10 @@ git status                # 予定外変更ファイルなし
 
 ### モバイルレイアウト QA（< 768px）
 
-- [ ] Q1 と Q14（大問最長）で `contentSheet.height` が 520px で一致
-- [ ] Q1 と Q14 で `promptArea.top` / `promptArea.height`（120px）が同一
-- [ ] Q1 と Q14 で `dividerWrap.top` が同一
-- [ ] Q1 と Q14（A/B 最長）で `abSection.top` / `abSection.height`（220px）が同一
+- [ ] Q1 と Q24（大問最長）で `contentSheet.height` が 510px で一致
+- [ ] Q1 と Q24 で `promptArea.top` / `promptArea.height`（110px）が同一
+- [ ] Q1 と Q24 で `dividerWrap.top` が同一
+- [ ] Q1 と Q24（A/B 最長）で `abSection.top` / `abSection.height`（220px）が同一
 - [ ] A/B 文章量が変わっても `answerButtons.top` が全40問で同一
 - [ ] ≤360px で質問文が 22px（font-size: 20px が適用されていない）
 - [ ] 360px 幅で全40問オーバーフローなし（Q24 の長大問・長B文章含む）
