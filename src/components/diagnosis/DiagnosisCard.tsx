@@ -30,19 +30,20 @@ export function DiagnosisCard({
         "rounded-2xl border border-neutral-200 p-6 transition-colors relative overflow-hidden",
         isAvailable
           ? "hover:border-neutral-400 cursor-pointer"
-          : "opacity-60 cursor-default"
+          : "opacity-60 cursor-default",
+        /* responsive background-position: mobile=58% center, md+=center center */
+        bgImage ? "[background-position:58%_center] md:[background-position:center_center]" : ""
       )}
       style={bgImage ? {
         backgroundImage: `url(${bgImage})`,
         backgroundSize: "cover",
-        backgroundPosition: "center 30%",
       } : undefined}
     >
-      {/* Overlay for readability when bgImage is set */}
+      {/* Overlay: left→right gradient keeps text readable while image shows through on the right */}
       {bgImage && (
         <div
           className="absolute inset-0 rounded-2xl"
-          style={{ background: "linear-gradient(to right, rgba(250,247,241,0.90) 50%, rgba(248,244,236,0.78) 100%)" }}
+          style={{ background: "linear-gradient(to right, rgba(250,247,241,0.88) 40%, rgba(248,244,236,0.72) 100%)" }}
         />
       )}
 
