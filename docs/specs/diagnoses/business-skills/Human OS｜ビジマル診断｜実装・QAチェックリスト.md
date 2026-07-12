@@ -124,6 +124,32 @@ git status                # 予定外変更ファイルなし
 - [ ] 表示スコア D（50〜100）が全問で正しく出力されるか
 - [ ] 特化個体率が実際のユーザー分布で過剰・過少になっていないか
 
+### モバイルレイアウト QA（< 768px）
+
+- [ ] Q1 と Q14（大問最長）で `contentSheet.height` が 520px で一致
+- [ ] Q1 と Q14 で `promptArea.top` / `promptArea.height`（120px）が同一
+- [ ] Q1 と Q14 で `dividerWrap.top` が同一
+- [ ] Q1 と Q14（A/B 最長）で `abSection.top` / `abSection.height`（220px）が同一
+- [ ] A/B 文章量が変わっても `answerButtons.top` が全40問で同一
+- [ ] ≤360px で質問文が 22px（font-size: 20px が適用されていない）
+- [ ] 360px 幅で全40問オーバーフローなし（Q24 の長大問・長B文章含む）
+- [ ] 390px 幅で全40問オーバーフローなし
+- [ ] `contentSheet` に `overflow: hidden` 相当のクリップが効いている
+- [ ] PC（≥768px）で `contentSheet.height` が `auto` になっている（520px になっていない）
+
+### PC レイアウト QA（≥768px）
+
+- [ ] Q1（大問1行、A/B各1行）と Q14（大問2行、B2行）で `questionPanel.height` が完全一致
+- [ ] 大問1行（Q1）と大問2行（Q14）で `promptArea.top` / `promptArea.height` が同一
+- [ ] 大問1行（Q1）と大問2行（Q14）で `divider.top` が同一
+- [ ] A/B文章1行（Q1）と2行（Q4）で `comparisonArea.top` / `comparisonArea.height` が同一
+- [ ] A/B文章量が変わっても `answerButtons.top` が全40問で同一
+- [ ] A ラベル上端と B ラベル上端が1px以内で一致
+- [ ] A 本文上端と B 本文上端が1px以内で一致
+- [ ] 短い A/B 文章が垂直中央へ移動していない（上揃え）
+- [ ] B 縦棒が B 文章の左側にある（中央区切り線に見えない）
+- [ ] Q24（最長大問・最長B文章）で各領域がオーバーフローしない
+
 ### iOS・ブラウザ QA
 
 - [ ] iPhone Safari で質問ボタン4択すべてタップ反応する
@@ -131,6 +157,8 @@ git status                # 予定外変更ファイルなし
 - [ ] 40問完了後に結果ページへ遷移する
 - [ ] 結果 URL を直接開いても正しく表示される
 - [ ] 共有 URL（X・LINE）が正しく生成される
+- [ ] 360px 幅で全40問オーバーフローなし（Q24 の長大問・長B文章含む）
+- [ ] 390px 幅で全40問オーバーフローなし
 
 ### SEO・法務 QA
 

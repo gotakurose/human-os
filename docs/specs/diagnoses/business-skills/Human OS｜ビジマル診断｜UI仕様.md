@@ -123,18 +123,60 @@ CSS：`src/app/diagnoses/[diagnosisId]/questions/style-axis-question-flow.module
 | コンテナ | `max-width: 720px`、中央寄せ |
 | 戻るボタン | Q1: 「← 説明へ戻る」（LP へ Link）。Q2+: 「← 前の質問」（`type="button"`） |
 | 進捗 | `Q.{nn} / 40` + パーセント表示。アンティークゴールド（`var(--dossier-gold)`）の 1px プログレスバー |
-| コンテンツパネル | PC（≥768px）: `height: 448px; box-sizing: border-box`。モバイル: 高さ自動 |
+| コンテンツパネル | PC（≥768px）: 4行固定グリッドで全40問同一高（398px相当）。モバイル（< 768px）: CSS Grid 固定3行 + `height: var(--mobile-panel-height)` で全40問同一高（520px） |
+
+### モバイル固定グリッド仕様（< 768px）
+
+コンテンツパネル全体を `height: var(--mobile-panel-height)` の固定高とし、内部を CSS Grid 3行で構成する。
+全40問で質問文・区切り・A/B 領域・回答ボタンの Y 座標が完全一致する。
+
+```css
+--mobile-prompt-height:     120px;  /* 大問領域（3行対応） */
+--mobile-divider-height:    44px;   /* 区切り線 */
+--mobile-option-height:     100px;  /* A・B 各ブロック（2行対応） */
+--mobile-ab-section-height: 220px;  /* 100 + 20px gap + 100 */
+--mobile-panel-height:      520px;  /* パネル全体固定高 */
+```
+
+- フォントサイズは全幅（≤360px を含む）で 22px 統一
+- 大問テキスト最大3行（Q14: 32文字 / 360px 幅 ≈ 102px ＜ 120px）
+- A/B テキスト最大2行（Q04 optionB: 24文字 / 360px 幅 ≈ 84px ＜ 100px）
+- `overflow: hidden` で各行からのはみ出しをクリップ
+- ページはコンテンツパネル外側でスクロール可（バックボタン・プログレスは固定高外）
+
+### PC 固定グリッド仕様（≥768px）
+
+コンテンツパネルは以下4行の CSS Grid で構成し、質問文や A/B 文章の行数にかかわらず全 Y 座標を固定する。
+
+```css
+--pc-prompt-height:     96px;  /* 大問領域（2行対応） */
+--pc-divider-height:    30px;  /* 区切り線 */
+--pc-comparison-height: 124px; /* A/B 比較領域 */
+--pc-buttons-height:    72px;  /* 回答ボタン */
+```
+
+- 大問領域は常に 2 行分の固定高（1 行でも縮めない。2 行でも区切り線を押し下げない）
+- 大問テキストは固定領域内で垂直中央配置（`display:flex; align-items:center; justify-content:center`）
+- 区切り線は独立した 30px の Grid 行（大問・A/B 両側の余白で位置調整しない）
+- A/B 比較領域は固定 124px。A・B 両カラムとも上端揃え（`justify-content: flex-start`）
+- A/B ラベルと本文は各カラム内で上揃え開始（文章量が異なっても開始位置を揃える）
+- B レールは B 文章の左側（A と同構造。右端には置かない）
+- B カラムは `padding-left: 12px` でレールを中央ギャップから視覚的に分離
+- A/B カラム間 `column-gap: 24px`
+- 回答ボタン行は独立した固定行（A/B 文章の余白で Y 座標を調整しない）
+- 全40問で紙パネル上端・区切り・比較領域・ボタン位置が完全一致
 
 ### 質問・A/B レイアウト
 
 | 要素 | 仕様 |
 |---|---|
-| 質問文 | `var(--font-heading)` / 24px（PC: 26px）/ `font-weight: 600` / 左揃え（モバイル）/ 中央揃え（PC） |
+| 質問文 | `var(--font-heading)` / 22px（全幅統一。PC: 26px）/ `font-weight: 600` / 左揃え（モバイル）/ 中央揃え（PC） |
+| 質問文（モバイル） | `height: var(--mobile-prompt-height)` = 120px の固定 Grid 行に収まる。全幅 22px（≤360px を含む） |
 | 区切り飾り | `/images/diagnoses/business-skills/ornaments/divider-ornament.png`。両脇に `rgba(205,191,159,0.63)` の水平線 |
-| A/B ブロック（モバイル） | 縦並び。A・B ともに左端に 4px カラーレール |
-| A/B ブロック（PC） | 横2カラムグリッド（`column-gap: 42px`）。A: 左端レール、B: 右端レール |
+| A/B ブロック（モバイル） | 縦並び。A・B ともに左端に 4px カラーレール。`height: var(--mobile-option-height)` = 100px 固定（2行対応）で Y 座標固定 |
+| A/B ブロック（PC） | 横2カラムグリッド（`column-gap: 24px`）。A・B ともに左端レール。内容は上揃え |
 | A レール | `#526657`（`border-radius: 999px`） |
-| B レール | `#745647`（`border-radius: 999px`） |
+| B レール | `#745647`（`border-radius: 999px`）。B 文章の左側（右端には置かない） |
 | A/B ラベル | `var(--font-heading)` / 18px（PC: 21px）/ A: `#526657`、B: `#745647` |
 | A/B テキスト | `var(--font-heading)` / 17px（PC: 18px）/ `line-height: 1.75`（PC: 1.8） |
 
@@ -142,7 +184,7 @@ CSS：`src/app/diagnoses/[diagnosisId]/questions/style-axis-question-flow.module
 
 | 要素 | 仕様 |
 |---|---|
-| 配置 | コンテンツパネル下部。横並び4択。フェードゾーン外（選択後もそのまま残る） |
+| 配置 | コンテンツパネル下部。横並び4択。フェードゾーン外（選択後もそのまま残る）。PC: A/B 文章量に関わらず Y 座標固定 |
 | ボタンサイズ | `height: 72px` / `border-radius: 10px` / `flex: 1` |
 | 背景色 | CSS 変数 `--btn-bg`（ボタン別）: 強くA `#CBD2C5` / ややA `#E1E5DD` / ややB `#E9E1DA` / 強くB `#D8CBC0` |
 | ダイアモンド | 16×16px の回転正方形（`transform: rotate(45deg)`）/ `border: 1.5px solid var(--diamond-border)` / `background: #FFFDF8` |

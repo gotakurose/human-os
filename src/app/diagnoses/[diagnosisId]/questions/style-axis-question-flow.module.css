@@ -4,6 +4,18 @@
    Do NOT import from globals.css beyond CSS variables.
    ═══════════════════════════════════════════════════════════ */
 
+/* ── Mobile fixed layout variables (≤767px) ─────────────── */
+/* Calculated: prompt 3 lines at 22px lh1.55 = 103px; AB 2 lines = 88px */
+@media (max-width: 767px) {
+  :root {
+    --mobile-prompt-height:     120px;  /* 103px needed + 17px buffer */
+    --mobile-divider-height:    44px;   /* ornament ~7px centered in 44px */
+    --mobile-option-height:     100px;  /* 88px needed at 390px + 12px buffer */
+    --mobile-ab-section-height: 220px;  /* 100 + 20px gap + 100 */
+    --mobile-panel-height:      520px;  /* 44px padding + 384px grid + 20px + 72px */
+  }
+}
+
 /* ── Page ────────────────────────────────────────────────── */
 .page {
   min-height: 100svh;
@@ -103,11 +115,19 @@
   box-shadow: 0 1px 4px rgba(26, 24, 21, 0.04);
   display: flex;
   flex-direction: column;
+  height: var(--mobile-panel-height);  /* fixed for all 40 questions; PC overrides to auto */
+  box-sizing: border-box;
 }
 
-/* ── Fading zone ─────────────────────────────────────────── */
+/* ── Fading zone — mobile: 3-row fixed grid ─────────────── */
 .qContent {
   transition: opacity 80ms ease;
+  display: grid;
+  grid-template-rows:
+    var(--mobile-prompt-height)
+    var(--mobile-divider-height)
+    var(--mobile-ab-section-height);
+  overflow: hidden;
 }
 .qFading {
   opacity: 0;
@@ -116,13 +136,14 @@
 /* ── Question text — var(--font-heading) ─────────────────── */
 .questionText {
   font-family: var(--font-heading);
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   line-height: 1.55;
   letter-spacing: 0;
   color: var(--dossier-ink);
-  margin: 0 0 18px;
+  margin: 0;            /* grid row handles spacing; PC also uses margin: 0 */
   text-align: left;
+  overflow: hidden;     /* prevent text from visually overflowing fixed row */
 }
 
 /* ── Divider ornament ────────────────────────────────────── */
@@ -130,7 +151,7 @@
   display: flex;
   align-items: center;
   pointer-events: none;
-  margin-bottom: 20px;
+  margin: 0;  /* grid row controls spacing; old margin-bottom removed */
 }
 .dividerLine {
   flex: 1;
@@ -149,7 +170,8 @@
 .abSection {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 20px;    /* 100 + 20 + 100 = 220 = --mobile-ab-section-height */
+  overflow: hidden;
 }
 
 /*
@@ -163,7 +185,9 @@
   grid-template-columns: 4px minmax(0, 1fr);
   column-gap: 14px;
   align-items: stretch;
-  min-height: 82px;
+  height: var(--mobile-option-height);  /* fixed; PC overrides to 100% */
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 .railA {
@@ -218,7 +242,7 @@
 
 /* ── Answer section — non-fading ────────────────────────── */
 .answerSection {
-  margin-top: 24px;
+  margin-top: 20px;
   flex-shrink: 0;
 }
 
@@ -320,41 +344,64 @@
 }
 
 /* ══════════════════════════════════════════════════════════
-   PC ≥ 768px
+   PC ≥ 768px — Fixed 4-row grid layout
+   Row heights are fixed; all 40 questions produce identical Y coords.
    ══════════════════════════════════════════════════════════ */
 @media (min-width: 768px) {
+  :root {
+    --pc-prompt-height:     96px;
+    --pc-divider-height:    30px;
+    --pc-comparison-height: 124px;
+    --pc-buttons-height:    72px;
+  }
+
   .container {
     padding: 32px 0 48px;
   }
 
   /*
-   * Fixed panel height (border-box so padding is included).
-   * Flex layout distributes space between qContent and buttons.
+   * Paper panel: flex column, no fixed height.
+   * Height = padding + (96 + 30 + 124)px qContent + 24px gap + 72px buttons
+   *        = 52px padding + 346px content = 398px — same for every question.
    */
   .contentSheet {
     box-sizing: border-box;
-    height: 448px;
     padding: 28px 28px 24px;
+    height: auto;  /* override mobile --mobile-panel-height */
   }
 
-  /* qContent grows to fill remaining height after buttons */
+  /*
+   * Fading zone: 3-row fixed grid.
+   * Row 1 — prompt (96px), Row 2 — divider (30px), Row 3 — A/B (124px).
+   */
   .qContent {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
+    flex: none;
+    display: grid;
+    grid-template-rows:
+      var(--pc-prompt-height)
+      var(--pc-divider-height)
+      var(--pc-comparison-height);
   }
 
+  /*
+   * Prompt: fills the 96px row. display:flex on <p> centers
+   * the text node vertically regardless of 1- or 2-line length.
+   */
   .questionText {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 26px;
     text-align: center;
-    margin: 0 0 20px;
-    flex-shrink: 0;
+    margin: 0;
+    min-height: unset;
   }
 
+  /* Divider: fills the 30px row, ornament centered vertically */
   .dividerWrap {
-    flex-shrink: 0;
-    margin-bottom: 22px;
+    margin: 0;
+    display: flex;
+    align-items: center;
   }
 
   .dividerImg {
@@ -362,41 +409,39 @@
   }
 
   /*
-   * A/B: horizontal 2-column grid.
-   * flex: 1 makes it fill remaining height in qContent.
+   * A/B comparison: 2-column grid filling the 124px row.
+   * A block: 4px left rail | content.
+   * B block: 4px left rail | content (same structure as A).
+   * padding-left on B shifts its rail away from the column gap.
    */
   .abSection {
-    flex: 1;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 42px;
+    column-gap: 24px;
     align-items: stretch;
-    gap: 0;
-    min-height: 128px;
   }
 
-  /* A block: rail on left — same as mobile */
   .abBlockA {
-    min-height: 128px;
+    column-gap: 12px;
+    min-height: unset;
+    height: 100%;
   }
 
-  /*
-   * B block: rail on right on PC.
-   * Override column template so content gets col 1, rail gets col 2.
-   */
+  /* B uses same left-rail DOM structure as A — no column swap. */
   .abBlockB {
-    grid-template-columns: minmax(0, 1fr) 4px;
-    min-height: 128px;
+    grid-template-columns: 4px minmax(0, 1fr);
+    column-gap: 12px;
+    padding-left: 12px; /* separates B rail from center gap visually */
+    min-height: unset;
+    height: 100%;
   }
 
-  .abBlockB .railB {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .abBlockB .abContentB {
-    grid-column: 1;
-    grid-row: 1;
+  /* Content in each block: top-aligned, not vertically centered */
+  .abContentA,
+  .abContentB {
+    justify-content: flex-start;
+    padding-top: 4px;
+    gap: 8px;
   }
 
   .aLabel,
@@ -407,6 +452,12 @@
   .abText {
     font-size: 18px;
     line-height: 1.8;
+  }
+
+  /* Answer buttons: non-fading, below qContent */
+  .answerSection {
+    margin-top: 24px;
+    flex-shrink: 0;
   }
 
   .answerRow {
@@ -427,7 +478,6 @@
   }
 
   .questionText {
-    font-size: 20px;
     margin-bottom: 14px;
   }
 
