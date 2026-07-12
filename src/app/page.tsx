@@ -64,11 +64,13 @@ export default function HomePage() {
             estimatedMinutes={8}
             status="available"
             href="/diagnoses/business-skills"
+            bgImage="/images/diagnoses/business-skills/top-card-bg.png"
           />
+          {/* best-station: 実装済みだが現在非公開。再公開時にここのコメントを外す */}
         </div>
 
         <p className="mt-10 text-xs text-neutral-300 text-center tracking-wide font-jp">
-          他の診断もCOMING SOON…
+          さらに多くの診断がCOMING SOON…
         </p>
       </section>
 

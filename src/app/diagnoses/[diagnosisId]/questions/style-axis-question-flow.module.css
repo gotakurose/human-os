@@ -8,11 +8,11 @@
 /* Calculated: prompt 3 lines at 22px lh1.55 = 103px; AB 2 lines = 88px */
 @media (max-width: 767px) {
   :root {
-    --mobile-prompt-height:     120px;  /* 103px needed + 17px buffer */
+    --mobile-prompt-height:     110px;  /* Q24 37chars → 3 lines × 22px × 1.55 = 102px + 8px buffer */
     --mobile-divider-height:    44px;   /* ornament ~7px centered in 44px */
     --mobile-option-height:     100px;  /* 88px needed at 390px + 12px buffer */
     --mobile-ab-section-height: 220px;  /* 100 + 20px gap + 100 */
-    --mobile-panel-height:      520px;  /* 44px padding + 384px grid + 20px + 72px */
+    --mobile-panel-height:      510px;  /* 44px padding + 374px grid + 20px + 72px */
   }
 }
 
@@ -141,9 +141,11 @@
   line-height: 1.55;
   letter-spacing: 0;
   color: var(--dossier-ink);
-  margin: 0;            /* grid row handles spacing; PC also uses margin: 0 */
+  margin: 0;
   text-align: left;
-  overflow: hidden;     /* prevent text from visually overflowing fixed row */
+  overflow: hidden;
+  display: flex;
+  align-items: center;   /* 1-line / 2-line / 3-line prompts all vertically centered in fixed track */
 }
 
 /* ── Divider ornament ────────────────────────────────────── */
@@ -475,10 +477,6 @@
 
   .contentSheet {
     padding: 20px 16px 16px;
-  }
-
-  .questionText {
-    margin-bottom: 14px;
   }
 
   .abText {
