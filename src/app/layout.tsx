@@ -8,6 +8,7 @@ import {
   IBM_Plex_Mono,
   Shippori_Mincho_B1,
 } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -98,6 +99,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-white text-neutral-900">
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
