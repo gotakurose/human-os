@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "simulate:business-skills": "npx tsx scripts/simulate-business-skills.ts"
+    "simulate:business-skills": "npx tsx scripts/simulate-business-skills.ts",
+    "validate:business-skills-v2": "npx tsx scripts/validate-business-skills-v2.ts",
+    "test:business-skills-v2": "npx tsx scripts/test-business-skills-v2-routing.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -16,6 +18,7 @@
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "server-only": "0.0.1",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3"
   },

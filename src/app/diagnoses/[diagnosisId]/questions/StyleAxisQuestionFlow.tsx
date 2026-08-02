@@ -6,7 +6,9 @@ import Link from "next/link";
 import Image from "next/image";
 import type { StyleAxisQuestion, Scoring, Meta, DiagnosisType, AbilityScoringEntry } from "@/schemas/diagnosis";
 import { dispatch } from "@/engine/dispatcher";
-import { calculateAbilityUScores, buildAvParam } from "@/engine/ability-scorer";
+import { calculateAbilityUScores, buildAvParam, type AbilityUScores } from "@/engine/ability-scorer";
+import { selectBusinessSkillsV2Route, type BusinessSkillsV2Answers } from "@/engine/business-skills-v2-selector";
+import type { BusinessSkillsV2Routing } from "@/schemas/business-skills-v2";
 import styles from "./style-axis-question-flow.module.css";
 
 type Choice = "strongly_a" | "lean_a" | "lean_b" | "strongly_b";
@@ -28,9 +30,11 @@ interface Props {
   scoring: Scoring;
   types: DiagnosisType[];
   abilityContributions?: AbilityScoringEntry[];
+  v2Enabled?: boolean;
+  v2Routing?: BusinessSkillsV2Routing | null;
 }
 
-export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, abilityContributions = [] }: Props) {
+export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, abilityContributions = [], v2Enabled = false, v2Routing = null }: Props) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -78,9 +82,28 @@ export function StyleAxisQuestionFlow({ diagnosisId, questions, scoring, types, 
             params.set("st", String(Math.round(sa.solo_team * 100)));
             params.set("dc", String(Math.round(sa.divergent_convergent * 100)));
           }
+          let abilityU: AbilityUScores | null = null;
           if (abilityContributions.length > 0) {
-            const u = calculateAbilityUScores(newAnswers, abilityContributions);
-            params.set("av", buildAvParam(u));
+            abilityU = calculateAbilityUScores(newAnswers, abilityContributions);
+            params.set("av", buildAvParam(abilityU));
+          }
+
+          if (v2Enabled && v2Routing && abilityU && result.styleAxisScores) {
+            try {
+              const v2 = selectBusinessSkillsV2Route({
+                answers: newAnswers as BusinessSkillsV2Answers,
+                typeId: result.typeId,
+                styleAxisScores: result.styleAxisScores,
+                abilityUScores: abilityU,
+                routing: v2Routing,
+              });
+              params.set("sr", v2.subRouteId);
+              params.set("cf", v2.confidence);
+            } catch (error) {
+              if (process.env.NODE_ENV === "development") {
+                console.error("Business Skills V2 route selection failed", error);
+              }
+            }
           }
 
           const url = `/diagnoses/${diagnosisId}/results/${result.typeId}?${params.toString()}`;

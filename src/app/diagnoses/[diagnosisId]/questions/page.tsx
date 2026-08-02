@@ -10,6 +10,9 @@ import type { AbilityScoringEntry } from "@/schemas/diagnosis";
 import { notFound } from "next/navigation";
 import { QuestionFlow } from "./QuestionFlow";
 import { StyleAxisQuestionFlow } from "./StyleAxisQuestionFlow";
+import { isBusinessSkillsV2Enabled } from "@/lib/business-skills-v2-feature";
+import { loadBusinessSkillsV2Routing } from "@/lib/business-skills-v2-data";
+import type { BusinessSkillsV2Routing } from "@/schemas/business-skills-v2";
 
 export const metadata = {
   robots: { index: false, follow: true },
@@ -46,6 +49,16 @@ export default async function QuestionsPage({ params }: Props) {
     try {
       abilityContributions = loadAbilityScoring(diagnosisId).contributions;
     } catch { /* ability-scoring.json is optional */ }
+
+    let v2Enabled = false;
+    let v2Routing: BusinessSkillsV2Routing | null = null;
+    if (diagnosisId === "business-skills" && isBusinessSkillsV2Enabled()) {
+      v2Enabled = true;
+      try {
+        v2Routing = loadBusinessSkillsV2Routing();
+      } catch { /* v2 routing is optional */ }
+    }
+
     return (
       <main className="flex-1">
         <StyleAxisQuestionFlow
@@ -55,6 +68,8 @@ export default async function QuestionsPage({ params }: Props) {
           scoring={scoring}
           types={types}
           abilityContributions={abilityContributions}
+          v2Enabled={v2Enabled}
+          v2Routing={v2Routing}
         />
       </main>
     );

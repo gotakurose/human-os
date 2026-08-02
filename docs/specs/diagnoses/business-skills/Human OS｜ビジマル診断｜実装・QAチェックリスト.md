@@ -1,7 +1,7 @@
-﻿# Human OS｜ビジマル診断｜実装・QAチェックリスト
+# Human OS｜ビジマル診断｜実装・QAチェックリスト
 
-> 文書状態：正本・実装済み
-> 更新日：2026年7月13日
+> 文書状態：正本・V1実装済み／V2実装前QA追加
+> 更新日：2026年7月17日
 > 対象：Human OS / ビジマル診断
 
 ---
@@ -23,7 +23,7 @@
 
 ### データ
 
-- [x] 質問文 v5-final（`data/diagnoses/business-skills/questions.json`）
+- [x] 質問文 v4-final（`data/diagnoses/business-skills/questions.json`）
 - [x] 固定文章 v7-final（`data/diagnoses/business-skills/fixed-copy.json`）
 - [x] 4軸動的文章 v3-final（`data/diagnoses/business-skills/dynamic-copy.json`）
 - [x] 16タイプ定義（`data/diagnoses/business-skills/types.json`）
@@ -31,7 +31,7 @@
 ### UI
 
 - [x] 診断 LP（`/diagnoses/business-skills`）
-- [x] 質問フロー（`/diagnoses/business-skills/questions`）— ダイアモンドボタン UI（`style-axis-question-flow.module.css`）
+- [x] 質問フロー（`/diagnoses/business-skills/questions`）
 - [x] 16タイプ結果ページ（`/diagnoses/business-skills/results/{typeId}`）
 - [x] 五角形レーダーチャート（`PentagonRadarChart.tsx`）
 - [x] 表示スコア D（50〜100）適用（`ResultAbilitySection.tsx`）
@@ -124,32 +124,6 @@ git status                # 予定外変更ファイルなし
 - [ ] 表示スコア D（50〜100）が全問で正しく出力されるか
 - [ ] 特化個体率が実際のユーザー分布で過剰・過少になっていないか
 
-### モバイルレイアウト QA（< 768px）
-
-- [ ] Q1 と Q24（大問最長）で `contentSheet.height` が 510px で一致
-- [ ] Q1 と Q24 で `promptArea.top` / `promptArea.height`（110px）が同一
-- [ ] Q1 と Q24 で `dividerWrap.top` が同一
-- [ ] Q1 と Q24（A/B 最長）で `abSection.top` / `abSection.height`（220px）が同一
-- [ ] A/B 文章量が変わっても `answerButtons.top` が全40問で同一
-- [ ] ≤360px で質問文が 22px（font-size: 20px が適用されていない）
-- [ ] 360px 幅で全40問オーバーフローなし（Q24 の長大問・長B文章含む）
-- [ ] 390px 幅で全40問オーバーフローなし
-- [ ] `contentSheet` に `overflow: hidden` 相当のクリップが効いている
-- [ ] PC（≥768px）で `contentSheet.height` が `auto` になっている（520px になっていない）
-
-### PC レイアウト QA（≥768px）
-
-- [ ] Q1（大問1行、A/B各1行）と Q14（大問2行、B2行）で `questionPanel.height` が完全一致
-- [ ] 大問1行（Q1）と大問2行（Q14）で `promptArea.top` / `promptArea.height` が同一
-- [ ] 大問1行（Q1）と大問2行（Q14）で `divider.top` が同一
-- [ ] A/B文章1行（Q1）と2行（Q4）で `comparisonArea.top` / `comparisonArea.height` が同一
-- [ ] A/B文章量が変わっても `answerButtons.top` が全40問で同一
-- [ ] A ラベル上端と B ラベル上端が1px以内で一致
-- [ ] A 本文上端と B 本文上端が1px以内で一致
-- [ ] 短い A/B 文章が垂直中央へ移動していない（上揃え）
-- [ ] B 縦棒が B 文章の左側にある（中央区切り線に見えない）
-- [ ] Q24（最長大問・最長B文章）で各領域がオーバーフローしない
-
 ### iOS・ブラウザ QA
 
 - [ ] iPhone Safari で質問ボタン4択すべてタップ反応する
@@ -157,8 +131,6 @@ git status                # 予定外変更ファイルなし
 - [ ] 40問完了後に結果ページへ遷移する
 - [ ] 結果 URL を直接開いても正しく表示される
 - [ ] 共有 URL（X・LINE）が正しく生成される
-- [ ] 360px 幅で全40問オーバーフローなし（Q24 の長大問・長B文章含む）
-- [ ] 390px 幅で全40問オーバーフローなし
 
 ### SEO・法務 QA
 
@@ -191,3 +163,81 @@ AdSense を再導入する場合はすべてを同時に実施する。
 | 固定名称・ID | `Human OS｜ビジマル診断｜固定名称・IDマスター.md` |
 | 総合・運用 | `Human OS｜ビジマル診断｜総合・運用マスター.md` |
 | プラットフォーム共通 | `docs/specs/common/` |
+
+---
+
+## 7. V2結果分岐・文章実装QA
+
+### 実装前データ
+
+- [ ] `Human OS｜ビジマル診断｜結果分岐マスター.csv` が163行
+- [ ] `mainRouteId` が65件
+- [ ] `subRouteId` が163件・重複0
+- [ ] `Human OS｜ビジマル診断｜回答証拠マスター.csv` が1,514行
+- [ ] `subRouteId × questionId` の重複0
+- [ ] 全サブルートが回答証拠3件以上
+- [ ] 証拠重みが1.0000〜1.4500
+- [ ] 全質問IDが`q01`〜`q40`に存在
+- [ ] typeId・基準コードが固定名称・IDマスターと一致
+
+### 判定エンジン
+
+- [ ] 回答一致度が `1.00 / 0.75 / 0.25 / 0.00`
+- [ ] 証拠重み算式が正本と一致
+- [ ] `evidenceMatch / abilityMatch / axisMatch`を別々に算出
+- [ ] 配点が `0.55 / 0.30 / 0.15`
+- [ ] 主ルート点が「主ルート内の最高サブルート点」
+- [ ] 選出主ルート内の最高サブルートを返す
+- [ ] 同点処理が証拠→能力→軸→収録順
+- [ ] 無作為処理なし
+- [ ] 確信度が `0.040 / 0.015`
+- [ ] lowでも最上位分岐を返す
+
+### 代表回答・安定性
+
+- [ ] 163代表回答が意図したsubRouteIdを返す
+- [ ] 最小1位差が0.063以上
+- [ ] 1問変更時の最低分岐維持率が85.0％以上
+- [ ] 1証拠除外テストが163 / 163 PASS
+- [ ] 1証拠の最大影響が0.22以下
+- [ ] 同じ回答で常に同じ結果を返す
+
+### 回帰
+
+- [ ] V1の4軸スコアが変更されていない
+- [ ] 16タイプ判定が変更されていない
+- [ ] 5能力U/V/Dが変更されていない
+- [ ] `av`形式が変更されていない
+- [ ] 特化個体・族バッジ判定が変更されていない
+
+### V2本文
+
+- [ ] 163ページが一意のsubRouteIdへ対応
+- [ ] 必須セクション欠損0
+- [ ] 主ルート名・サブルート名・確信度が画面へ出ない
+- [ ] 4軸と5能力の実数値が本文と一致
+- [ ] 数値補正上限を超えない
+- [ ] 50を平均と呼ばない
+- [ ] 最低能力を能力不足と断定しない
+- [ ] シェア文1行目がタイプ名のみ
+- [ ] 「でした。」残存0
+
+### UI・公開
+
+- [ ] PCでトップビューと全セクションを目視確認
+- [ ] iPhoneで長文、軸、5能力、シェアを目視確認
+- [ ] 旧V1本文が混在しない
+- [ ] V1へ戻せるロールバック手順がある
+- [ ] Previewで代表16件を手動確認
+- [ ] Production反映後に代表16件を再確認
+
+## 8. V2実装禁止条件
+
+以下のいずれかが未確定の場合、Production反映へ進まない。
+
+- JSONスキーマ
+- 163本文とsubRouteIdの対応
+- 判定エンジンの代表回答テスト
+- V1回帰テスト
+- ロールバック方法
+- ユーザーのPreview確認

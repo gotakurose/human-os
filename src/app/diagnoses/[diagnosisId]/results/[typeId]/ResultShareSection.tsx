@@ -2,11 +2,17 @@
 
 import { useState, useEffect } from "react";
 
-interface Props {
-  typeName: string;
+interface V2ShareData {
+  typeLine: string;
+  bodyLines: string[];
 }
 
-export function ResultShareSection({ typeName }: Props) {
+interface Props {
+  typeName: string;
+  v2Share?: V2ShareData;
+}
+
+export function ResultShareSection({ typeName, v2Share }: Props) {
   const [currentUrl, setCurrentUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
@@ -16,7 +22,10 @@ export function ResultShareSection({ typeName }: Props) {
     setCurrentUrl(window.location.href);
   }, []);
 
-  const shareText   = encodeURIComponent(`私は「${typeName}」でした。 #ビジマル診断 #HumanOS`);
+  const rawShareText = v2Share
+    ? `${v2Share.typeLine}\n${v2Share.bodyLines.join("\n")} #ビジマル診断 #HumanOS`
+    : `私は「${typeName}」でした。 #ビジマル診断 #HumanOS`;
+  const shareText   = encodeURIComponent(rawShareText);
   const encodedUrl  = encodeURIComponent(currentUrl);
   const xUrl        = `https://twitter.com/intent/tweet?text=${shareText}&url=${encodedUrl}`;
   const lineUrl     = `https://social-plugins.line.me/lineit/share?url=${encodedUrl}`;

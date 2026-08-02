@@ -12,6 +12,17 @@ import { DynamicCopySlot } from "./DynamicCopySlot";
 import { TYPE_DISPLAY_ASSETS } from "./result-assets";
 import { RotateCcw, Home } from "lucide-react";
 import type { DynamicCopyPart, TypeDefinition } from "./resolve-axis-dynamic-copy";
+import { parseAvParam, buildAvParam } from "@/engine/ability-scorer";
+import type { StyleAxisScores } from "@/engine/style-axis-scorer";
+import { isBusinessSkillsV2Enabled } from "@/lib/business-skills-v2-feature";
+import {
+  loadBusinessSkillsV2Routing,
+  loadBusinessSkillsV2ResultCopy,
+  loadBusinessSkillsV2NumericRules,
+} from "@/lib/business-skills-v2-data";
+import { renderBusinessSkillsV2NumericCopy } from "@/engine/business-skills-v2-numeric-renderer";
+import type { BusinessSkillsV2Confidence } from "@/engine/business-skills-v2-selector";
+import { BusinessSkillsV2Result } from "./BusinessSkillsV2Result";
 
 const ORN = "/images/diagnoses/business-skills/ornaments";
 
@@ -110,8 +121,20 @@ function validateFixedCopyIntegrity(fixedCopy: FixedCopy, types: DiagnosisType[]
   }
 }
 
+const AXIS_INT_RE = /^-?(0|[1-9]\d*)$/;
+function parseAxisParam(s: string): number | null {
+  if (!AXIS_INT_RE.test(s)) return null;
+  const n = Number(s);
+  if (!Number.isInteger(n) || !Number.isFinite(n) || n < -100 || n > 100) return null;
+  return n;
+}
+function isValidConfidence(s: string): s is BusinessSkillsV2Confidence {
+  return s === "high" || s === "medium" || s === "low";
+}
+
 interface Props {
   params: Promise<{ diagnosisId: string; typeId: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export async function generateStaticParams() {
@@ -150,7 +173,7 @@ export async function generateMetadata({ params }: Props) {
   }
 }
 
-export default async function ResultPage({ params }: Props) {
+export default async function ResultPage({ params, searchParams }: Props) {
   const { diagnosisId, typeId } = await params;
 
   let types, meta;
@@ -203,6 +226,113 @@ export default async function ResultPage({ params }: Props) {
   const typeAssets        = TYPE_DISPLAY_ASSETS[typeId] ?? null;
   const resolvedCharImage = typeAssets?.characterImage ?? (type.characterImage || null);
   const resolvedEnName    = typeAssets?.displayEnglishName ?? type.englishName;
+
+  // ── V2 gate ──────────────────────────────────────────────────────────────────
+  v2: {
+    if (diagnosisId !== "business-skills" || !isBusinessSkillsV2Enabled()) break v2;
+
+    const sp = await searchParams;
+    const taRaw = sp.ta;
+    const osRaw = sp.os;
+    const stRaw = sp.st;
+    const dcRaw = sp.dc;
+    const avRaw = sp.av;
+    const srRaw = sp.sr;
+    const cfRaw = sp.cf;
+
+    if (
+      typeof taRaw !== "string" || typeof osRaw !== "string" ||
+      typeof stRaw !== "string" || typeof dcRaw !== "string" ||
+      typeof avRaw !== "string" || typeof srRaw !== "string" ||
+      typeof cfRaw !== "string"
+    ) break v2;
+
+    const ta = parseAxisParam(taRaw);
+    const os = parseAxisParam(osRaw);
+    const st = parseAxisParam(stRaw);
+    const dc = parseAxisParam(dcRaw);
+    if (ta === null || os === null || st === null || dc === null) break v2;
+
+    const parsedAv = parseAvParam(avRaw);
+    if (parsedAv === null) break v2;
+    if (buildAvParam(parsedAv) !== avRaw) break v2;
+
+    if (!isValidConfidence(cfRaw)) break v2;
+    const confidence = cfRaw;
+
+    let v2ReadyData: {
+      typeCopy:      { typeName: string; englishName: string; catchCopy: string };
+      routeCopy:     import("@/schemas/business-skills-v2").BusinessSkillsV2ResultRoute;
+      numericResult: import("@/engine/business-skills-v2-numeric-renderer").BusinessSkillsV2NumericRenderResult;
+    } | null = null;
+
+    try {
+      const v2Routing      = loadBusinessSkillsV2Routing();
+      const v2ResultCopy   = loadBusinessSkillsV2ResultCopy();
+      const v2NumericRules = loadBusinessSkillsV2NumericRules();
+
+      const v2RoutingType = v2Routing.types.find((t) => t.typeId === typeId);
+      if (!v2RoutingType) break v2;
+
+      const v2Route = v2RoutingType.routes.find((r) => r.subRouteId === srRaw);
+      if (!v2Route) break v2;
+
+      const v2ResultCopyType = v2ResultCopy.types.find((t) => t.typeId === typeId);
+      if (!v2ResultCopyType) break v2;
+
+      const v2NumericType = v2NumericRules.types.find((t) => t.typeId === typeId);
+      if (!v2NumericType) break v2;
+
+      if (v2ResultCopyType.baseCode !== v2RoutingType.baseCode) break v2;
+      if (v2NumericType.baseCode     !== v2RoutingType.baseCode) break v2;
+      if (v2RoutingType.typeName     !== type.name)              break v2;
+      if (v2RoutingType.englishName  !== resolvedEnName)         break v2;
+
+      const v2RouteCopy = v2ResultCopyType.routes.find((r) => r.subRouteId === srRaw);
+      if (!v2RouteCopy) break v2;
+
+      const styleAxisScores: StyleAxisScores = {
+        thinking_action:      ta / 100,
+        offensive_stable:     os / 100,
+        solo_team:            st / 100,
+        divergent_convergent: dc / 100,
+      };
+
+      v2ReadyData = {
+        typeCopy: {
+          typeName:    v2ResultCopyType.typeName,
+          englishName: v2ResultCopyType.englishName,
+          catchCopy:   v2ResultCopyType.catchCopy,
+        },
+        routeCopy:     v2RouteCopy,
+        numericResult: renderBusinessSkillsV2NumericCopy({
+          route:            v2Route,
+          typeNumericRules: v2NumericType,
+          templates:        v2NumericRules.global.templates,
+          styleAxisScores,
+          abilityUScores:   parsedAv,
+          confidence,
+        }),
+      };
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.error("Business Skills V2 result rendering failed", error);
+      }
+    }
+
+    if (!v2ReadyData) break v2;
+
+    return (
+      <BusinessSkillsV2Result
+        diagnosisId={diagnosisId}
+        type={type}
+        displayAssets={typeAssets}
+        typeCopy={v2ReadyData.typeCopy}
+        routeCopy={v2ReadyData.routeCopy}
+        numericResult={v2ReadyData.numericResult}
+      />
+    );
+  }
 
   return (
     <main

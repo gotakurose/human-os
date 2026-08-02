@@ -1,0 +1,327 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://human-os.site/schemas/business-skills-v2-numeric-rules.schema.json",
+  "title": "Business Skills V2 Numeric Rules",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contentVersion",
+    "status",
+    "diagnosisId",
+    "global",
+    "types"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "2.0.0"
+    },
+    "contentVersion": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "const": "locked-not-implemented"
+    },
+    "diagnosisId": {
+      "const": "business-skills"
+    },
+    "global": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "abilityDisplayRange",
+        "axisDisplayRange",
+        "sectionLimits",
+        "lagAbilityMinDisplayGap",
+        "templates"
+      ],
+      "properties": {
+        "abilityDisplayRange": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "min",
+            "max"
+          ],
+          "properties": {
+            "min": {
+              "const": 50
+            },
+            "max": {
+              "const": 100
+            }
+          }
+        },
+        "axisDisplayRange": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "min",
+            "max",
+            "pairSum"
+          ],
+          "properties": {
+            "min": {
+              "const": 0
+            },
+            "max": {
+              "const": 100
+            },
+            "pairSum": {
+              "const": 100
+            }
+          }
+        },
+        "sectionLimits": {
+          "type": "object"
+        },
+        "lagAbilityMinDisplayGap": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "templates": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "types": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/type"
+      }
+    }
+  },
+  "$defs": {
+    "pole": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "label"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
+    "axisRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "role",
+        "strongest",
+        "central",
+        "overuseRisk"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "strongest": {
+          "type": "string",
+          "minLength": 1
+        },
+        "central": {
+          "type": "string",
+          "minLength": 1
+        },
+        "overuseRisk": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "abilityRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "role",
+        "lagImpact"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lagImpact": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "pair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "labels",
+        "effect"
+      ],
+      "properties": {
+        "labels": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          }
+        },
+        "effect": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "interaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "condition",
+        "effect"
+      ],
+      "properties": {
+        "condition": {
+          "type": "string"
+        },
+        "effect": {
+          "type": "string"
+        }
+      }
+    },
+    "type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "typeId",
+        "typeName",
+        "baseCode",
+        "displayPoles",
+        "axes",
+        "abilities",
+        "axisPairs",
+        "abilityPairs",
+        "interactions",
+        "sourceFile",
+        "sourceSha256"
+      ],
+      "properties": {
+        "typeId": {
+          "type": "string"
+        },
+        "typeName": {
+          "type": "string"
+        },
+        "baseCode": {
+          "type": "string",
+          "pattern": "^[TA][OS][IG][EF]$"
+        },
+        "displayPoles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "thinking_action",
+            "offensive_stable",
+            "solo_team",
+            "divergent_convergent"
+          ],
+          "properties": {
+            "thinking_action": {
+              "$ref": "#/$defs/pole"
+            },
+            "offensive_stable": {
+              "$ref": "#/$defs/pole"
+            },
+            "solo_team": {
+              "$ref": "#/$defs/pole"
+            },
+            "divergent_convergent": {
+              "$ref": "#/$defs/pole"
+            }
+          }
+        },
+        "axes": {
+          "type": "object",
+          "minProperties": 4,
+          "maxProperties": 4,
+          "additionalProperties": {
+            "$ref": "#/$defs/axisRule"
+          }
+        },
+        "abilities": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "logic",
+            "execution",
+            "sales",
+            "creativity",
+            "management"
+          ],
+          "properties": {
+            "logic": {
+              "$ref": "#/$defs/abilityRule"
+            },
+            "execution": {
+              "$ref": "#/$defs/abilityRule"
+            },
+            "sales": {
+              "$ref": "#/$defs/abilityRule"
+            },
+            "creativity": {
+              "$ref": "#/$defs/abilityRule"
+            },
+            "management": {
+              "$ref": "#/$defs/abilityRule"
+            }
+          }
+        },
+        "axisPairs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pair"
+          }
+        },
+        "abilityPairs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pair"
+          }
+        },
+        "interactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/interaction"
+          }
+        },
+        "sourceFile": {
+          "type": "string"
+        },
+        "sourceSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

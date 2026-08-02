@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://human-os.site/schemas/business-skills-v2-representative-tests.schema.json",
+  "title": "Business Skills V2 Representative Tests",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contentVersion",
+    "status",
+    "diagnosisId",
+    "qaThresholds",
+    "cases"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "contentVersion": {
+      "type": "string"
+    },
+    "status": {
+      "const": "locked-implementation-test"
+    },
+    "diagnosisId": {
+      "const": "business-skills"
+    },
+    "qaThresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "caseCount",
+        "minimumRepresentativeGap",
+        "minimumOneAnswerChangeRetention",
+        "leaveOneEvidencePassCount",
+        "minimumLeaveOneEvidenceGap",
+        "deterministicRunsPerCase"
+      ],
+      "properties": {
+        "caseCount": {
+          "const": 163
+        },
+        "minimumRepresentativeGap": {
+          "const": 0.0624
+        },
+        "minimumOneAnswerChangeRetention": {
+          "const": 0.85
+        },
+        "leaveOneEvidencePassCount": {
+          "const": 1514
+        },
+        "minimumLeaveOneEvidenceGap": {
+          "const": 0.0295
+        },
+        "deterministicRunsPerCase": {
+          "const": 3
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 163,
+      "maxItems": 163,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "caseId",
+          "typeId",
+          "baseCode",
+          "mainRouteId",
+          "subRouteId",
+          "answers"
+        ],
+        "properties": {
+          "caseId": {
+            "type": "string"
+          },
+          "typeId": {
+            "type": "string"
+          },
+          "baseCode": {
+            "type": "string",
+            "pattern": "^[TA][OS][IG][EF]$"
+          },
+          "mainRouteId": {
+            "type": "string"
+          },
+          "subRouteId": {
+            "type": "string"
+          },
+          "answers": {
+            "type": "object",
+            "minProperties": 40,
+            "maxProperties": 40,
+            "additionalProperties": {
+              "enum": [
+                "strongly_a",
+                "lean_a",
+                "lean_b",
+                "strongly_b"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

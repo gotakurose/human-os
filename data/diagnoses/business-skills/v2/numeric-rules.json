@@ -1,0 +1,2159 @@
+{
+  "schemaVersion": "2.0.0",
+  "contentVersion": "2026-07-17",
+  "status": "locked-not-implemented",
+  "diagnosisId": "business-skills",
+  "global": {
+    "abilityDisplayRange": {
+      "min": 50,
+      "max": 100
+    },
+    "axisDisplayRange": {
+      "min": 0,
+      "max": 100,
+      "pairSum": 100
+    },
+    "sectionLimits": {
+      "currentYou": {
+        "topAbilities": 2,
+        "relativeLagAbilities": 1,
+        "axisPairs": 1
+      },
+      "quantitativeAnalysis": {
+        "topAxes": 2,
+        "centralAxes": 1,
+        "topAbilities": 2,
+        "relativeLagAbilities": 1
+      },
+      "failureFlow": {
+        "maxNumericCorrections": 2
+      },
+      "oneChange": {
+        "maxActions": 1,
+        "allowNumericReplacement": false
+      }
+    },
+    "lagAbilityMinDisplayGap": 5,
+    "templates": {
+      "currentYouTopAbilities": "今回は{{topAbility1Label}}と{{topAbility2Label}}が上位です。{{topAbility1Label}}は「{{topAbility1Role}}」方向へ、{{topAbility2Label}}は「{{topAbility2Role}}」方向へ使われています。",
+      "currentYouLag": "{{lagAbilityLabel}}は能力不足という意味ではありません。本人内では相対的に遅く、「{{lagAbilityImpact}}」という形で影響しやすくなります。",
+      "quantTopAxes": "4軸では{{topAxis1Label}}{{topAxis1Value}}が最も強く、{{topAxis2Label}}{{topAxis2Value}}が続きます。{{topAxis1Role}}傾向と、{{topAxis2Role}}傾向が組み合わさっています。",
+      "quantCentralAxis": "{{centralAxisLabel}}{{centralAxisValue}}は中央に近く、{{centralAxisCentral}}。",
+      "quantTopAbilities": "5能力では{{topAbility1Label}}{{topAbility1Value}}と{{topAbility2Label}}{{topAbility2Value}}が上位です。{{topAbility1Label}}は「{{topAbility1Role}}」、{{topAbility2Label}}は「{{topAbility2Role}}」ために使われています。",
+      "quantLag": "{{lagAbilityLabel}}{{lagAbilityValue}}は低い能力という意味ではありません。上位能力との差がある場合、「{{lagAbilityImpact}}」という形で出やすくなります。"
+    }
+  },
+  "types": [
+    {
+      "typeId": "vision-architect",
+      "typeName": "事業構想家",
+      "baseCode": "TOIE",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "thinking",
+          "label": "思考"
+        },
+        "offensive_stable": {
+          "key": "offensive",
+          "label": "攻め"
+        },
+        "solo_team": {
+          "key": "individual",
+          "label": "個人突破"
+        },
+        "divergent_convergent": {
+          "key": "divergent",
+          "label": "発散"
+        }
+      },
+      "axes": {
+        "thinking": {
+          "label": "思考",
+          "role": "事業構造を理解したうえで大きく変える。高すぎると現在の制約を過小評価する",
+          "strongest": "事業構造を理解したうえで大きく変える。高すぎると現在の制約を過小評価する",
+          "central": "行動側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "offensive": {
+          "label": "攻め",
+          "role": "新市場・新用途・新しい収益源を増やす。高すぎると資源が分散する",
+          "strongest": "新市場・新用途・新しい収益源を増やす。高すぎると資源が分散する",
+          "central": "安定側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "individual": {
+          "label": "個人突破",
+          "role": "顧客・現場・協力者の反応を構想へ取り込みやすい",
+          "strongest": "顧客・現場・協力者の反応を構想へ取り込みやすい",
+          "central": "組織推進側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "divergent": {
+          "label": "発散",
+          "role": "顧客、商品、収益、技術、経路を別の組み合わせへ広げる",
+          "strongest": "顧客、商品、収益、技術、経路を別の組み合わせへ広げる",
+          "central": "収束側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "顧客、収益、資源、市場の因果と前提を整理する",
+          "lagImpact": "構想の広さに比べ、成立条件や優先順位が曖昧になりやすい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "構想を試作、販売、導入、実取引へ移す",
+          "lagImpact": "構想と説明が先行し、現実の反応が入る時期が遅れる"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "顧客の選択理由、支払条件、導入障害を確認する",
+          "lagImpact": "顧客価値を論理で作れても、実際に選ばれる条件を外しやすい"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "別顧客、別用途、別収益、別の事業モデルを生む",
+          "lagImpact": "発散は維持しても、既存要素の再配置を中心とする出方になる"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "事業構想を役割、責任、運用、継続条件へ落とす",
+          "lagImpact": "構想が個人の説明に依存し、現場が自走しにくい"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [
+        {
+          "labels": [
+            "論理力",
+            "創造力"
+          ],
+          "effect": "事業構想家の中心。新しい全体像と成立条件を同時に作る"
+        },
+        {
+          "labels": [
+            "創造力",
+            "営業力"
+          ],
+          "effect": "顧客価値、価値提案、空白市場、横展開へ反映する"
+        },
+        {
+          "labels": [
+            "論理力",
+            "管理力"
+          ],
+          "effect": "収益構造、価値連鎖、基盤事業化へ反映する"
+        },
+        {
+          "labels": [
+            "論理力",
+            "営業力"
+          ],
+          "effect": "収益構造、価値提案、顧客課題の現実確認へ反映する"
+        },
+        {
+          "labels": [
+            "創造力",
+            "管理力"
+          ],
+          "effect": "資源再配置、基盤事業化で、広がりを運用可能な形へ変える"
+        }
+      ],
+      "interactions": [
+        {
+          "condition": "攻めが強く営業力も高い",
+          "effect": "価値提案、空白市場、横展開が顧客選択へつながりやすい"
+        },
+        {
+          "condition": "個人突破が強く管理力が低い",
+          "effect": "構想の一貫性は高いが、他者へ渡す役割と責任が不足しやすい"
+        },
+        {
+          "condition": "発散が強く実行力が低い",
+          "effect": "選択肢と未来展開が増え、最初の検証が遅れやすい"
+        },
+        {
+          "condition": "思考が強く営業力が低い",
+          "effect": "論理的な顧客価値を作れても、実際の購入理由を確認しにくい"
+        },
+        {
+          "condition": "管理力が高く個人突破が中央寄り",
+          "effect": "全体構想を関係者が使える運用へ移しやすい"
+        }
+      ],
+      "sourceFile": "事業構想家/Human OS｜ビジマル診断｜事業構想家数値補正ルール.md",
+      "sourceSha256": "51ab40964c1e413ead1f12d9853665d59d5bf3429e156594c91487a5822e7c42"
+    },
+    {
+      "typeId": "win-hunter",
+      "typeName": "勝ち筋ハンター",
+      "baseCode": "TOIF",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "thinking",
+          "label": "思考"
+        },
+        "offensive_stable": {
+          "key": "offensive",
+          "label": "攻め"
+        },
+        "solo_team": {
+          "key": "individual",
+          "label": "個人突破"
+        },
+        "divergent_convergent": {
+          "key": "convergent",
+          "label": "収束"
+        }
+      },
+      "axes": {
+        "thinking": {
+          "label": "思考",
+          "role": "目的、比較条件、成功条件を整理してから選ぶ",
+          "strongest": "目的、比較条件、成功条件を整理してから選ぶ",
+          "central": "行動側の方法も使える柔軟性として扱う",
+          "overuseRisk": "判断材料を増やし続ける"
+        },
+        "offensive": {
+          "label": "攻め",
+          "role": "現状維持より期待成果を取りに行く",
+          "strongest": "現状維持より期待成果を取りに行く",
+          "central": "安定側の方法も使える柔軟性として扱う",
+          "overuseRisk": "将来資産や守る下限を軽く見る"
+        },
+        "individual": {
+          "label": "個人突破",
+          "role": "自分で仮説と配分判断を引き受ける",
+          "strongest": "自分で仮説と配分判断を引き受ける",
+          "central": "組織推進側の方法も使える柔軟性として扱う",
+          "overuseRisk": "説明前に選択肢を切る"
+        },
+        "convergent": {
+          "label": "収束",
+          "role": "勝敗条件を少数へ絞る",
+          "strongest": "勝敗条件を少数へ絞る",
+          "central": "発散側の方法も使える柔軟性として扱う",
+          "overuseRisk": "前提変化や別の勝ち方を残さない"
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "比較、因果、成功条件、停止条件、ボトルネックの特定",
+          "lagImpact": "条件や判断基準の整理が、上位能力による動きより後へ回りやすい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "決定後の着手、資源移動、先行行動、対処の速さ",
+          "lagImpact": "考えや合意を、最初の行動へ移す時期が遅れやすい"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "顧客判断、合意形成、交渉、相手の条件の読み取り",
+          "lagImpact": "相手の懸念や選択条件を確かめる工程が遅れやすい"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "差別化、代替案、別の取引形態、新しい機会の発見",
+          "lagImpact": "別の方法や組み合わせを作るより、既存の進め方へ寄りやすい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "指標運用、資源配分、撤退移行、守る下限、確認方法",
+          "lagImpact": "担当、期限、順番、完了条件を共有できる形へ固定する工程が遅れやすい"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [],
+      "interactions": [],
+      "sourceFile": "勝ち筋ハンター/Human OS｜ビジマル診断｜勝ち筋ハンター数値補正ルール.md",
+      "sourceSha256": "25e6e28eed6dd45d75168ef3752b4531a11b55a5b3d26f64dbeb2e9f04553ed5"
+    },
+    {
+      "typeId": "strategy-commander",
+      "typeName": "企画軍師",
+      "baseCode": "TOGE",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "thinking",
+          "label": "思考"
+        },
+        "offensive_stable": {
+          "key": "offensive",
+          "label": "攻め"
+        },
+        "solo_team": {
+          "key": "group",
+          "label": "組織推進"
+        },
+        "divergent_convergent": {
+          "key": "divergent",
+          "label": "発散"
+        }
+      },
+      "axes": {
+        "thinking": {
+          "label": "思考",
+          "role": "目的、前提、役割、判断材料を整理してから組み合わせる",
+          "strongest": "目的、前提、役割、判断材料を整理してから組み合わせる",
+          "central": "行動側の方法も使える柔軟性として扱う",
+          "overuseRisk": "統合を本人の頭の中で続ける"
+        },
+        "offensive": {
+          "label": "攻め",
+          "role": "現状維持の連携より、より大きな成果を生む役割と組み合わせへ踏み込む",
+          "strongest": "現状維持の連携より、より大きな成果を生む役割と組み合わせへ踏み込む",
+          "central": "安定側の方法も使える柔軟性として扱う",
+          "overuseRisk": "本人の希望や運用負荷を軽く見る"
+        },
+        "group": {
+          "label": "組織推進",
+          "role": "複数人の知識と能力を一つの成果へつなぐ",
+          "strongest": "複数人の知識と能力を一つの成果へつなぐ",
+          "central": "個人突破側の方法も使える柔軟性として扱う",
+          "overuseRisk": "自分がすべての接続と調整を抱える"
+        },
+        "divergent": {
+          "label": "発散",
+          "role": "異なる情報から新しい組み合わせや複数戦略を作る",
+          "strongest": "異なる情報から新しい組み合わせや複数戦略を作る",
+          "central": "収束側の方法も使える柔軟性として扱う",
+          "overuseRisk": "決定と資源集中が遅れる"
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "前提の分解、専門知識の統合、判断権、複数案の成立条件",
+          "lagImpact": "条件や判断基準の整理が、上位能力による動きより後へ回りやすい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "試行開始、配置変更、直接接続、決定後の動き",
+          "lagImpact": "考えや合意を、最初の行動へ移す時期が遅れやすい"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "立場の違いの理解、合意、協力関係、外部連携",
+          "lagImpact": "相手の懸念や選択条件を確かめる工程が遅れやすい"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "異分野の組み合わせ、第三案、複線、知識の別用途",
+          "lagImpact": "別の方法や組み合わせを作るより、既存の進め方へ寄りやすい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "役割、判断範囲、連携方法、共有資産、更新責任",
+          "lagImpact": "担当、期限、順番、完了条件を共有できる形へ固定する工程が遅れやすい"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [],
+      "interactions": [],
+      "sourceFile": "企画軍師/Human OS｜ビジマル診断｜企画軍師数値補正ルール.md",
+      "sourceSha256": "70c1c8181425996d7fe4f70aa434512255c60afd26e2d0174e82e03689ff0717"
+    },
+    {
+      "typeId": "siege-advisor",
+      "typeName": "攻城参謀",
+      "baseCode": "TOGF",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "thinking",
+          "label": "思考"
+        },
+        "offensive_stable": {
+          "key": "offensive",
+          "label": "攻め"
+        },
+        "solo_team": {
+          "key": "group",
+          "label": "組織推進"
+        },
+        "divergent_convergent": {
+          "key": "convergent",
+          "label": "収束"
+        }
+      },
+      "axes": {
+        "thinking": {
+          "label": "思考",
+          "role": "目的、制約、失敗影響、依存関係を整理してから作戦を作る",
+          "strongest": "目的、制約、失敗影響、依存関係を整理してから作戦を作る",
+          "central": "行動側の方法も使える柔軟性として扱う",
+          "overuseRisk": "最初の見立てと計画を守りやすい"
+        },
+        "offensive": {
+          "label": "攻め",
+          "role": "現状を維持するより、成果を止める制約へ踏み込み、資源と役割を変える",
+          "strongest": "現状を維持するより、成果を止める制約へ踏み込み、資源と役割を変える",
+          "central": "安定側の方法も使える柔軟性として扱う",
+          "overuseRisk": "支援業務や局所事情を軽く見る"
+        },
+        "group": {
+          "label": "組織推進",
+          "role": "複数人の判断、役割、工程を一つの成果へそろえる",
+          "strongest": "複数人の判断、役割、工程を一つの成果へそろえる",
+          "central": "個人突破側の方法も使える柔軟性として扱う",
+          "overuseRisk": "異論を足並みの乱れとして扱う"
+        },
+        "convergent": {
+          "label": "収束",
+          "role": "問題、案、情報を突破点と実行順序へ絞る",
+          "strongest": "問題、案、情報を突破点と実行順序へ絞る",
+          "central": "発散側の方法も使える柔軟性として扱う",
+          "overuseRisk": "別の原因や代替案を早く閉じる"
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "制約の分解、影響関係、優先順位、停止条件、工程依存",
+          "lagImpact": "条件や判断基準の整理が、上位能力による動きより後へ回りやすい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "緊急封鎖、資源移動、再始動、決定後の初動",
+          "lagImpact": "考えや合意を、最初の行動へ移す時期が遅れやすい"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "部門間の利害理解、懸念回収、判断の引き受け、協力の成立",
+          "lagImpact": "相手の懸念や選択条件を確かめる工程が遅れやすい"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "別の攻略方法、代替手段、計画変更、限られた条件での再構成",
+          "lagImpact": "別の方法や組み合わせを作るより、既存の進め方へ寄りやすい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "役割、責任、期限、受け渡し、資源配分、解除・引き継ぎ条件",
+          "lagImpact": "担当、期限、順番、完了条件を共有できる形へ固定する工程が遅れやすい"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [],
+      "interactions": [],
+      "sourceFile": "攻城参謀/Human OS｜ビジマル診断｜攻城参謀数値補正ルール.md",
+      "sourceSha256": "48e204cbe81aaa80a0bb477f61e91e2a48549750500445c14f718f6907789140"
+    },
+    {
+      "typeId": "solo-inventor",
+      "typeName": "独創の発明家",
+      "baseCode": "TSIE",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "thinking",
+          "label": "思考"
+        },
+        "offensive_stable": {
+          "key": "stable",
+          "label": "安定"
+        },
+        "solo_team": {
+          "key": "individual",
+          "label": "個人突破"
+        },
+        "divergent_convergent": {
+          "key": "divergent",
+          "label": "発散"
+        }
+      },
+      "axes": {
+        "thinking": {
+          "label": "思考",
+          "role": "動く前に目的、原理、比較条件を組み立て、新しい方法が成立する理由を重く見る",
+          "strongest": "動く前に目的、原理、比較条件を組み立て、新しい方法が成立する理由を重く見る",
+          "central": "行動側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "stable": {
+          "label": "安定",
+          "role": "新規性より先に、品質、信頼、戻し方、継続利用の条件を固定する",
+          "strongest": "新規性より先に、品質、信頼、戻し方、継続利用の条件を固定する",
+          "central": "攻め側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "individual": {
+          "label": "個人突破",
+          "role": "仮説、設計、道具、判断モデルを自分の責任で完結させる",
+          "strongest": "仮説、設計、道具、判断モデルを自分の責任で完結させる",
+          "central": "組織推進側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "divergent": {
+          "label": "発散",
+          "role": "前提、用途、接続先、選択肢を増やし、既存枠にない解を探す",
+          "strongest": "前提、用途、接続先、選択肢を増やし、既存枠にない解を探す",
+          "central": "収束側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "目的・前提・原因・機能を分解し、新しい原理が成立する理由を整理する",
+          "lagImpact": "接続や発想は豊富でも、成立条件と比較理由を説明しにくい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "仮説を試作品、実験、道具へ変え、結果から修正する",
+          "lagImpact": "設計、比較、条件整理が広がり、最初の試作・実験が遅れる"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "新しい前提や方法を、相手が判断できる価値・不安・選択条件へ翻訳する",
+          "lagImpact": "新しい方法の合理性はあるが、相手が前提を変える理由、利用する魅力、不安の扱いが弱い"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "異分野接続、機能再構成、多用途化、代替原理を作る",
+          "lagImpact": "分析と安全条件は整うが、既存方式を越える代替案が増えにくい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "試す範囲、品質条件、停止条件、再利用範囲、更新責任を固定する",
+          "lagImpact": "発明や実験の後に、利用範囲、品質条件、更新責任が残らない"
+        }
+      },
+      "axisPairs": [
+        {
+          "labels": [
+            "思考",
+            "発散"
+          ],
+          "effect": "前提や要素を分解し、複数の新しい解決原理を作る"
+        },
+        {
+          "labels": [
+            "安定",
+            "発散"
+          ],
+          "effect": "守る境界を決め、その内側で安全に新しい可能性を試す"
+        },
+        {
+          "labels": [
+            "個人突破",
+            "思考"
+          ],
+          "effect": "自分で仮説と設計を組み、他人の合意前に構造を確かめる"
+        },
+        {
+          "labels": [
+            "個人突破",
+            "発散"
+          ],
+          "effect": "既存手段を待たず、独自の道具、用途、方法を作る"
+        },
+        {
+          "labels": [
+            "思考",
+            "安定"
+          ],
+          "effect": "検証条件、失敗時の戻し方、再現条件を先に設計する"
+        }
+      ],
+      "abilityPairs": [
+        {
+          "labels": [
+            "創造力",
+            "論理力"
+          ],
+          "effect": "前提反転、原因再設計、異分野接続、機能再構成を強くする"
+        },
+        {
+          "labels": [
+            "創造力",
+            "管理力"
+          ],
+          "effect": "制約活用、多用途展開、小域実験、原理資産を強くする"
+        },
+        {
+          "labels": [
+            "論理力",
+            "管理力"
+          ],
+          "effect": "原因再設計、比較検証、原理資産を強くする"
+        },
+        {
+          "labels": [
+            "創造力",
+            "実行力"
+          ],
+          "effect": "異分野接続、専用道具、小域実験を実物へ移しやすくする"
+        },
+        {
+          "labels": [
+            "論理力",
+            "実行力"
+          ],
+          "effect": "仮説検証、専用道具、原因再設計の初動を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "創造力"
+          ],
+          "effect": "新しい前提・用途を相手の判断条件へ変えやすくする"
+        }
+      ],
+      "interactions": [
+        {
+          "condition": "発散が強く実行力が相対的に遅い",
+          "effect": "可能性と比較条件が増え、最初の一案を試す時期が遅れる"
+        },
+        {
+          "condition": "思考が強く営業力が相対的に遅い",
+          "effect": "原理は正しいが、相手には頼まれたことを変えたように見える"
+        },
+        {
+          "condition": "安定が強く創造力が相対的に遅い",
+          "effect": "安全設計が先行し、既存方式を越える案が弱くなる"
+        },
+        {
+          "condition": "個人突破が強く管理力が相対的に遅い",
+          "effect": "独自解が本人しか使えない道具・理論になる"
+        }
+      ],
+      "sourceFile": "独創の発明家/Human OS｜ビジマル診断｜独創の発明家数値補正ルール.md",
+      "sourceSha256": "278b747a2cdfe98b7dc19de07d7af70bbb24cd7fee90629f2853c15f90b8cc4a"
+    },
+    {
+      "typeId": "precision-sniper",
+      "typeName": "精密スナイパー",
+      "baseCode": "TSIF",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "thinking",
+          "label": "思考"
+        },
+        "offensive_stable": {
+          "key": "stable",
+          "label": "安定"
+        },
+        "solo_team": {
+          "key": "individual",
+          "label": "個人突破"
+        },
+        "divergent_convergent": {
+          "key": "convergent",
+          "label": "収束"
+        }
+      },
+      "axes": {
+        "thinking": {
+          "label": "思考",
+          "role": "動く前に判断対象、事実、仮説、確認順序を定義し、根拠の質を重く見る",
+          "strongest": "動く前に判断対象、事実、仮説、確認順序を定義し、根拠の質を重く見る",
+          "central": "行動側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "stable": {
+          "label": "安定",
+          "role": "判断の誤りや変更の副作用を抑え、再現性、停止条件、確認記録を重く見る",
+          "strongest": "判断の誤りや変更の副作用を抑え、再現性、停止条件、確認記録を重く見る",
+          "central": "攻め側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "individual": {
+          "label": "個人突破",
+          "role": "自分で情報を読み、仮説を立て、判断または修正まで責任を持つ",
+          "strongest": "自分で情報を読み、仮説を立て、判断または修正まで責任を持つ",
+          "central": "組織推進側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "convergent": {
+          "label": "収束",
+          "role": "情報や原因を増やし続けず、結論を変える一点へ確認を集中する",
+          "strongest": "情報や原因を増やし続けず、結論を変える一点へ確認を集中する",
+          "central": "発散側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "事実・推測・未確認点を分け、原因、比較基準、反証条件を整理する",
+          "lagImpact": "異常や違和感は捉えても、原因、比較基準、判断変更条件を説明しにくい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "確認手順、再現試験、限定修正を実際に行い、結果から判断を更新する",
+          "lagImpact": "分析、比較、確認設計が続き、最初の検証や限定対応が遅れる"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "発見や保留理由を、相手が判断できる影響、選択肢、安心材料へ翻訳する",
+          "lagImpact": "発見や線引きは正確でも、相手が動く理由や不安への説明が不足する"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "既存の説明にない条件、反対仮説、第三の確認方法を作る",
+          "lagImpact": "既存の原因候補や確認方法へ集中し、未知の条件や第三案を作りにくい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "確認項目、期限、停止条件、監視点、更新責任を固定する",
+          "lagImpact": "判断は鋭いが、期限、確認責任、監視、再利用条件が残らない"
+        }
+      },
+      "axisPairs": [
+        {
+          "labels": [
+            "思考",
+            "収束"
+          ],
+          "effect": "判断対象を定義し、反対証拠から弱い説明を落とす"
+        },
+        {
+          "labels": [
+            "安定",
+            "収束"
+          ],
+          "effect": "重大な失敗へ確認を集中し、変更範囲と副作用を限定する"
+        },
+        {
+          "labels": [
+            "個人突破",
+            "思考"
+          ],
+          "effect": "自分で仮説、比較基準、確認手順を組み立てる"
+        },
+        {
+          "labels": [
+            "個人突破",
+            "収束"
+          ],
+          "effect": "他人の合意を待たず、直す一点または採用する一案を決める"
+        },
+        {
+          "labels": [
+            "思考",
+            "安定"
+          ],
+          "effect": "必要な確かさ、再現条件、見直し条件を先に置く"
+        }
+      ],
+      "abilityPairs": [
+        {
+          "labels": [
+            "論理力",
+            "管理力"
+          ],
+          "effect": "異常抽出、矛盾解消、比較基準、証拠閾値、予防確認を強くする"
+        },
+        {
+          "labels": [
+            "論理力",
+            "創造力"
+          ],
+          "effect": "条件分離、仮説反証、別原因の設計を強くする"
+        },
+        {
+          "labels": [
+            "論理力",
+            "実行力"
+          ],
+          "effect": "影響切り分け、再現確認、修正点限定を早く現実へ移す"
+        },
+        {
+          "labels": [
+            "管理力",
+            "実行力"
+          ],
+          "effect": "対応範囲、検証順、公開停止、監視を実務へ落とす"
+        },
+        {
+          "labels": [
+            "論理力",
+            "営業力"
+          ],
+          "effect": "矛盾解消、比較基準、判断理由の説明を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "管理力"
+          ],
+          "effect": "確認や線引きを、関係者が受け入れられる運用へ変える"
+        }
+      ],
+      "interactions": [
+        {
+          "condition": "思考が強く実行力が相対的に遅い",
+          "effect": "必要情報と確認条件が増え、検証開始や決断が遅れる"
+        },
+        {
+          "condition": "収束が強く創造力が相対的に遅い",
+          "effect": "有力な一点へ早く集まり、未知の原因や第三案を見落とす"
+        },
+        {
+          "condition": "安定が強く営業力が相対的に遅い",
+          "effect": "確認や保留の合理性は高いが、周囲には責任回避に見える"
+        },
+        {
+          "condition": "個人突破が強く管理力が相対的に遅い",
+          "effect": "本人は正しく判断できても、基準や監視が他者へ残らない"
+        }
+      ],
+      "sourceFile": "精密スナイパー/Human OS｜ビジマル診断｜精密スナイパー数値補正ルール.md",
+      "sourceSha256": "137dff4050650c9a96814a461c9a91dcd4cb9d6cc7e3b52346cde94b005f2905"
+    },
+    {
+      "typeId": "structure-hacker",
+      "typeName": "構造ハッカー",
+      "baseCode": "TSGE",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "thinking",
+          "label": "思考"
+        },
+        "offensive_stable": {
+          "key": "stable",
+          "label": "安定"
+        },
+        "solo_team": {
+          "key": "group",
+          "label": "組織推進"
+        },
+        "divergent_convergent": {
+          "key": "divergent",
+          "label": "発散"
+        }
+      },
+      "axes": {
+        "thinking": {
+          "label": "思考",
+          "role": "人を動かす前に、流れ、依存関係、責任、判断条件を整理し、問題が再発する構造を定義する",
+          "strongest": "人を動かす前に、流れ、依存関係、責任、判断条件を整理し、問題が再発する構造を定義する",
+          "central": "行動側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "stable": {
+          "label": "安定",
+          "role": "変更による品質低下や混乱を抑え、段階移行、停止条件、旧運用の扱いまで重く見る",
+          "strongest": "変更による品質低下や混乱を抑え、段階移行、停止条件、旧運用の扱いまで重く見る",
+          "central": "攻め側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "group": {
+          "label": "組織推進",
+          "role": "個人の作業効率ではなく、複数人の接点、共同判断、共有運用を変える",
+          "strongest": "個人の作業効率ではなく、複数人の接点、共同判断、共有運用を変える",
+          "central": "個人突破側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "divergent": {
+          "label": "発散",
+          "role": "現行の順番、役割、標準を前提にせず、別の流れ、接続、運用方法を作る",
+          "strongest": "現行の順番、役割、標準を前提にせず、別の流れ、接続、運用方法を作る",
+          "central": "収束側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "待ち時間、依存関係、責任の抜け、例外条件を分け、原因と変更点を整理する",
+          "lagImpact": "違和感や停滞は捉えても、原因となる依存関係や変更条件を説明しにくい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "小さな範囲で新しい流れや運用を試し、実際の時間・品質・負担から修正する",
+          "lagImpact": "設計、文書、関係者調整が続き、小さな試行や旧運用の停止が遅れる"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "変更される側の不安、判断者の条件、専門用語の違いを整理し、使われる設計へ翻訳する",
+          "lagImpact": "構造変更は合理的でも、変更される側の不安や利点への説明が不足する"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "現在の工程や組織境界を前提にせず、別の順番、分岐、接続、再利用方法を作る",
+          "lagImpact": "既存の役割や手順を精密に整える方向へ寄り、根本的な組み替えが少なくなる"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "担当、期限、完了条件、版、停止条件、更新責任を固定し、変更を運用へ残す",
+          "lagImpact": "良い変更案は作れても、担当、期限、版、更新責任が残らず、元の運用へ戻る"
+        }
+      },
+      "axisPairs": [
+        {
+          "labels": [
+            "思考",
+            "組織推進"
+          ],
+          "effect": "複数人の依存関係を整理し、共通の責任・判断・情報経路へ変える"
+        },
+        {
+          "labels": [
+            "思考",
+            "発散"
+          ],
+          "effect": "問題の原因を構造へ置き、既存の順番や役割とは違う設計を作る"
+        },
+        {
+          "labels": [
+            "安定",
+            "組織推進"
+          ],
+          "effect": "担当者が変わっても続く標準、引き継ぎ、例外処理を作る"
+        },
+        {
+          "labels": [
+            "安定",
+            "発散"
+          ],
+          "effect": "守る品質を固定しながら、実現手段や運用を柔軟に更新する"
+        },
+        {
+          "labels": [
+            "組織推進",
+            "発散"
+          ],
+          "effect": "部署・専門・担当の境界を越え、新しい連携方法を作る"
+        }
+      ],
+      "abilityPairs": [
+        {
+          "labels": [
+            "論理力",
+            "管理力"
+          ],
+          "effect": "滞留、責任境界、判断窓口、例外、標準を明確な運用条件へ変える"
+        },
+        {
+          "labels": [
+            "論理力",
+            "創造力"
+          ],
+          "effect": "見えない依存関係を発見し、別の流れや接続方法を作る"
+        },
+        {
+          "labels": [
+            "管理力",
+            "創造力"
+          ],
+          "effect": "新しい仕組みを、担当者が変わっても続く標準・分岐・知識資産へ残す"
+        },
+        {
+          "labels": [
+            "管理力",
+            "実行力"
+          ],
+          "effect": "試行、移行、旧運用停止、効果確認まで現場で進める"
+        },
+        {
+          "labels": [
+            "営業力",
+            "管理力"
+          ],
+          "effect": "変更理由と現場負担を整理し、関係者が受け入れられる移行へ変える"
+        },
+        {
+          "labels": [
+            "営業力",
+            "創造力"
+          ],
+          "effect": "異なる専門家や部署の言葉をつなぎ、新しい共同作業を作る"
+        }
+      ],
+      "interactions": [
+        {
+          "condition": "思考が強く実行力が相対的に遅い",
+          "effect": "設計精度が上がるほど、現場試行と切替が遅れる"
+        },
+        {
+          "condition": "安定が強く創造力が相対的に遅い",
+          "effect": "既存運用の整備へ寄り、問題を生む前提自体を変えにくい"
+        },
+        {
+          "condition": "組織推進が強く営業力が相対的に遅い",
+          "effect": "全体最適の設計でも、関係者には一方的な統制に見える"
+        },
+        {
+          "condition": "発散が強く管理力が相対的に遅い",
+          "effect": "多くの改善案が出るが、標準・責任・旧運用停止まで残らない"
+        }
+      ],
+      "sourceFile": "構造ハッカー/Human OS｜ビジマル診断｜構造ハッカー数値補正ルール.md",
+      "sourceSha256": "cdf855e3a436c2296b9a1a189da9fd85b9e9547380deae3a178aa9b9802bae95"
+    },
+    {
+      "typeId": "fortress-guardian",
+      "typeName": "城塞の守護者",
+      "baseCode": "TSGF",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "thinking",
+          "label": "思考"
+        },
+        "offensive_stable": {
+          "key": "stable",
+          "label": "安定"
+        },
+        "solo_team": {
+          "key": "group",
+          "label": "組織推進"
+        },
+        "divergent_convergent": {
+          "key": "convergent",
+          "label": "収束"
+        }
+      },
+      "axes": {
+        "thinking": {
+          "label": "思考",
+          "role": "事故や停止の前に、守る対象、失敗条件、確認順、復旧条件を定義する",
+          "strongest": "事故や停止の前に、守る対象、失敗条件、確認順、復旧条件を定義する",
+          "central": "行動側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "stable": {
+          "label": "安定",
+          "role": "一度の成果より、信用、品質、安全、継続が翌日も保たれることを重く見る",
+          "strongest": "一度の成果より、信用、品質、安全、継続が翌日も保たれることを重く見る",
+          "central": "攻め側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "group": {
+          "label": "組織推進",
+          "role": "特定の人の注意力ではなく、複数人が同じ基準で守れる状態を作る",
+          "strongest": "特定の人の注意力ではなく、複数人が同じ基準で守れる状態を作る",
+          "central": "個人突破側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "convergent": {
+          "label": "収束",
+          "role": "すべての危険へ備えず、失った時の影響が大きい条件へ管理を集中する",
+          "strongest": "すべての危険へ備えず、失った時の影響が大きい条件へ管理を集中する",
+          "central": "発散側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "失敗の影響、依存関係、優先順位、停止・再開条件を整理する",
+          "lagImpact": "危険を感じても、守る境界、優先順位、再開条件を説明しにくい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "監視、切替、訓練、限定導入、停止、復旧を実際に動かす",
+          "lagImpact": "基準や計画は整うが、訓練、切替、試行、停止が実際に行われない"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "守る理由、制限、報告、停止判断を、相手が納得して動ける説明へ変える",
+          "lagImpact": "制限や確認の合理性は高いが、周囲には不信、拒否、責任回避に見える"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "既存手順の複製ではない代替経路、例外対応、導入方法を作る",
+          "lagImpact": "既存手順へ戻すことを優先し、代替案や柔軟な例外処理を作りにくい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "基準、権限、記録、監視、担当、期限、復旧手順を共有可能な形へ固定する",
+          "lagImpact": "守る判断はできても、基準、権限、記録、担当が他者へ残らない"
+        }
+      },
+      "axisPairs": [
+        {
+          "labels": [
+            "安定",
+            "収束"
+          ],
+          "effect": "戻しにくい損失へ基準、監視、停止条件を集中する"
+        },
+        {
+          "labels": [
+            "思考",
+            "安定"
+          ],
+          "effect": "問題が起きる前に、予防、代替、復旧を決める"
+        },
+        {
+          "labels": [
+            "組織推進",
+            "安定"
+          ],
+          "effect": "個人の責任感ではなく、共通基準と役割分担で守る"
+        },
+        {
+          "labels": [
+            "思考",
+            "収束"
+          ],
+          "effect": "守る対象、確認点、再開条件を少数へ絞る"
+        },
+        {
+          "labels": [
+            "組織推進",
+            "収束"
+          ],
+          "effect": "複数人の判断をそろえつつ、承認と報告を増やしすぎない"
+        }
+      ],
+      "abilityPairs": [
+        {
+          "labels": [
+            "管理力",
+            "論理力"
+          ],
+          "effect": "品質下限、信用境界、情報権限、兆候監視、停止条件を強くする"
+        },
+        {
+          "labels": [
+            "管理力",
+            "営業力"
+          ],
+          "effect": "例外報告、判断継承、信用・法令境界を現場が受け入れられる運用へ変える"
+        },
+        {
+          "labels": [
+            "管理力",
+            "創造力"
+          ],
+          "effect": "代替経路、段階導入、例外に対応できる安全な別方法を作る"
+        },
+        {
+          "labels": [
+            "管理力",
+            "実行力"
+          ],
+          "effect": "訓練、切替、復旧、導入、停止を机上で終わらせない"
+        },
+        {
+          "labels": [
+            "論理力",
+            "実行力"
+          ],
+          "effect": "兆候確認、影響限定、復旧順序、切り戻しを速く行う"
+        },
+        {
+          "labels": [
+            "論理力",
+            "営業力"
+          ],
+          "effect": "守る境界と代替条件を、顧客や関係者へ説明する"
+        }
+      ],
+      "interactions": [
+        {
+          "condition": "安定が強く創造力が相対的に遅い",
+          "effect": "安全な代替を作る前に、禁止や元の方法への復帰を選びやすい"
+        },
+        {
+          "condition": "思考が強く実行力が相対的に遅い",
+          "effect": "計画、基準、訓練項目が整うが、実際の切替確認が遅れる"
+        },
+        {
+          "condition": "組織推進が強く営業力が相対的に遅い",
+          "effect": "共通ルールを作っても、現場には一方的な管理として伝わる"
+        },
+        {
+          "condition": "収束が強く創造力が相対的に遅い",
+          "effect": "既存の危険へ確認を集中し、未知の失敗や第三の方法を見落とす"
+        }
+      ],
+      "sourceFile": "城塞の守護者/Human OS｜ビジマル診断｜城塞の守護者数値補正ルール.md",
+      "sourceSha256": "e36574131b8746b449d3dc73f3ea90d459d1c422f2505527dd8571e84d3a1ace"
+    },
+    {
+      "typeId": "assault-creator",
+      "typeName": "突撃クリエイター",
+      "baseCode": "AOIE",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "action",
+          "label": "行動"
+        },
+        "offensive_stable": {
+          "key": "offensive",
+          "label": "攻め"
+        },
+        "solo_team": {
+          "key": "individual",
+          "label": "個人突破"
+        },
+        "divergent_convergent": {
+          "key": "divergent",
+          "label": "発散"
+        }
+      },
+      "axes": {
+        "action": {
+          "label": "行動",
+          "role": "考えるより、現実へ出して理解する速さを強調",
+          "strongest": "考えるより、現実へ出して理解する速さを強調",
+          "central": "思考側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "offensive": {
+          "label": "攻め",
+          "role": "安全性より、成果差や機会を取りに行く判断を強調",
+          "strongest": "安全性より、成果差や機会を取りに行く判断を強調",
+          "central": "安定側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "individual": {
+          "label": "個人突破",
+          "role": "自分で判断・実行を引き取る傾向を強調",
+          "strongest": "自分で判断・実行を引き取る傾向を強調",
+          "central": "組織推進側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "divergent": {
+          "label": "発散",
+          "role": "選択肢、用途、組み合わせを増やす傾向を強調",
+          "strongest": "選択肢、用途、組み合わせを増やす傾向を強調",
+          "central": "収束側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "原因、条件、比較基準、判断の筋道を作る",
+          "lagImpact": "条件や判断基準の整理が、上位能力による動きより後へ回りやすい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "始める、現実へ出す、止まっても動かし直す",
+          "lagImpact": "考えや合意を、最初の行動へ移す時期が遅れやすい"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "相手の条件・迷い・反応をつかみ、次の行動へつなぐ",
+          "lagImpact": "相手の懸念や選択条件を確かめる工程が遅れやすい"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "前提、用途、組み合わせ、方法を変える",
+          "lagImpact": "別の方法や組み合わせを作るより、既存の進め方へ寄りやすい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "担当、期限、順番、完了条件を固定する",
+          "lagImpact": "担当、期限、順番、完了条件を共有できる形へ固定する工程が遅れやすい"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [],
+      "interactions": [],
+      "sourceFile": "突撃クリエイター/Human OS｜ビジマル診断｜突撃クリエイター数値補正ルール.md",
+      "sourceSha256": "dc59fab9e6ee2e6595abc3a8069db57b5325f271bb6573ec964651b4351fd0ca"
+    },
+    {
+      "typeId": "sales-monster",
+      "typeName": "営業モンスター",
+      "baseCode": "AOIF",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "action",
+          "label": "行動"
+        },
+        "offensive_stable": {
+          "key": "offensive",
+          "label": "攻め"
+        },
+        "solo_team": {
+          "key": "individual",
+          "label": "個人突破"
+        },
+        "divergent_convergent": {
+          "key": "convergent",
+          "label": "収束"
+        }
+      },
+      "axes": {
+        "action": {
+          "label": "行動",
+          "role": "会話や検討を、日程・担当・次の行動へ変える速さを強調",
+          "strongest": "会話や検討を、日程・担当・次の行動へ変える速さを強調",
+          "central": "思考側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "offensive": {
+          "label": "攻め",
+          "role": "機会や相手の温度を逃さず、自分から判断を前へ進める傾向を強調",
+          "strongest": "機会や相手の温度を逃さず、自分から判断を前へ進める傾向を強調",
+          "central": "安定側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "individual": {
+          "label": "個人突破",
+          "role": "自分の質問・提案・判断で局面を動かす傾向を強調",
+          "strongest": "自分の質問・提案・判断で局面を動かす傾向を強調",
+          "central": "組織推進側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "convergent": {
+          "label": "収束",
+          "role": "選択肢や論点を減らし、一つの結論へ寄せる傾向を強調",
+          "strongest": "選択肢や論点を減らし、一つの結論へ寄せる傾向を強調",
+          "central": "発散側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "懸念の原因、比較基準、条件差、判断理由を整理する",
+          "lagImpact": "相手の反応を読めても、判断基準や理由が残らない"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "話を日程、担当、次の行動へ移す",
+          "lagImpact": "話は動くが、次の行動が曖昧なまま終わる"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "相手の迷い、反応、決める条件をつかむ",
+          "lagImpact": "自分の正しさで結論を進め、相手の決定条件を読み違えやすい"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "別案、代替方法、条件の組み替えを作る",
+          "lagImpact": "一つの提案を押し続け、別の解き方を作りにくい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "約束、範囲、期限、引き継ぎ、実行可能性を固定する",
+          "lagImpact": "約束後の履行、担当、期限、引き継ぎが追いつかない"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [
+        {
+          "labels": [
+            "営業力",
+            "論理力"
+          ],
+          "effect": "原因特定、基準整理、条件調整を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "実行力"
+          ],
+          "effect": "即時着地、段階合意、追跡着地を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "創造力"
+          ],
+          "effect": "代替解消を強くする"
+        },
+        {
+          "labels": [
+            "論理力",
+            "実行力"
+          ],
+          "effect": "証拠解消、本命提示を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "管理力"
+          ],
+          "effect": "関係者接続、追跡着地を強くする"
+        }
+      ],
+      "interactions": [],
+      "sourceFile": "営業モンスター/Human OS｜ビジマル診断｜営業モンスター数値補正ルール.md",
+      "sourceSha256": "25befe6107bd3246bd49e4036b3ac751a58b3a5fcd2479167400cf83d51fa7e1"
+    },
+    {
+      "typeId": "producer",
+      "typeName": "巻き込みプロデューサー",
+      "baseCode": "AOGE",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "action",
+          "label": "行動"
+        },
+        "offensive_stable": {
+          "key": "offensive",
+          "label": "攻め"
+        },
+        "solo_team": {
+          "key": "group",
+          "label": "組織推進"
+        },
+        "divergent_convergent": {
+          "key": "divergent",
+          "label": "発散"
+        }
+      },
+      "axes": {
+        "action": {
+          "label": "行動",
+          "role": "計画を完成させる前に、人と最初の動きを作る速さを強調",
+          "strongest": "計画を完成させる前に、人と最初の動きを作る速さを強調",
+          "central": "思考側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "offensive": {
+          "label": "攻め",
+          "role": "まだ確約のない人や資源へ働きかけ、企画を大きくする傾向を強調",
+          "strongest": "まだ確約のない人や資源へ働きかけ、企画を大きくする傾向を強調",
+          "central": "安定側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "group": {
+          "label": "組織推進",
+          "role": "個人の成果より、複数人が役割を持つ状態を作る傾向を強調",
+          "strongest": "個人の成果より、複数人が役割を持つ状態を作る傾向を強調",
+          "central": "個人突破側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "divergent": {
+          "label": "発散",
+          "role": "一つの人・素材・成果から、別の組み合わせや展開を見つける傾向を強調",
+          "strongest": "一つの人・素材・成果から、別の組み合わせや展開を見つける傾向を強調",
+          "central": "収束側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "企画の中心目的、参加条件、役割、資源の制約を整理する",
+          "lagImpact": "参加者や展開が増えるほど、中心目的と判断基準が薄くなる"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "会話や興味を、打合せ、試行、制作など最初の行動へ変える",
+          "lagImpact": "人と案は集まるが、最初の行動が決まらない"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "相手の関心、参加理由、懸念、強みをつかむ",
+          "lagImpact": "企画上は適切な接続でも、本人の関心や参加意思を読み違えやすい"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "人・場所・予算・情報を別の組み合わせや展開へ変える",
+          "lagImpact": "人を集めても、元の案や役割を変えられず、参加の余地が小さい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "参加範囲、責任、期限、予算、撤退条件を固定する",
+          "lagImpact": "興味と参加、参加と責任、企画と実務の境界が曖昧になる"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [
+        {
+          "labels": [
+            "営業力",
+            "創造力"
+          ],
+          "effect": "意味付与、対話編集、協力連鎖を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "管理力"
+          ],
+          "effect": "役割提示、強み配置、境界接続を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "実行力"
+          ],
+          "effect": "初動形成を強くする"
+        },
+        {
+          "labels": [
+            "実行力",
+            "創造力"
+          ],
+          "effect": "現場試作、成果展開を強くする"
+        },
+        {
+          "labels": [
+            "論理力",
+            "創造力"
+          ],
+          "effect": "条件再編、成果展開を強くする"
+        }
+      ],
+      "interactions": [],
+      "sourceFile": "巻き込みプロデューサー/Human OS｜ビジマル診断｜巻き込みプロデューサー数値補正ルール.md",
+      "sourceSha256": "24c448564254073ff2ad0f7b1702d2a616eca29a17e732c597ad51212ca8f0fd"
+    },
+    {
+      "typeId": "frontline-commander",
+      "typeName": "前線指揮官",
+      "baseCode": "AOGF",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "action",
+          "label": "行動"
+        },
+        "offensive_stable": {
+          "key": "offensive",
+          "label": "攻め"
+        },
+        "solo_team": {
+          "key": "group",
+          "label": "組織推進"
+        },
+        "divergent_convergent": {
+          "key": "convergent",
+          "label": "収束"
+        }
+      },
+      "axes": {
+        "action": {
+          "label": "行動",
+          "role": "不完全な情報でも仮の判断を出し、担当と初動へ変える速さを強調",
+          "strongest": "不完全な情報でも仮の判断を出し、担当と初動へ変える速さを強調",
+          "central": "思考側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "offensive": {
+          "label": "攻め",
+          "role": "機会損失や悪化を避けるため、難しい目標や早い切り替えを選ぶ傾向を強調",
+          "strongest": "機会損失や悪化を避けるため、難しい目標や早い切り替えを選ぶ傾向を強調",
+          "central": "安定側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "group": {
+          "label": "組織推進",
+          "role": "自分で抱えず、人の配置、役割、共有によって現場を動かす傾向を強調",
+          "strongest": "自分で抱えず、人の配置、役割、共有によって現場を動かす傾向を強調",
+          "central": "個人突破側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "convergent": {
+          "label": "収束",
+          "role": "多い問題や案から、現在の最優先と一つの方針を選ぶ傾向を強調",
+          "strongest": "多い問題や案から、現在の最優先と一つの方針を選ぶ傾向を強調",
+          "central": "発散側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "影響の大きい原因、優先順位、判断基準、工程の詰まりを整理する",
+          "lagImpact": "速く動けても、優先順位や判断理由が残らない"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "仮方針を出し、担当、初動、方法変更をその場で動かす",
+          "lagImpact": "役割や方針は決まるが、初動と現場変更が遅れる"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "人の反応、懸念、得意、立場の違いを拾い、動ける説明へ変える",
+          "lagImpact": "合理的な指示を優先し、現場の不安、得意、反対理由を読み違えやすい"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "代替手段、新しい順番、現場に合う別の進め方を作る",
+          "lagImpact": "現在の方針や工程を強め続け、別の方法へ切り替えにくい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "役割、責任、期限、確認点、最新方針を一つへ固定する",
+          "lagImpact": "変更後の担当、期限、終了条件、最新方針の固定が追いつかない"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [
+        {
+          "labels": [
+            "実行力",
+            "管理力"
+          ],
+          "effect": "影響封じ、重点投入、進捗回収を強くする"
+        },
+        {
+          "labels": [
+            "実行力",
+            "創造力"
+          ],
+          "effect": "復旧再開、現場修正を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "管理力"
+          ],
+          "effect": "得意配置、合意方針、責任再設定を強くする"
+        },
+        {
+          "labels": [
+            "論理力",
+            "実行力"
+          ],
+          "effect": "仮方針、重点方針を強くする"
+        },
+        {
+          "labels": [
+            "論理力",
+            "管理力"
+          ],
+          "effect": "責任再設定、進捗回収を強くする"
+        }
+      ],
+      "interactions": [
+        {
+          "condition": "行動が強く管理力が遅い",
+          "effect": "指示変更が速い一方、古い方針と新しい方針が並存しやすい"
+        },
+        {
+          "condition": "組織推進が強く営業力が遅い",
+          "effect": "全体配置は作れても、本人の納得や現場感情を拾いにくい"
+        },
+        {
+          "condition": "収束が強く創造力が遅い",
+          "effect": "本命へ集中できる一方、外した別案へ戻りにくい"
+        }
+      ],
+      "sourceFile": "前線指揮官/Human OS｜ビジマル診断｜前線指揮官数値補正ルール.md",
+      "sourceSha256": "7466a2bc0d89d3f0ec51ee90f1d1cc82df738523bd269903d251173784246616"
+    },
+    {
+      "typeId": "lone-crafter",
+      "typeName": "孤高のクラフター",
+      "baseCode": "ASIE",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "action",
+          "label": "行動"
+        },
+        "offensive_stable": {
+          "key": "stable",
+          "label": "安定"
+        },
+        "solo_team": {
+          "key": "individual",
+          "label": "個人突破"
+        },
+        "divergent_convergent": {
+          "key": "divergent",
+          "label": "発散"
+        }
+      },
+      "axes": {
+        "action": {
+          "label": "行動",
+          "role": "説明を固める前に実物へ変え、作った結果から判断する速さを強調",
+          "strongest": "説明を固める前に実物へ変え、作った結果から判断する速さを強調",
+          "central": "思考側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "stable": {
+          "label": "安定",
+          "role": "一度動くことより、繰り返し使える品質・信頼・保守性を重く見る傾向を強調",
+          "strongest": "一度動くことより、繰り返し使える品質・信頼・保守性を重く見る傾向を強調",
+          "central": "攻め側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "individual": {
+          "label": "個人突破",
+          "role": "品質を左右する判断と工程を自分で持ち、専門性で完結させる傾向を強調",
+          "strongest": "品質を左右する判断と工程を自分で持ち、専門性で完結させる傾向を強調",
+          "central": "組織推進側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "divergent": {
+          "label": "発散",
+          "role": "一つの作り方へ固定せず、別案・別用途・組み合わせを実物で探す傾向を強調",
+          "strongest": "一つの作り方へ固定せず、別案・別用途・組み合わせを実物で探す傾向を強調",
+          "central": "収束側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "違和感の原因、比較軸、必ず残す確認、品質差の理由を整理する",
+          "lagImpact": "感覚的には良くできても、比較理由や品質基準を説明・再現しにくい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "曖昧な状態から試作品を作る、問題時に手を入れる、成果を再開する",
+          "lagImpact": "案や品質への視点は広いが、実物へする速度と修正回数が足りない"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "相手の好み、使いにくさ、決める条件を具体的な制作条件へ変える",
+          "lagImpact": "本人が見つけた品質差を優先し、相手が価値を感じる差や使い方を確認しにくい"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "複数案、別の作り方、再利用できる部品・道具を作る",
+          "lagImpact": "一つの作り方を磨き続け、別案・別用途・道具化へ移りにくい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "品質基準、修正範囲、担当、確認時点、再現可能な工程を固定する",
+          "lagImpact": "試作・修正・応急対応の後に、範囲、期限、担当、完了条件が残らない"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [
+        {
+          "labels": [
+            "実行力",
+            "創造力"
+          ],
+          "effect": "粗形試作、比較試作、使用感改良、即応復旧を強くする"
+        },
+        {
+          "labels": [
+            "創造力",
+            "論理力"
+          ],
+          "effect": "比較試作、違和感修正、再利用設計を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "創造力"
+          ],
+          "effect": "要望具体化、使用感改良を強くする"
+        },
+        {
+          "labels": [
+            "管理力",
+            "論理力"
+          ],
+          "effect": "耐久安定、品質基準、一貫制作を強くする"
+        },
+        {
+          "labels": [
+            "実行力",
+            "論理力"
+          ],
+          "effect": "手順短縮、即応復旧を強くする"
+        },
+        {
+          "labels": [
+            "実行力",
+            "管理力"
+          ],
+          "effect": "耐久安定、一貫制作を強くする"
+        }
+      ],
+      "interactions": [
+        {
+          "condition": "行動が強く管理力が相対的に遅い",
+          "effect": "作る速度に、変更記録と完了条件が追いつかない"
+        },
+        {
+          "condition": "安定が強く営業力が相対的に遅い",
+          "effect": "品質は高いが、相手が必要とする水準を越えて作り込みやすい"
+        },
+        {
+          "condition": "個人突破が強く管理力が相対的に遅い",
+          "effect": "自分で完結するほど、引き継ぎと再現性が残らない"
+        },
+        {
+          "condition": "発散が強く実行力が相対的に遅い",
+          "effect": "案・用途・道具の可能性は増えるが、使える形まで届きにくい"
+        },
+        {
+          "condition": "創造力が高く安定も強い",
+          "effect": "多用途で壊れにくいものを目指し、過剰設計になりやすい"
+        }
+      ],
+      "sourceFile": "孤高のクラフター/Human OS｜ビジマル診断｜孤高のクラフター数値補正ルール.md",
+      "sourceSha256": "1f40fb0d221436b0e6aa7f3ac8f692e74f638ec4e4f5eaec1e5601a055ab05f4"
+    },
+    {
+      "typeId": "closer",
+      "typeName": "完遂クローザー",
+      "baseCode": "ASIF",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "action",
+          "label": "行動"
+        },
+        "offensive_stable": {
+          "key": "stable",
+          "label": "安定"
+        },
+        "solo_team": {
+          "key": "individual",
+          "label": "個人突破"
+        },
+        "divergent_convergent": {
+          "key": "convergent",
+          "label": "収束"
+        }
+      },
+      "axes": {
+        "action": {
+          "label": "行動",
+          "role": "残件や問題を見つけた後、確認待ちにせず自分で処理へ移す速さを強調",
+          "strongest": "残件や問題を見つけた後、確認待ちにせず自分で処理へ移す速さを強調",
+          "central": "思考側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "stable": {
+          "label": "安定",
+          "role": "一度の納品より、品質・信頼・責任が崩れない終わり方を強調",
+          "strongest": "一度の納品より、品質・信頼・責任が崩れない終わり方を強調",
+          "central": "攻め側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "individual": {
+          "label": "個人突破",
+          "role": "自分の担当と判断で最後の穴を閉じる傾向を強調",
+          "strongest": "自分の担当と判断で最後の穴を閉じる傾向を強調",
+          "central": "組織推進側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "convergent": {
+          "label": "収束",
+          "role": "作業、条件、選択肢を減らし、一つの完了状態へ寄せる傾向を強調",
+          "strongest": "作業、条件、選択肢を減らし、一つの完了状態へ寄せる傾向を強調",
+          "central": "発散側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "完了条件、優先順位、原因、終了判断を整理する",
+          "lagImpact": "全部を自分で処理し、優先順位や中止判断が曖昧になる"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "残件、復旧、代替作業を実際に処理する",
+          "lagImpact": "条件は整うが、最後の処理が実際に進まない"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "受取人や関係者の不安、返答条件、利用開始の障害をつかむ",
+          "lagImpact": "相手の受取状況や返答しにくい事情を読み違える"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "元の方法が使えない時に別手段を作る",
+          "lagImpact": "元の方法へ固執し、代替や縮小を選びにくい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "担当、期限、品質、承認、引継ぎ、精算を固定する",
+          "lagImpact": "変更後の担当・期限・正式条件が残る"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [
+        {
+          "labels": [
+            "論理力",
+            "管理力"
+          ],
+          "effect": "成果条件固定、品質基準固定、計画再建、中止精算を強くする"
+        },
+        {
+          "labels": [
+            "実行力",
+            "管理力"
+          ],
+          "effect": "抜け回収、依存回収、引継ぎ完了を強くする"
+        },
+        {
+          "labels": [
+            "実行力",
+            "創造力"
+          ],
+          "effect": "代替完遂を強くする"
+        },
+        {
+          "labels": [
+            "実行力",
+            "論理力"
+          ],
+          "effect": "即応復旧後の影響整理を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "管理力"
+          ],
+          "effect": "受取状態確認、依存回収を強くする"
+        }
+      ],
+      "interactions": [],
+      "sourceFile": "完遂クローザー/Human OS｜ビジマル診断｜完遂クローザー数値補正ルール.md",
+      "sourceSha256": "89095d8b3fc476a7a937fd7fc01c8046e32c1c21b03661bf39d295f702029d66"
+    },
+    {
+      "typeId": "team-conductor",
+      "typeName": "ギルド調律師",
+      "baseCode": "ASGE",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "action",
+          "label": "行動"
+        },
+        "offensive_stable": {
+          "key": "stable",
+          "label": "安定"
+        },
+        "solo_team": {
+          "key": "group",
+          "label": "組織推進"
+        },
+        "divergent_convergent": {
+          "key": "divergent",
+          "label": "発散"
+        }
+      },
+      "axes": {
+        "action": {
+          "label": "行動",
+          "role": "問題が言語化され切る前でも、短い共有、役割変更、対話の場など最初の調整を置く速さを強調",
+          "strongest": "問題が言語化され切る前でも、短い共有、役割変更、対話の場など最初の調整を置く速さを強調",
+          "central": "思考側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "stable": {
+          "label": "安定",
+          "role": "一時的な和解より、負担と信頼を崩さず協力が続く状態を重視する傾向を強調",
+          "strongest": "一時的な和解より、負担と信頼を崩さず協力が続く状態を重視する傾向を強調",
+          "central": "攻め側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "group": {
+          "label": "組織推進",
+          "role": "個人の正しさより、複数人が同じ成果へつながる状態を重視する傾向を強調",
+          "strongest": "個人の正しさより、複数人が同じ成果へつながる状態を重視する傾向を強調",
+          "central": "個人突破側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        },
+        "divergent": {
+          "label": "発散",
+          "role": "一つの関わり方に固定せず、言葉、役割、組み合わせ、共有方法を複数考える傾向を強調",
+          "strongest": "一つの関わり方に固定せず、言葉、役割、組み合わせ、共有方法を複数考える傾向を強調",
+          "central": "収束側の方法も使える柔軟性として扱う",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "目的、前提、判断基準、負担の原因を整理する",
+          "lagImpact": "人の反応は拾えても、何が違い、何を決めるかが曖昧になる"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "共有、配置変更、対話、支援の開始を実際に進める",
+          "lagImpact": "理解と相談は進むが、役割や共有方法が実際には変わらない"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "言いにくい事情、立場ごとの条件、反応の変化をつかむ",
+          "lagImpact": "制度や合理性を優先し、言いにくい事情と受け取り方を読み違える"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "人と役割、伝え方、協力方法の新しい組み合わせを作る",
+          "lagImpact": "現在の関係や役割を保ったまま、説明と我慢で調整しやすい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "担当、支援期間、共有周期、判断権限、終了条件を固定する",
+          "lagImpact": "調整の担当・期限・終了条件が残らず、本人が介在し続ける"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [
+        {
+          "labels": [
+            "営業力",
+            "論理力"
+          ],
+          "effect": "目的翻訳、前提共有、判断基準接続、対立仲介を強くする"
+        },
+        {
+          "labels": [
+            "営業力",
+            "創造力"
+          ],
+          "effect": "役割適合、本音解凍を強くする"
+        },
+        {
+          "labels": [
+            "実行力",
+            "管理力"
+          ],
+          "effect": "負荷再配分、共有リズムを強くする"
+        },
+        {
+          "labels": [
+            "論理力",
+            "管理力"
+          ],
+          "effect": "支援正式化、判断基準接続を強くする"
+        },
+        {
+          "labels": [
+            "創造力",
+            "管理力"
+          ],
+          "effect": "自走接続を強くする"
+        }
+      ],
+      "interactions": [],
+      "sourceFile": "ギルド調律師/Human OS｜ビジマル診断｜ギルド調律師数値補正ルール.md",
+      "sourceSha256": "d329493bf9e446d4d286c29ddd36fe5958b96db1798e03a7f01825930a872ef9"
+    },
+    {
+      "typeId": "last-fortress",
+      "typeName": "最後の砦",
+      "baseCode": "ASGF",
+      "displayPoles": {
+        "thinking_action": {
+          "key": "action",
+          "label": "行動"
+        },
+        "offensive_stable": {
+          "key": "stable",
+          "label": "安定"
+        },
+        "solo_team": {
+          "key": "group",
+          "label": "組織推進"
+        },
+        "divergent_convergent": {
+          "key": "convergent",
+          "label": "収束"
+        }
+      },
+      "axes": {
+        "action": {
+          "label": "行動",
+          "role": "危機中に現実の影響を止め、暫定運用や復旧を始める速さ",
+          "strongest": "原因確定前でも影響停止・代替開始へ移りやすい",
+          "central": "状況により、動く前の確認や原因整理も行える",
+          "overuseRisk": null
+        },
+        "stable": {
+          "label": "安定",
+          "role": "拡大より、信用・安全・品質・継続を守る方向",
+          "strongest": "信用・安全・継続の損失を強く避ける",
+          "central": "継続を守りながら、必要な変更や新しい手段も選べる",
+          "overuseRisk": null
+        },
+        "group": {
+          "label": "組織推進",
+          "role": "個人の完遂ではなく、複数人と重要機能をつなぐ責任単位",
+          "strongest": "個人ではなく複数人の機能・負荷・判断を扱う",
+          "central": "全体調整だけでなく、専門担当へ切り分けて任せられる",
+          "overuseRisk": null
+        },
+        "convergent": {
+          "label": "収束",
+          "role": "守る機能、確認条件、復旧順序を少数へ絞る方向",
+          "strongest": "守る対象と復旧条件を明確に絞る",
+          "central": "一つの方法へ固定せず、複数の代替や復旧案を残せる",
+          "overuseRisk": null
+        }
+      },
+      "abilities": {
+        "logic": {
+          "label": "論理力",
+          "role": "影響範囲、優先順位、解除条件、再発条件を整理する",
+          "lagImpact": "動き出しや代替が先行し、終了条件や波及確認が後へ回りやすい"
+        },
+        "execution": {
+          "label": "実行力",
+          "role": "暫定停止、代替運用、担当変更、復旧を現実に始める",
+          "lagImpact": "設計・合意はできても、試行や移行確認が遅れやすい"
+        },
+        "sales": {
+          "label": "営業力",
+          "role": "顧客・現場・関係者の守る条件を聞き、変更を合意へ変える",
+          "lagImpact": "正しい緊急判断が、説明不足や一方的な変更に見えやすい"
+        },
+        "creativity": {
+          "label": "創造力",
+          "role": "通常手順が使えない時に、目的を守る別手段を作る",
+          "lagImpact": "既存資源の集中や最低基準固定へ寄り、危機後の改善案が少なくなりやすい"
+        },
+        "management": {
+          "label": "管理力",
+          "role": "担当、期限、品質、確認、返却、予備を固定する",
+          "lagImpact": "本人の判断と追加対応でつなぎ、記録・移管・再開条件が残りにくい"
+        }
+      },
+      "axisPairs": [],
+      "abilityPairs": [
+        {
+          "labels": [
+            "実行力",
+            "管理力"
+          ],
+          "effect": "危機判断を担当・手順・確認へすぐ変える"
+        },
+        {
+          "labels": [
+            "論理力",
+            "実行力"
+          ],
+          "effect": "影響範囲を絞り、必要な遮断や復旧を動かす"
+        },
+        {
+          "labels": [
+            "管理力",
+            "営業力"
+          ],
+          "effect": "負荷・責任・移管を関係者の合意へ変える"
+        },
+        {
+          "labels": [
+            "実行力",
+            "創造力"
+          ],
+          "effect": "通常手順が使えない時に代替運用を作る"
+        },
+        {
+          "labels": [
+            "論理力",
+            "管理力"
+          ],
+          "effect": "最低基準、復旧条件、予備を制度へ残す"
+        }
+      ],
+      "interactions": [
+        {
+          "condition": "行動が中央寄り",
+          "effect": "状況により、動く前の確認や原因整理も行える"
+        },
+        {
+          "condition": "安定が中央寄り",
+          "effect": "継続を守りながら、必要な変更や新しい手段も選べる"
+        },
+        {
+          "condition": "組織推進が中央寄り",
+          "effect": "全体調整だけでなく、専門担当へ切り分けて任せられる"
+        },
+        {
+          "condition": "収束が中央寄り",
+          "effect": "一つの方法へ固定せず、複数の代替や復旧案を残せる"
+        }
+      ],
+      "sourceFile": "最後の砦/Human OS｜ビジマル診断｜最後の砦数値補正ルール.md",
+      "sourceSha256": "5301003c99d0b34abe36c942c7fbfd4a3fb285bbdf2a3ca2af59b46ba8f20180"
+    }
+  ]
+}
