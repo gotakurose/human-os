@@ -1,0 +1,277 @@
+/* ── Page ────────────────────────────────────────────────── */
+.page {
+  min-height: 100svh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  --a-rail: #4A6650;   /* deep ink green */
+  --b-rail: #5C3D2C;   /* deep walnut */
+}
+
+/* Fixed background — no movement, no parallax */
+.bgLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/images/diagnoses/business-skills/hero-question-temp.png");
+  background-size: cover;
+  background-position: center center;
+}
+
+.bgOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: rgba(244, 240, 231, 0.88);
+}
+
+/* ── Container ───────────────────────────────────────────── */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  box-sizing: border-box;
+  padding: 24px 16px 32px;
+}
+
+/* ── Back button ─────────────────────────────────────────── */
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-family: var(--font-jp);
+  color: var(--dossier-sub);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 12px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1.3;
+  transition: color 100ms ease;
+}
+.backBtn:hover {
+  color: var(--dossier-ink);
+}
+
+/* ── Progress (outside sheet) ────────────────────────────── */
+.progressWrap {
+  margin-bottom: 12px;
+}
+.progressRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+}
+.progressLabel {
+  font-size: 12px;
+  line-height: 1.4;
+  font-family: var(--font-mono-doc);
+  color: var(--dossier-sub);
+}
+.progressTrack {
+  height: 1px;
+  position: relative;
+  background: rgba(26, 24, 21, 0.18);
+}
+.progressFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--dossier-gold);
+  transition: width 200ms ease;
+}
+
+/* ── Paper sheet ─────────────────────────────────────────── */
+/* No border, no shadow — paper feeling from bg contrast alone */
+.contentSheet {
+  background: rgba(252, 250, 245, 0.97);
+  border-radius: 8px;
+  padding: 24px 18px 20px;
+}
+
+/* ── Fading zone ─────────────────────────────────────────── */
+.questionContent {
+  transition: opacity 80ms ease;
+}
+.questionContentFading {
+  opacity: 0;
+}
+
+/* ── Question text ───────────────────────────────────────── */
+.questionText {
+  font-family: var(--font-zen);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--dossier-ink);
+  margin: 0;
+}
+
+/* ── A/B stacked section ─────────────────────────────────── */
+.abSection {
+  display: flex;
+  flex-direction: column;
+  margin-top: 18px;
+}
+
+/* A block: left-aligned, label + left-rail body */
+.abBlockA {
+  margin-bottom: 18px;
+}
+.abLabelA {
+  display: block;
+  font-family: var(--font-jp);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--a-rail);
+  margin-bottom: 5px;
+  line-height: 1;
+}
+.abBodyA {
+  border-left: 3px solid var(--a-rail);
+  padding-left: 11px;
+  min-height: 60px;
+}
+
+/* B block: shifted right, label + right-rail body */
+.abBlockB {
+  margin-left: 24px; /* shift right */
+}
+.abLabelB {
+  display: block;
+  font-family: var(--font-jp);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--b-rail);
+  text-align: right;
+  margin-bottom: 5px;
+  line-height: 1;
+}
+.abBodyB {
+  border-right: 3px solid var(--b-rail);
+  padding-right: 11px;
+  min-height: 60px;
+  text-align: left; /* body text stays left-aligned */
+}
+
+.abText {
+  font-family: var(--font-jp);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--dossier-ink);
+  word-break: normal;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+
+/* ── Thin rule between question and answer ───────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--dossier-line-soft);
+  margin: 18px 0 16px;
+}
+
+/* ── 4 answer buttons ────────────────────────────────────── */
+.answerRow {
+  display: flex;
+  gap: 4px;
+}
+
+/*
+ * Per-button CSS props set via style prop:
+ *   --btn-bg   : button background color
+ *   --btn-text : button label color
+ */
+.answerBtn {
+  flex: 1;
+  min-width: 0;
+  height: 60px;
+  border: none;
+  border-radius: 9px;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  font-family: var(--font-jp);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  transition: filter 100ms ease, box-shadow 100ms ease;
+}
+
+.answerBtn:disabled {
+  cursor: default;
+}
+
+.answerBtn:focus-visible {
+  outline: 2px solid var(--dossier-gold);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .answerBtn:not(:disabled):not(.answerBtnSelected):hover {
+    filter: brightness(1.05);
+  }
+}
+
+.answerBtnSelected {
+  filter: brightness(0.86) !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.20);
+}
+
+/* ── PC (≥768px) ─────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .container {
+    padding: 32px 0 48px;
+  }
+  .contentSheet {
+    padding: 28px 28px 24px;
+  }
+  .questionText {
+    font-size: 24px;
+  }
+  .abBlockB {
+    margin-left: 40px;
+  }
+  .abText {
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  .answerBtn {
+    height: 64px;
+    font-size: 14px;
+  }
+}
+
+/* ── Narrow (≤380px) ─────────────────────────────────────── */
+@media (max-width: 380px) {
+  .abBlockB {
+    margin-left: 16px;
+  }
+  .abText {
+    font-size: 15px;
+  }
+  .answerBtn {
+    font-size: 12px;
+  }
+}

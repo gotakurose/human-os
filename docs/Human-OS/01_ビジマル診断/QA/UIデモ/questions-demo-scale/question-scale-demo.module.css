@@ -1,0 +1,374 @@
+/* ── Page ────────────────────────────────────────────────── */
+.page {
+  min-height: 100svh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Fixed background — no movement, no animation, no transform */
+.bgLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/images/diagnoses/business-skills/hero-question-temp.png");
+  background-size: cover;
+  background-position: center center;
+}
+
+.bgOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: rgba(244, 240, 231, 0.86);
+}
+
+/* ── Content container ───────────────────────────────────── */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  box-sizing: border-box;
+  padding: 24px 16px 32px;
+}
+
+/* ── Back button ─────────────────────────────────────────── */
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-family: var(--font-jp);
+  color: var(--dossier-sub);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 12px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1.3;
+  transition: color 100ms ease;
+}
+
+.backBtn:hover {
+  color: var(--dossier-ink);
+}
+
+/* ── Progress (outside panel) ────────────────────────────── */
+.progressWrap {
+  margin-bottom: 12px;
+}
+
+.progressRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+}
+
+.progressLabel {
+  font-size: 12px;
+  line-height: 1.4;
+  font-family: var(--font-mono-doc);
+  color: var(--dossier-sub);
+}
+
+.progressTrack {
+  height: 1px;
+  position: relative;
+  background: rgba(26, 24, 21, 0.18);
+}
+
+.progressFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--dossier-gold);
+  transition: width 200ms ease;
+}
+
+/* ── Paper panel ─────────────────────────────────────────── */
+.panel {
+  background: var(--dossier-surface);
+  border: 1px solid var(--dossier-line);
+  border-radius: 14px;
+  padding: 20px 20px 16px;
+  box-shadow: 0 1px 8px rgba(26, 24, 21, 0.06);
+}
+
+/* ── Fading zone: question text + A/B ───────────────────── */
+.questionContent {
+  transition: opacity 80ms ease;
+}
+
+.questionContentFading {
+  opacity: 0;
+}
+
+/* ── Question text ───────────────────────────────────────── */
+.questionText {
+  font-family: var(--font-zen);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.48;
+  letter-spacing: 0;
+  color: var(--dossier-ink);
+  min-height: 66px;
+  margin: 0 0 22px;
+}
+
+/* ── A/B 2-column grid ───────────────────────────────────── */
+.abGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.abColA,
+.abColB {
+  pointer-events: none;
+  cursor: default;
+  user-select: none;
+}
+
+.abColA {
+  padding-right: 10px;
+}
+
+.abColB {
+  padding-left: 10px;
+  border-left: 1px solid var(--dossier-line-soft);
+}
+
+.abLabel {
+  display: block;
+  font-family: var(--font-jp);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--dossier-gold);
+  margin-bottom: 8px;
+}
+
+.abText {
+  font-family: var(--font-jp);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--dossier-ink);
+  min-height: 108px;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+
+/* ── Divider below A/B area ──────────────────────────────── */
+.abDivider {
+  border: none;
+  border-top: 1px solid var(--dossier-line-soft);
+  margin: 10px 0 8px;
+}
+
+/* ── Answer guide ────────────────────────────────────────── */
+.answerGuide {
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--dossier-sub);
+  margin: 0 0 8px;
+}
+
+/* ── Scale row ───────────────────────────────────────────── */
+.scaleRow {
+  display: flex;
+  position: relative;
+}
+
+/*
+ * Horizontal line through all diamond centers.
+ * center Y = (buttonH - labelLineH - gap) / 2
+ * mobile: (76 - 13×1.3 - 11) / 2 = (76 - 16.9 - 11) / 2 ≈ 24px
+ */
+.scaleLine {
+  position: absolute;
+  left: 12.5%;   /* center of button 1 */
+  right: 12.5%;  /* center of button 4 */
+  top: 24px;
+  height: 1px;
+  background: var(--dossier-line);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Scale button ────────────────────────────────────────── */
+.scaleBtn {
+  flex: 0 0 25%;
+  width: 25%;
+  min-width: 0;
+  height: 76px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+  outline: none;
+  border-radius: 8px;
+  transition: background 100ms ease;
+}
+
+.scaleBtn:disabled {
+  cursor: default;
+}
+
+.scaleBtn:focus-visible {
+  outline: 2px solid var(--dossier-gold);
+  outline-offset: -2px;
+}
+
+.scaleBtnSelected {
+  background: rgba(140, 122, 75, 0.13);
+}
+
+@media (hover: hover) {
+  .scaleBtn:not(:disabled):hover {
+    background: rgba(140, 122, 75, 0.07);
+  }
+  .scaleBtn:not(:disabled):hover .diamond {
+    border-color: var(--dossier-gold);
+  }
+}
+
+/* ── Diamond shapes ──────────────────────────────────────── */
+.diamond {
+  display: block;
+  flex-shrink: 0;
+  transform: rotate(45deg);
+  position: relative;
+  transition: background 100ms ease, border-color 100ms ease;
+}
+
+.diamondStrong {
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--dossier-gold);
+  background: rgba(140, 122, 75, 0.18);
+}
+
+.diamondLight {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--dossier-line);
+  background: rgba(140, 122, 75, 0.05);
+}
+
+.diamondSelected {
+  background: var(--dossier-gold) !important;
+  border-color: var(--dossier-gold) !important;
+}
+
+/* Inner cream accent when selected */
+.diamondSelected::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px;
+  height: 5px;
+  background: var(--dossier-surface);
+}
+
+/* ── Scale labels ────────────────────────────────────────── */
+.scaleLabel {
+  font-family: var(--font-jp);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--dossier-sub);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 100ms ease;
+}
+
+.scaleLabelSelected {
+  color: var(--dossier-ink);
+}
+
+/* ── PC (≥768px) ─────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .container {
+    padding: 32px 0 48px;
+  }
+
+  .panel {
+    padding: 26px 28px 20px;
+  }
+
+  .questionText {
+    font-size: 20px;
+    line-height: 1.55;
+    min-height: 62px;
+    margin-bottom: 22px;
+  }
+
+  .abColA {
+    padding-right: 14px;
+  }
+
+  .abColB {
+    padding-left: 14px;
+  }
+
+  .abText {
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 72px;
+  }
+
+  .scaleBtn {
+    height: 82px;
+  }
+
+  /* PC: center Y = (82 - 14×1.3 - 11) / 2 = (82 - 18.2 - 11) / 2 ≈ 26.4 → 27px */
+  .scaleLine {
+    top: 27px;
+  }
+
+  .diamondStrong {
+    width: 24px;
+    height: 24px;
+  }
+
+  .diamondLight {
+    width: 17px;
+    height: 17px;
+  }
+
+  .scaleLabel {
+    font-size: 14px;
+  }
+}
+
+/* ── Narrow screens (≤380px) ─────────────────────────────── */
+@media (max-width: 380px) {
+  .abText {
+    font-size: 14px;
+  }
+
+  .scaleLabel {
+    font-size: 12px;
+  }
+}

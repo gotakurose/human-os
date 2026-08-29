@@ -1,0 +1,413 @@
+/* ═══════════════════════════════════════════════════════════
+   Pattern 6 — demo-only CSS
+   既存 Pattern1〜5 / globals.css には一切触れない
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Page ────────────────────────────────────────────────── */
+.page {
+  min-height: 100svh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Fixed background — no scroll, no parallax, no transform */
+.bgLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/images/diagnoses/business-skills/hero-question-temp.png");
+  background-size: cover;
+  background-position: center center;
+}
+
+.bgOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: rgba(244, 240, 231, 0.88);
+}
+
+/* ── Scroll container ────────────────────────────────────── */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  box-sizing: border-box;
+  padding: 24px 16px 32px;
+}
+
+/* ── Back button ─────────────────────────────────────────── */
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-family: var(--font-jp);
+  color: var(--dossier-sub);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 12px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1.3;
+  transition: color 100ms ease;
+}
+.backBtn:hover {
+  color: var(--dossier-ink);
+}
+
+/* ── Progress ────────────────────────────────────────────── */
+.progressWrap {
+  margin-bottom: 14px;
+}
+
+.progressRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+}
+
+.progressLabel {
+  font-size: 12px;
+  line-height: 1.4;
+  font-family: var(--font-mono-doc);
+  color: var(--dossier-sub);
+}
+
+.progressTrack {
+  height: 1px;
+  position: relative;
+  background: rgba(26, 24, 21, 0.18);
+}
+
+.progressFill {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  background: var(--dossier-gold);
+  transition: width 200ms ease;
+}
+
+/* ── Paper sheet ─────────────────────────────────────────── */
+.contentSheet {
+  background: var(--dossier-surface, rgba(252, 250, 245, 0.98));
+  border: 1px solid rgba(26, 24, 21, 0.08);
+  border-radius: 12px;
+  padding: 24px 20px 20px;
+  box-shadow: 0 1px 4px rgba(26, 24, 21, 0.04);
+}
+
+/* ── Fading zone: question + A/B ─────────────────────────── */
+.qContent {
+  transition: opacity 80ms ease;
+}
+.qFading {
+  opacity: 0;
+}
+
+/* ── Question text ───────────────────────────────────────── */
+.questionText {
+  font-family: var(--font-zen);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.55;
+  letter-spacing: 0;
+  color: var(--dossier-ink);
+  margin: 0 0 28px;
+}
+
+/* ── A/B section ─────────────────────────────────────────── */
+.abSection {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/*
+ * A block — full width, left-aligned, LEFT vertical rail
+ *
+ * Rail technique: absolute pseudo-element with adaptive height.
+ *   top/bottom = max(0px, 50% - 36px)
+ *   When block ≤ 72px  → top=0, bottom=0 → rail fills block height (natural stretch, min 48px)
+ *   When block  > 72px → top>0, bottom>0 → rail stays 72px, centered in taller block
+ *   Parent min-height: 48px guarantees rail ≥ 48px always.
+ */
+.abBlockA {
+  position: relative;
+  padding-left: 15px; /* 3px rail + 12px gap */
+  min-height: 48px;
+}
+
+.abBlockA::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: max(0px, calc(50% - 36px));
+  bottom: max(0px, calc(50% - 36px));
+  width: 3px;
+  background: #5E7466;
+  border-radius: 1.5px;
+}
+
+/*
+ * B block — 88% width, right-shifted, RIGHT vertical rail
+ */
+.abBlockB {
+  position: relative;
+  padding-right: 15px; /* 12px gap + 3px rail */
+  width: 88%;
+  margin-left: auto;
+  min-height: 48px;
+}
+
+.abBlockB::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: max(0px, calc(50% - 36px));
+  bottom: max(0px, calc(50% - 36px));
+  width: 3px;
+  background: #7A5C4C;
+  border-radius: 1.5px;
+}
+
+/* ── Labels ──────────────────────────────────────────────── */
+.aLabel {
+  display: block;
+  font-family: var(--font-jp);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  color: #4F675A;
+  margin-bottom: 8px;
+}
+
+.bLabel {
+  display: block;
+  font-family: var(--font-jp);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  color: #6F5143;
+  text-align: right;
+  margin-bottom: 8px;
+}
+
+/* ── Option text (shared A/B) ────────────────────────────── */
+.abText {
+  font-family: var(--font-jp);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--dossier-ink);
+  text-align: left;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Answer section — non-fading
+   ═══════════════════════════════════════════════════════════ */
+.answerSection {
+  margin-top: 24px;
+}
+
+/* Row of 4 buttons */
+.answerRow {
+  display: flex;
+  gap: 6px;
+}
+
+/*
+ * When a choice is selected, unselected buttons dim slightly.
+ * opacity: 0.77 keeps them readable, not invisible.
+ */
+.hasSelection .answerBtn:not(.answerBtnSelected) {
+  opacity: 0.77;
+}
+
+/* ── Answer button ───────────────────────────────────────── */
+/*
+ * Per-button CSS custom props (set via style prop in TSX):
+ *   --btn-bg          button background
+ *   --btn-color       text + diamond dot color
+ *   --diamond-border  diamond outline color
+ */
+.answerBtn {
+  flex: 1;
+  min-width: 0;
+  height: 68px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--btn-bg);
+  color: var(--btn-color);
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+  transition:
+    opacity      150ms ease,
+    transform    100ms ease,
+    filter       100ms ease;
+}
+
+.answerBtn:disabled {
+  cursor: default;
+}
+
+.answerBtn:focus-visible {
+  outline: 2px solid var(--dossier-gold);
+  outline-offset: 2px;
+}
+
+/* Hover — pointer devices only, non-selected buttons */
+@media (hover: hover) {
+  .answerBtn:not(:disabled):not(.answerBtnSelected):hover {
+    filter: brightness(0.97);
+    transform: translateY(-1px);
+  }
+}
+
+/* ── Selected state ──────────────────────────────────────── */
+/*
+ * "Pressed into the paper" feeling:
+ *   translateY(1px) = subtle downward nudge
+ *   outline inset   = inked border inside button edge
+ *   font-weight 700 = text becomes heavier
+ */
+.answerBtnSelected {
+  transform: translateY(1px);
+  outline: 2px solid rgba(26, 24, 21, 0.65);
+  outline-offset: -2px;
+  font-weight: 700;
+}
+
+/* ── Diamond ─────────────────────────────────────────────── */
+/*
+ * CSS rotated square.
+ * background: #FFFDF8 (warm white/parchment) on all buttons.
+ * border-color from --diamond-border (varies per button).
+ * Never filled — always white interior.
+ */
+.diamond {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transform: rotate(45deg);
+  border: 1.5px solid var(--diamond-border);
+  background: #FFFDF8;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/*
+ * Inner dot — only visible when button is selected.
+ * A small muted ink dot marks the center of the diamond.
+ * rgba(26,24,21,0.50) works on the warm-white #FFFDF8 background
+ * for both dark-background buttons and light-background buttons.
+ */
+.answerBtnSelected .diamond::before {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(26, 24, 21, 0.50);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Button label ────────────────────────────────────────── */
+.btnLabel {
+  font-family: var(--font-jp);
+  font-size: 14px;
+  font-weight: inherit; /* 600 default, 700 when .answerBtnSelected */
+  line-height: 1;
+  white-space: nowrap;
+  color: inherit;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PC ≥ 768px
+   ══════════════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+  .container {
+    padding: 32px 0 48px;
+  }
+
+  .contentSheet {
+    padding: 28px 28px 24px;
+  }
+
+  .questionText {
+    font-size: 22px;
+    margin-bottom: 32px;
+  }
+
+  .abSection {
+    gap: 24px;
+  }
+
+  .abBlockB {
+    width: 86%;
+  }
+
+  .abText {
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .answerBtn {
+    height: 72px;
+  }
+
+  .btnLabel {
+    font-size: 15px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   Small screens ≤ 360px
+   テキストやタップ領域を無理に縮小しない
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .container {
+    padding: 20px 12px 28px;
+  }
+
+  .contentSheet {
+    padding: 20px 16px 16px;
+  }
+
+  .questionText {
+    font-size: 20px; /* min: spec says ≥ 20px */
+    margin-bottom: 24px;
+  }
+
+  .abText {
+    font-size: 15px; /* spec: A/B本文15px未満へ縮小しない = stay at 15px min */
+  }
+
+  .btnLabel {
+    font-size: 13px;
+  }
+}
