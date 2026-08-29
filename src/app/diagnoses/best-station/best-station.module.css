@@ -1,0 +1,188 @@
+/* ══════════════════════════════════════════════════════════════
+   best-station 専用ギャルPOPデザインシステム
+   このCSS Moduleはbest-station配下のページだけへ適用する。
+   Human OS共通CSS・ビジマル診断・他診断へは一切影響しない。
+   色トークンはlayout.tsxの --bs-* CSS変数を参照する。
+══════════════════════════════════════════════════════════════ */
+
+/* ルート：全ページ共通の下地 */
+.root {
+  --_ink: var(--bs-ink, #211920);
+  --_border: var(--bs-border, #241C22);
+  background: var(--bs-bg, #FFF8F1);
+  color: var(--_ink);
+  min-height: 100vh;
+}
+
+/* ── ディスプレイ見出し（大見出し・結果駅・一発ツッコミ用） ────────────── */
+.display {
+  font-family: var(--font-display, "Hiragino Sans", sans-serif);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+}
+
+/* ディスプレイ書体が読めない環境向けのフォールバック（900相当＋縁取り） */
+.displayFallback {
+  font-weight: 900;
+  text-shadow: 2px 2px 0 rgba(36, 28, 34, 0.14);
+}
+
+/* 濃色オフセット影付きの一方向テキストシャドウ */
+.inkShadow {
+  text-shadow: 3px 3px 0 rgba(36, 28, 34, 0.16);
+}
+
+/* ── マーカー風ハイライト（一部の単語背景） ──────────────────────────── */
+.markerYellow {
+  background: linear-gradient(transparent 58%, var(--bs-yellow, #FFD84D) 58%);
+  padding: 0 0.06em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.markerPink {
+  background: linear-gradient(transparent 58%, rgba(255, 79, 154, 0.4) 58%);
+  padding: 0 0.06em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ── ステッカー風ラベル ──────────────────────────────────────────────── */
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-family: var(--font-jp);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 2px solid var(--_border);
+  background: var(--bs-surface, #fff);
+  color: var(--_ink);
+  box-shadow: 2px 2px 0 var(--_border);
+  transform: rotate(-2deg);
+}
+.stickerPink   { background: var(--bs-pink, #FF4F9A);   color: #fff; }
+.stickerCoral  { background: var(--bs-coral, #FF765B);  color: #fff; }
+.stickerYellow { background: var(--bs-yellow, #FFD84D); color: var(--_ink); }
+.stickerAqua   { background: var(--bs-aqua, #52D8D2);   color: var(--_ink); }
+.stickerLav    { background: var(--bs-lavender, #B9A5FF); color: var(--_ink); }
+
+/* ── 太枠オフセット影カード（見出し・強調ブロック用） ──────────────────── */
+.popCard {
+  border: 2px solid var(--_border);
+  border-radius: 18px;
+  background: var(--bs-surface, #fff);
+  box-shadow: 4px 4px 0 var(--_border);
+}
+
+/* ── 分析本文カード（落ち着いて読ませる。傾けない・過装飾しない） ──────── */
+.readCard {
+  border: 1.5px solid rgba(36, 28, 34, 0.16);
+  border-radius: 16px;
+  background: var(--bs-surface, #fff);
+  box-shadow: 2px 2px 0 rgba(36, 28, 34, 0.08);
+}
+
+/* ── POP回答ボタン ────────────────────────────────────────────────────── */
+.answer {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-jp);
+  font-weight: 500;
+  color: var(--_ink);
+  background: var(--bs-surface, #fff);
+  border: 2px solid var(--_border);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--_border);
+  transition: transform 130ms ease, box-shadow 130ms ease, background 130ms ease;
+  cursor: pointer;
+  min-height: 44px;
+}
+.answer:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 5px 0 var(--_border);
+}
+.answer:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0 var(--_border);
+}
+.answerSelected {
+  background: var(--bs-pink, #FF4F9A);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 3px 3px 0 var(--_border);
+}
+.answerSelected:hover {
+  box-shadow: 4px 5px 0 var(--_border);
+}
+
+/* セカンダリ選択色（segmented等の補助アクセント） */
+.answerAqua { background: var(--bs-aqua, #52D8D2); color: var(--_ink); font-weight: 700; }
+
+/* ── 主CTA・次へボタン ────────────────────────────────────────────────── */
+.cta {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-jp);
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--bs-pink, #FF4F9A), var(--bs-coral, #FF765B));
+  border: 2px solid var(--_border);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0 var(--_border);
+  transition: transform 130ms ease, box-shadow 130ms ease;
+  cursor: pointer;
+  min-height: 52px;
+}
+.cta:hover { transform: translateY(-2px); box-shadow: 5px 6px 0 var(--_border); }
+.cta:active { transform: translateY(1px); box-shadow: 1px 1px 0 var(--_border); }
+.ctaDisabled {
+  background: #D4D0CA;
+  color: #fff;
+  box-shadow: 2px 2px 0 rgba(36, 28, 34, 0.25);
+  cursor: not-allowed;
+  transform: none;
+}
+.ctaDisabled:hover { transform: none; box-shadow: 2px 2px 0 rgba(36, 28, 34, 0.25); }
+
+/* ── フォーカス可視化（アクセシビリティ） ─────────────────────────────── */
+.answer:focus-visible,
+.cta:focus-visible,
+.stickerBtn:focus-visible {
+  outline: 3px solid var(--bs-pink, #FF4F9A);
+  outline-offset: 3px;
+}
+
+/* ── 星・キラキラ等の単純装飾（1画面3個まで） ─────────────────────────── */
+.sparkle {
+  display: inline-block;
+  color: var(--bs-yellow, #FFD84D);
+  filter: drop-shadow(1px 1px 0 var(--_border));
+}
+
+/* ── モーション：登場演出（初回・短く） ───────────────────────────────── */
+@keyframes bsPopIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.popIn { animation: bsPopIn 200ms ease-out both; }
+
+@keyframes bsStationIn {
+  0%   { opacity: 0; transform: translateY(14px) rotate(-3deg) scale(0.9); }
+  60%  { transform: translateY(0) rotate(1.5deg) scale(1.04); }
+  100% { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+}
+.stationIn { animation: bsStationIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* ── prefers-reduced-motion 対応 ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .answer, .cta { transition: none; }
+  .answer:hover, .cta:hover { transform: none; }
+  .popIn, .stationIn { animation: none; }
+}
