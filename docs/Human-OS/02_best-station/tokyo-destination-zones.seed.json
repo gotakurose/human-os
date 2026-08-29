@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "zones": [
+    {
+      "id": "none",
+      "label": "特になし／まだ分からない"
+    },
+    {
+      "id": "shinjuku",
+      "label": "新宿・西新宿"
+    },
+    {
+      "id": "shibuya",
+      "label": "渋谷・恵比寿"
+    },
+    {
+      "id": "ikebukuro",
+      "label": "池袋"
+    },
+    {
+      "id": "tokyo",
+      "label": "東京・大手町・日本橋"
+    },
+    {
+      "id": "shinagawa",
+      "label": "品川・田町・浜松町"
+    },
+    {
+      "id": "roppongi",
+      "label": "六本木・赤坂・虎ノ門"
+    },
+    {
+      "id": "ueno",
+      "label": "上野・秋葉原・浅草"
+    },
+    {
+      "id": "east_bay",
+      "label": "錦糸町・豊洲・湾岸"
+    },
+    {
+      "id": "west_tokyo",
+      "label": "中野・吉祥寺・西東京"
+    },
+    {
+      "id": "tama",
+      "label": "立川・八王子・多摩"
+    }
+  ]
+}

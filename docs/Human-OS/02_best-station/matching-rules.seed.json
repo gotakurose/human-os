@@ -1,0 +1,90 @@
+{
+  "matchingSpecVersion": "0.2.0-review",
+  "metricFeatureMap": {
+    "E01": "benefits.stimulation",
+    "E02": "benefits.recovery",
+    "E03": "benefits.convenience",
+    "E04": "benefits.activity",
+    "E05": "benefits.community",
+    "E06": "benefits.spontaneity",
+    "E07": "benefits.space",
+    "T01": "loads.noise",
+    "T02": "loads.crowd",
+    "T03": "loads.isolation",
+    "T04": "loads.inconvenience",
+    "T06": "loads.small_space",
+    "T07": "loads.intrusion"
+  },
+  "benefitMismatch": {
+    "standard": "max(0, need - stationBenefit)",
+    "E05": "abs(E05 - stationCommunity)"
+  },
+  "loadOverrun": "max(0, stationLoad - tolerance) * exposureFactor",
+  "exposureFactors": {
+    "T01": "0.5 + 0.5 * B01 / 100",
+    "T02": "0.5 + 0.5 * max(B03,B05,B07) / 100",
+    "T03": "1.0",
+    "T04": "0.5 + 0.5 * B04 / 100",
+    "T06": "0.5 + 0.5 * max(B01,B02) / 100",
+    "T07": "0.5 + 0.5 * B04 / 100"
+  },
+  "scoreWeights": {
+    "benefitShortfall": 0.45,
+    "loadOverrun": 0.2,
+    "economicPenalty": 0.2,
+    "destinationPenalty": 0.15
+  },
+  "finalScore": "clamp(0,100,100 - benefitShortfall*0.45 - loadOverrun*0.20 - economicPenalty*0.20 - destinationPenalty*0.15)",
+  "incomeToBudgetTier": {
+    "none": 1,
+    "under_300": 2,
+    "300_499": 3,
+    "500_699": 4,
+    "700_999": 5,
+    "1000_1499": 6,
+    "1500_1999": 7,
+    "2000_2999": 8,
+    "3000_plus": 10
+  },
+  "budgetAdjustments": {
+    "stableSupport": 1,
+    "slightlyMoreWillingness": 1,
+    "moreWillingness": 2,
+    "decreaseWillingness": -1,
+    "maxTier": 10,
+    "minTier": 1
+  },
+  "economicPenaltyByTierGap": {
+    "0": 0,
+    "1": 8,
+    "2": 20,
+    "3": 40,
+    "4_plus": 70
+  },
+  "destinationPenalty": {
+    "basePerAccessBand": 15,
+    "primaryMultiplier": 1.0,
+    "secondaryMultiplier": 0.4,
+    "frequencyMultiplierField": "commute_days_per_week",
+    "unknownPolicy": "omit_and_lower_confidence"
+  },
+  "rankingExclusions": [
+    "I01-I07 are not used to raise station ranking.",
+    "D01-D06 are not used to raise station ranking.",
+    "Station type/archetype is not used as a gate.",
+    "Prefecture average data is not used to infer personality or directly choose a result station."
+  ],
+  "alternativeSelection": {
+    "count": 2,
+    "maxScoreGapFromTop": 12,
+    "preferDifferentArchetype": true,
+    "preferDifferentAccessGroup": true
+  },
+  "confidence": {
+    "start": 100,
+    "missingSensitiveFieldPenalty": 5,
+    "missingIncomePenalty": 15,
+    "missingDestinationPenalty": 0,
+    "lowCoverageIGroupDoesNotReduceStationFitConfidence": true
+  }
+}

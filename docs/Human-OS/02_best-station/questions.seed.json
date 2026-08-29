@@ -1,0 +1,2106 @@
+{
+  "diagnosisId": "best-station",
+  "questionSpecVersion": "0.2.0-review",
+  "totalSteps": 30,
+  "targetCompletionMinutes": [
+    4,
+    6
+  ],
+  "steps": [
+    {
+      "stepId": "R01",
+      "section": "reality",
+      "title": "いま、どの都道府県に住んでますか？",
+      "subtitle": "全国の駅名は聞きません。まずは県だけで十分だべ。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "current_prefecture_code",
+          "type": "prefecture_select",
+          "required": true,
+          "source": "prefectures.seed.json",
+          "layer": "L1",
+          "scoring": null,
+          "commonDomains": [
+            "environment",
+            "change"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "R02",
+      "section": "reality",
+      "title": "今の家の周り、だいたいどんな場所ですか？",
+      "subtitle": "駅名ではなく、実際の暮らし方を選んでください。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "current_area_type",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": "downtown_core",
+              "label": "繁華街・都心のど真ん中"
+            },
+            {
+              "value": "urban_station",
+              "label": "都市の大きな駅前"
+            },
+            {
+              "value": "urban_residential",
+              "label": "都市の住宅街"
+            },
+            {
+              "value": "suburban_residential",
+              "label": "郊外の住宅地"
+            },
+            {
+              "value": "regional_city",
+              "label": "地方都市・地域の中心部"
+            },
+            {
+              "value": "rural",
+              "label": "田園・山間・海沿いなど"
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "current_noise_band",
+          "type": "segmented",
+          "required": true,
+          "options": [
+            {
+              "value": "low",
+              "label": "静か"
+            },
+            {
+              "value": "mid",
+              "label": "普通"
+            },
+            {
+              "value": "high",
+              "label": "にぎやか"
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "current_density_band",
+          "type": "segmented",
+          "required": true,
+          "options": [
+            {
+              "value": "low",
+              "label": "人が少ない"
+            },
+            {
+              "value": "mid",
+              "label": "普通"
+            },
+            {
+              "value": "high",
+              "label": "人が多い"
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "current_convenience_band",
+          "type": "segmented",
+          "required": true,
+          "options": [
+            {
+              "value": "low",
+              "label": "不便"
+            },
+            {
+              "value": "mid",
+              "label": "普通"
+            },
+            {
+              "value": "high",
+              "label": "便利"
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "current_green_space_band",
+          "type": "segmented",
+          "required": true,
+          "options": [
+            {
+              "value": "low",
+              "label": "余白少なめ"
+            },
+            {
+              "value": "mid",
+              "label": "普通"
+            },
+            {
+              "value": "high",
+              "label": "緑・余白多め"
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        }
+      ]
+    },
+    {
+      "stepId": "R03",
+      "section": "reality",
+      "title": "家の中、ちゃんと暮らせてますか？",
+      "subtitle": "寝る・働く・休むが全部ぶつかってないか確認します。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "housing_type",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": "rent_alone",
+              "label": "賃貸・一人暮らし"
+            },
+            {
+              "value": "rent_shared",
+              "label": "賃貸・同居"
+            },
+            {
+              "value": "owned",
+              "label": "持ち家・住宅ローン"
+            },
+            {
+              "value": "family_home",
+              "label": "実家暮らし"
+            },
+            {
+              "value": "company_housing",
+              "label": "社宅・寮"
+            },
+            {
+              "value": "other",
+              "label": "その他"
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "household_type",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": "alone",
+              "label": "一人"
+            },
+            {
+              "value": "partner",
+              "label": "パートナーと同居"
+            },
+            {
+              "value": "family_children",
+              "label": "子どもを含む家族"
+            },
+            {
+              "value": "parents_family",
+              "label": "親・親族と同居"
+            },
+            {
+              "value": "roommates",
+              "label": "友人・ルームメイト等"
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "room_comfort",
+          "type": "segmented",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "かなり窮屈"
+            },
+            {
+              "value": 50,
+              "label": "まあ足りる"
+            },
+            {
+              "value": 100,
+              "label": "余裕あり"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B02",
+          "scoring": {
+            "mode": "direct"
+          }
+        },
+        {
+          "fieldId": "home_function_conflict",
+          "type": "segmented",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "問題なし"
+            },
+            {
+              "value": 50,
+              "label": "少し競合"
+            },
+            {
+              "value": 100,
+              "label": "かなり競合"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B02",
+          "scoring": {
+            "mode": "weighted_component",
+            "weight": 0.6
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "R04",
+      "section": "reality",
+      "title": "その家、毎月いくら食ってますか？",
+      "subtitle": "物件全体と、あなた自身の負担を分けて聞きます。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "total_housing_cost_band",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": "zero",
+              "label": "0円／実家・全額補助など",
+              "band": 0
+            },
+            {
+              "value": "under_50k",
+              "label": "5万円未満",
+              "band": 1
+            },
+            {
+              "value": "50_79k",
+              "label": "5万〜7.9万円",
+              "band": 2
+            },
+            {
+              "value": "80_99k",
+              "label": "8万〜9.9万円",
+              "band": 3
+            },
+            {
+              "value": "100_129k",
+              "label": "10万〜12.9万円",
+              "band": 4
+            },
+            {
+              "value": "130_159k",
+              "label": "13万〜15.9万円",
+              "band": 5
+            },
+            {
+              "value": "160_199k",
+              "label": "16万〜19.9万円",
+              "band": 6
+            },
+            {
+              "value": "200_249k",
+              "label": "20万〜24.9万円",
+              "band": 7
+            },
+            {
+              "value": "250_349k",
+              "label": "25万〜34.9万円",
+              "band": 8
+            },
+            {
+              "value": "350k_plus",
+              "label": "35万円以上",
+              "band": 9
+            },
+            {
+              "value": "prefer_not",
+              "label": "答えたくない",
+              "band": null
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "personal_housing_cost_band",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": "zero",
+              "label": "0円／実家・全額補助など",
+              "band": 0
+            },
+            {
+              "value": "under_50k",
+              "label": "5万円未満",
+              "band": 1
+            },
+            {
+              "value": "50_79k",
+              "label": "5万〜7.9万円",
+              "band": 2
+            },
+            {
+              "value": "80_99k",
+              "label": "8万〜9.9万円",
+              "band": 3
+            },
+            {
+              "value": "100_129k",
+              "label": "10万〜12.9万円",
+              "band": 4
+            },
+            {
+              "value": "130_159k",
+              "label": "13万〜15.9万円",
+              "band": 5
+            },
+            {
+              "value": "160_199k",
+              "label": "16万〜19.9万円",
+              "band": 6
+            },
+            {
+              "value": "200_249k",
+              "label": "20万〜24.9万円",
+              "band": 7
+            },
+            {
+              "value": "250_349k",
+              "label": "25万〜34.9万円",
+              "band": 8
+            },
+            {
+              "value": "350k_plus",
+              "label": "35万円以上",
+              "band": 9
+            },
+            {
+              "value": "prefer_not",
+              "label": "答えたくない",
+              "band": null
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "housing_burden_feeling",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "かなり余裕がある"
+            },
+            {
+              "value": 33,
+              "label": "無理なく払えている"
+            },
+            {
+              "value": 66,
+              "label": "少し重い"
+            },
+            {
+              "value": 100,
+              "label": "かなり生活を圧迫している"
+            },
+            {
+              "value": null,
+              "label": "分からない／答えたくない"
+            }
+          ],
+          "layer": "L1",
+          "metric": "F02",
+          "scoring": {
+            "mode": "primary_evidence"
+          }
+        },
+        {
+          "fieldId": "future_housing_spend_willingness",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": "decrease",
+              "label": "できれば下げたい"
+            },
+            {
+              "value": "same",
+              "label": "今と同じくらい"
+            },
+            {
+              "value": "slightly_more",
+              "label": "生活が良くなるなら少し増やせる"
+            },
+            {
+              "value": "more",
+              "label": "必要ならしっかり増やせる"
+            },
+            {
+              "value": "unknown",
+              "label": "まだ分からない"
+            }
+          ],
+          "layer": "L1",
+          "metric": "F04",
+          "scoring": {
+            "mode": "supporting_evidence"
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "R05",
+      "section": "reality",
+      "title": "実家は太いですか？",
+      "subtitle": "正確には、親・会社・パートナー・資産など、住居費を支えるものがあるか聞きます。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "personal_income_band",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": "none",
+              "label": "現在は個人収入なし",
+              "band": 0
+            },
+            {
+              "value": "under_300",
+              "label": "300万円未満",
+              "band": 1
+            },
+            {
+              "value": "300_499",
+              "label": "300万〜499万円",
+              "band": 2
+            },
+            {
+              "value": "500_699",
+              "label": "500万〜699万円",
+              "band": 3
+            },
+            {
+              "value": "700_999",
+              "label": "700万〜999万円",
+              "band": 4
+            },
+            {
+              "value": "1000_1499",
+              "label": "1,000万〜1,499万円",
+              "band": 5
+            },
+            {
+              "value": "1500_1999",
+              "label": "1,500万〜1,999万円",
+              "band": 6
+            },
+            {
+              "value": "2000_2999",
+              "label": "2,000万〜2,999万円",
+              "band": 7
+            },
+            {
+              "value": "3000_plus",
+              "label": "3,000万円以上",
+              "band": 8
+            },
+            {
+              "value": "prefer_not",
+              "label": "答えたくない",
+              "band": null
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "cost_sharing",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": "self_only",
+              "label": "ほぼ自分だけで負担"
+            },
+            {
+              "value": "shared_partner",
+              "label": "パートナー・同居人と分担"
+            },
+            {
+              "value": "family_support",
+              "label": "家族・親族が一部負担"
+            },
+            {
+              "value": "company_support",
+              "label": "会社・制度が一部負担"
+            },
+            {
+              "value": "mixed",
+              "label": "複数の支えがある"
+            },
+            {
+              "value": "prefer_not",
+              "label": "答えたくない"
+            }
+          ],
+          "layer": "L1",
+          "metric": "F03",
+          "scoring": {
+            "mode": "categorical"
+          }
+        },
+        {
+          "fieldId": "support_sources",
+          "type": "multi_select",
+          "required": false,
+          "maxSelections": 4,
+          "options": [
+            {
+              "value": "none",
+              "label": "特になし"
+            },
+            {
+              "value": "company",
+              "label": "住宅手当・社宅等"
+            },
+            {
+              "value": "family",
+              "label": "親・親族の支援"
+            },
+            {
+              "value": "partner",
+              "label": "パートナー・同居人の負担"
+            },
+            {
+              "value": "assets",
+              "label": "貯蓄・資産収入等"
+            },
+            {
+              "value": "other",
+              "label": "その他"
+            },
+            {
+              "value": "prefer_not",
+              "label": "答えたくない"
+            }
+          ],
+          "layer": "L1",
+          "metric": "F03",
+          "scoring": {
+            "mode": "categorical"
+          }
+        },
+        {
+          "fieldId": "support_stability",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "value": "none",
+              "label": "支援なし"
+            },
+            {
+              "value": "temporary",
+              "label": "一時的・不安定"
+            },
+            {
+              "value": "stable",
+              "label": "当面は安定"
+            },
+            {
+              "value": "unknown",
+              "label": "分からない／答えたくない"
+            }
+          ],
+          "layer": "L1",
+          "metric": "F03",
+          "scoring": {
+            "mode": "confidence_modifier"
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "R06",
+      "section": "reality",
+      "title": "通勤で毎日ちょっと死んでませんか？",
+      "subtitle": "今の移動負荷だけ聞きます。目的地の駅名は不要です。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "current_status",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": "office_worker",
+              "label": "会社員・公務員等"
+            },
+            {
+              "value": "self_employed",
+              "label": "自営業・フリーランス"
+            },
+            {
+              "value": "student",
+              "label": "学生"
+            },
+            {
+              "value": "home_centered",
+              "label": "在宅中心・家事育児中心"
+            },
+            {
+              "value": "not_working",
+              "label": "現在は定期的な通勤・通学なし"
+            },
+            {
+              "value": "other",
+              "label": "その他"
+            }
+          ],
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "commute_days_per_week",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "0日"
+            },
+            {
+              "value": 1,
+              "label": "週1日"
+            },
+            {
+              "value": 2,
+              "label": "週2日"
+            },
+            {
+              "value": 3,
+              "label": "週3日"
+            },
+            {
+              "value": 4,
+              "label": "週4日"
+            },
+            {
+              "value": 5,
+              "label": "週5日以上"
+            }
+          ],
+          "layer": "L1",
+          "metric": "B08",
+          "scoring": {
+            "mode": "component"
+          }
+        },
+        {
+          "fieldId": "one_way_travel_time",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "移動なし／15分未満"
+            },
+            {
+              "value": 25,
+              "label": "15〜29分"
+            },
+            {
+              "value": 50,
+              "label": "30〜44分"
+            },
+            {
+              "value": 75,
+              "label": "45〜59分"
+            },
+            {
+              "value": 90,
+              "label": "60〜89分"
+            },
+            {
+              "value": 100,
+              "label": "90分以上"
+            }
+          ],
+          "layer": "L1",
+          "metric": "B08",
+          "scoring": {
+            "mode": "component"
+          }
+        },
+        {
+          "fieldId": "transfer_count",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "0回"
+            },
+            {
+              "value": 33,
+              "label": "1回"
+            },
+            {
+              "value": 66,
+              "label": "2回"
+            },
+            {
+              "value": 100,
+              "label": "3回以上"
+            }
+          ],
+          "layer": "L1",
+          "metric": "B08",
+          "scoring": {
+            "mode": "component"
+          }
+        },
+        {
+          "fieldId": "post_commute_exhaustion",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "ほぼ影響なし"
+            },
+            {
+              "value": 33,
+              "label": "少し疲れる"
+            },
+            {
+              "value": 66,
+              "label": "帰宅後の行動が減る"
+            },
+            {
+              "value": 100,
+              "label": "平日はほぼ何もできない"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B08",
+          "scoring": {
+            "mode": "component"
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "R07",
+      "section": "reality",
+      "title": "東京で、絶対に行かなきゃいけない方面はありますか？",
+      "subtitle": "ある人だけ選んでください。最大3方面までです。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "primary_tokyo_destination_zone",
+          "type": "single_select",
+          "required": true,
+          "source": "tokyo-destination-zones.seed.json",
+          "layer": "L1",
+          "scoring": null
+        },
+        {
+          "fieldId": "secondary_tokyo_destination_zones",
+          "type": "multi_select",
+          "required": false,
+          "maxSelections": 2,
+          "source": "tokyo-destination-zones.seed.json",
+          "excludeValues": [
+            "none"
+          ],
+          "layer": "L1",
+          "scoring": null
+        }
+      ]
+    },
+    {
+      "stepId": "Q08",
+      "section": "environment_need",
+      "title": "街が静かすぎて、店も人も動きも少ない日が3日続いたら？",
+      "subtitle": "刺激の必要量",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "e01",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "最高。ずっとこれでいい"
+            },
+            {
+              "value": 25,
+              "label": "特に困らない"
+            },
+            {
+              "value": 50,
+              "label": "少し物足りない"
+            },
+            {
+              "value": 75,
+              "label": "かなり停滞する"
+            },
+            {
+              "value": 100,
+              "label": "街の気配がないと無理"
+            }
+          ],
+          "layer": "L2",
+          "metric": "E01",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "environment",
+            "motivation",
+            "values"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q09",
+      "section": "environment_need",
+      "title": "疲れて帰った夜、家の周りにどれくらい静けさが必要ですか？",
+      "subtitle": "回復環境必要量",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "e02",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "周りが騒がしくても気にならない"
+            },
+            {
+              "value": 25,
+              "label": "多少にぎやかでも平気"
+            },
+            {
+              "value": 50,
+              "label": "普通に落ち着ければいい"
+            },
+            {
+              "value": 75,
+              "label": "かなり静かな方がいい"
+            },
+            {
+              "value": 100,
+              "label": "静けさ・余白・緑がないと回復できない"
+            }
+          ],
+          "layer": "L2",
+          "metric": "E02",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "environment",
+            "motivation",
+            "values"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q10",
+      "section": "environment_need",
+      "title": "日用品、病院、食事、配送。ひと手間かかる生活は？",
+      "subtitle": "生活摩擦回避度",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "e03",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "計画すれば全然平気"
+            },
+            {
+              "value": 25,
+              "label": "多少なら平気"
+            },
+            {
+              "value": 50,
+              "label": "続くと少し面倒"
+            },
+            {
+              "value": 75,
+              "label": "かなり機嫌が悪くなる"
+            },
+            {
+              "value": 100,
+              "label": "毎日の小さな不便が本当に無理"
+            }
+          ],
+          "layer": "L2",
+          "metric": "E03",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "environment",
+            "motivation",
+            "values"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q11",
+      "section": "environment_need",
+      "title": "飲食、文化、娯楽、友人との予定。街の外部資源を実際どれくらい使いたいですか？",
+      "subtitle": "活動接続必要量",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "e04",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "ほぼ使わなくていい"
+            },
+            {
+              "value": 25,
+              "label": "月に数回あれば十分"
+            },
+            {
+              "value": 50,
+              "label": "週1回くらい欲しい"
+            },
+            {
+              "value": 75,
+              "label": "週に何度も使いたい"
+            },
+            {
+              "value": 100,
+              "label": "日常的に使えないと生活が腐る"
+            }
+          ],
+          "layer": "L2",
+          "metric": "E04",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "environment",
+            "motivation",
+            "values"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q12",
+      "section": "environment_need",
+      "title": "近所の人との距離、どれが一番ラクですか？",
+      "subtitle": "生活圏対人距離",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "e05",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "完全に匿名がいい"
+            },
+            {
+              "value": 25,
+              "label": "基本は放っておいてほしい"
+            },
+            {
+              "value": 50,
+              "label": "必要な時だけつながれればいい"
+            },
+            {
+              "value": 75,
+              "label": "行きつけや顔なじみが欲しい"
+            },
+            {
+              "value": 100,
+              "label": "地域のつながりがある方が落ち着く"
+            }
+          ],
+          "layer": "L2",
+          "metric": "E05",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "environment",
+            "motivation",
+            "values"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q13",
+      "section": "environment_need",
+      "title": "夜10時に突然『飯・買い物・遊びに行きたい』となったら？",
+      "subtitle": "即応性欲求",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "e06",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "明日でいい"
+            },
+            {
+              "value": 25,
+              "label": "少し不便でも計画する"
+            },
+            {
+              "value": 50,
+              "label": "近場に何かあれば嬉しい"
+            },
+            {
+              "value": 75,
+              "label": "その場で動ける選択肢が欲しい"
+            },
+            {
+              "value": 100,
+              "label": "思い立った時に何でもできないと困る"
+            }
+          ],
+          "layer": "L2",
+          "metric": "E06",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "environment",
+            "motivation",
+            "values"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q14",
+      "section": "environment_need",
+      "title": "同じ家賃なら、どっちに寄せたいですか？",
+      "subtitle": "住空間優先度",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "e07",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "狭くても立地・街を最優先"
+            },
+            {
+              "value": 25,
+              "label": "やや立地優先"
+            },
+            {
+              "value": 50,
+              "label": "半々"
+            },
+            {
+              "value": 75,
+              "label": "やや広さ・設備優先"
+            },
+            {
+              "value": 100,
+              "label": "遠くても広さ・収納・在宅快適性を優先"
+            }
+          ],
+          "layer": "L2",
+          "metric": "E07",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "environment",
+            "motivation",
+            "values"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q15",
+      "section": "tolerance",
+      "title": "交通音や人の声が続く場所で一週間暮らしたら？",
+      "subtitle": "騒音耐性",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "t01",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "睡眠や集中がかなり崩れる"
+            },
+            {
+              "value": 25,
+              "label": "毎日かなり消耗する"
+            },
+            {
+              "value": 50,
+              "label": "多少は影響する"
+            },
+            {
+              "value": 75,
+              "label": "慣れればだいたい平気"
+            },
+            {
+              "value": 100,
+              "label": "ほとんど影響しない"
+            }
+          ],
+          "layer": "L3",
+          "metric": "T01",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "stress",
+            "environment",
+            "emotion"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q16",
+      "section": "tolerance",
+      "title": "混んだ駅や歩道を毎日通る生活は？",
+      "subtitle": "混雑・高密度耐性",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "t02",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "行動したくなくなる"
+            },
+            {
+              "value": 25,
+              "label": "かなり消耗する"
+            },
+            {
+              "value": 50,
+              "label": "少し疲れる"
+            },
+            {
+              "value": 75,
+              "label": "だいたい平気"
+            },
+            {
+              "value": 100,
+              "label": "ほぼ気にならない"
+            }
+          ],
+          "layer": "L3",
+          "metric": "T02",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "stress",
+            "environment",
+            "emotion"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q17",
+      "section": "tolerance",
+      "title": "知り合いも店もイベントも少ない環境が続いたら？",
+      "subtitle": "孤立耐性",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "t03",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "かなり不安・停滞する"
+            },
+            {
+              "value": 25,
+              "label": "孤独を強く感じる"
+            },
+            {
+              "value": 50,
+              "label": "時々つらい"
+            },
+            {
+              "value": 75,
+              "label": "一人でも安定できる"
+            },
+            {
+              "value": 100,
+              "label": "ほぼ何も困らない"
+            }
+          ],
+          "layer": "L3",
+          "metric": "T03",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "stress",
+            "environment",
+            "emotion"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q18",
+      "section": "tolerance",
+      "title": "店が早く閉まる、品ぞろえが少ない、予約が必要。これが日常なら？",
+      "subtitle": "生活不便耐性",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "t04",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "かなり生活が崩れる"
+            },
+            {
+              "value": 25,
+              "label": "毎日ストレス"
+            },
+            {
+              "value": 50,
+              "label": "工夫すれば対応できる"
+            },
+            {
+              "value": 75,
+              "label": "計画すれば平気"
+            },
+            {
+              "value": 100,
+              "label": "ほぼ問題ない"
+            }
+          ],
+          "layer": "L3",
+          "metric": "T04",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "stress",
+            "environment",
+            "emotion"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q19",
+      "section": "tolerance",
+      "title": "片道60分前後の移動を週5日続けたら？",
+      "subtitle": "反復移動耐性",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "t05",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "生活機能がかなり落ちる"
+            },
+            {
+              "value": 25,
+              "label": "平日はほぼ死ぬ"
+            },
+            {
+              "value": 50,
+              "label": "疲れるが何とかなる"
+            },
+            {
+              "value": 75,
+              "label": "慣れれば動ける"
+            },
+            {
+              "value": 100,
+              "label": "ほぼ普段どおり"
+            }
+          ],
+          "layer": "L3",
+          "metric": "T05",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "stress",
+            "environment",
+            "emotion"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q20",
+      "section": "tolerance",
+      "title": "収納が少なく、仕事・食事・睡眠が同じ空間でも？",
+      "subtitle": "狭小空間耐性",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "t06",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "かなり機嫌と生活が崩れる"
+            },
+            {
+              "value": 25,
+              "label": "長期は厳しい"
+            },
+            {
+              "value": 50,
+              "label": "工夫すれば住める"
+            },
+            {
+              "value": 75,
+              "label": "あまり気にならない"
+            },
+            {
+              "value": 100,
+              "label": "寝られれば十分"
+            }
+          ],
+          "layer": "L3",
+          "metric": "T06",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "stress",
+            "environment",
+            "emotion"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q21",
+      "section": "tolerance",
+      "title": "近所で顔を覚えられ、少し生活が見える環境は？",
+      "subtitle": "地域干渉耐性",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "t07",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "かなり消耗して避けたくなる"
+            },
+            {
+              "value": 25,
+              "label": "強くストレスを感じる"
+            },
+            {
+              "value": 50,
+              "label": "距離があれば平気"
+            },
+            {
+              "value": 75,
+              "label": "多少なら気にならない"
+            },
+            {
+              "value": 100,
+              "label": "ほぼ問題ない"
+            }
+          ],
+          "layer": "L3",
+          "metric": "T07",
+          "scoring": {
+            "mode": "direct_0_100"
+          },
+          "commonDomains": [
+            "stress",
+            "environment",
+            "emotion"
+          ]
+        }
+      ]
+    },
+    {
+      "stepId": "Q22",
+      "section": "behavior",
+      "title": "家、寝るだけですか？ それとも全部やってますか？",
+      "subtitle": "自宅中心度と、自宅が背負っている役割を見ます。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "b01_home_centered",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "ほぼ寝るだけ"
+            },
+            {
+              "value": 25,
+              "label": "平日は短時間だけ"
+            },
+            {
+              "value": 50,
+              "label": "家と外が半々"
+            },
+            {
+              "value": 75,
+              "label": "家で過ごす時間が多い"
+            },
+            {
+              "value": 100,
+              "label": "仕事・趣味・休息のほぼ全部が家"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B01",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        },
+        {
+          "fieldId": "b02_home_functions",
+          "type": "multi_select",
+          "required": true,
+          "maxSelections": 6,
+          "options": [
+            {
+              "value": "sleep",
+              "label": "睡眠"
+            },
+            {
+              "value": "work_study",
+              "label": "仕事・勉強"
+            },
+            {
+              "value": "hobby",
+              "label": "趣味"
+            },
+            {
+              "value": "exercise",
+              "label": "運動"
+            },
+            {
+              "value": "social",
+              "label": "人を呼ぶ"
+            },
+            {
+              "value": "care",
+              "label": "育児・介護"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B02",
+          "scoring": {
+            "mode": "function_load"
+          }
+        },
+        {
+          "fieldId": "b02_conflict_impact",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "特に困っていない"
+            },
+            {
+              "value": 33,
+              "label": "少しぶつかる"
+            },
+            {
+              "value": 66,
+              "label": "かなり使いづらい"
+            },
+            {
+              "value": 100,
+              "label": "家の狭さ・配置で生活が崩れている"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B02",
+          "scoring": {
+            "mode": "impact_component"
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "Q23",
+      "section": "behavior",
+      "title": "仕事以外で、街をどれくらい使ってますか？",
+      "subtitle": "外出頻度と、わざわざ都市へ出る頻度を分けます。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "b03_external_activity",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "月1回未満"
+            },
+            {
+              "value": 25,
+              "label": "月1〜3回"
+            },
+            {
+              "value": 50,
+              "label": "週1回くらい"
+            },
+            {
+              "value": 75,
+              "label": "週2〜3回"
+            },
+            {
+              "value": 100,
+              "label": "週4回以上"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B03",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        },
+        {
+          "fieldId": "b05_destination_city_use",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "ほぼ行かない"
+            },
+            {
+              "value": 25,
+              "label": "月1回未満"
+            },
+            {
+              "value": 50,
+              "label": "月1〜3回"
+            },
+            {
+              "value": 75,
+              "label": "週1回くらい"
+            },
+            {
+              "value": 100,
+              "label": "週2回以上"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B05",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "Q24",
+      "section": "behavior",
+      "title": "家の近所、ちゃんと使ってますか？",
+      "subtitle": "店があるかではなく、あなたが使っているかです。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "b04_local_use",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "ほぼ使わない"
+            },
+            {
+              "value": 25,
+              "label": "コンビニ・最低限だけ"
+            },
+            {
+              "value": 50,
+              "label": "日用品や食事で時々使う"
+            },
+            {
+              "value": 75,
+              "label": "よく使う店が複数ある"
+            },
+            {
+              "value": 100,
+              "label": "生活の大半が近所で完結する"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B04",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "Q25",
+      "section": "behavior",
+      "title": "夜の街、実際どれくらい使いますか？",
+      "subtitle": "『使えると安心』ではなく、本当に使う頻度です。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "b06_night_activity",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "ほぼ使わない"
+            },
+            {
+              "value": 25,
+              "label": "月1回未満"
+            },
+            {
+              "value": 50,
+              "label": "月1〜3回"
+            },
+            {
+              "value": 75,
+              "label": "週1回くらい"
+            },
+            {
+              "value": 100,
+              "label": "週2回以上"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B06",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "Q26",
+      "section": "behavior",
+      "title": "休日、どこまで動きますか？",
+      "subtitle": "行動範囲と、移動で生活が削れているかを見ます。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "b07_daily_range",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "ほぼ徒歩圏"
+            },
+            {
+              "value": 25,
+              "label": "自転車・近隣駅まで"
+            },
+            {
+              "value": 50,
+              "label": "30分圏内"
+            },
+            {
+              "value": 75,
+              "label": "都内を広く動く"
+            },
+            {
+              "value": 100,
+              "label": "県境や遠方まで普通に動く"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B07",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        },
+        {
+          "fieldId": "b08_current_travel_damage",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "移動で生活は削られていない"
+            },
+            {
+              "value": 33,
+              "label": "少し削られる"
+            },
+            {
+              "value": 66,
+              "label": "平日の行動がかなり減る"
+            },
+            {
+              "value": 100,
+              "label": "休日まで回復に使う"
+            }
+          ],
+          "layer": "L4",
+          "metric": "B08",
+          "scoring": {
+            "mode": "impact_component"
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "Q27",
+      "section": "ideal",
+      "title": "理想の街、欲張らずに4つだけ仕分けてください！",
+      "subtitle": "絶対ほしい2つ、なくても耐えられる2つ。残り3つは未観測です。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "ideal_priority_ranking",
+          "type": "dual_bucket_rank",
+          "required": true,
+          "items": [
+            {
+              "metric": "I01",
+              "label": "街の活気・刺激がある"
+            },
+            {
+              "metric": "I02",
+              "label": "静けさ・緑・余白がある"
+            },
+            {
+              "metric": "I03",
+              "label": "日常生活がすぐ済む"
+            },
+            {
+              "metric": "I04",
+              "label": "飲食・文化・娯楽へ近い"
+            },
+            {
+              "metric": "I05",
+              "label": "地域とのつながりがある"
+            },
+            {
+              "metric": "I06",
+              "label": "思い立った時に動ける"
+            },
+            {
+              "metric": "I07",
+              "label": "広さ・収納・設備を得やすい"
+            }
+          ],
+          "mustHaveCount": 2,
+          "compromiseCount": 2,
+          "unselectedState": "unobserved",
+          "layer": "L5A",
+          "metrics": [
+            "I01",
+            "I02",
+            "I03",
+            "I04",
+            "I05",
+            "I06",
+            "I07"
+          ],
+          "scoring": {
+            "must_have": 100,
+            "can_compromise": 0,
+            "unobserved": null
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "Q28",
+      "section": "motive",
+      "title": "住所を言った時、ちょっと気持ちよくなりたいですか？",
+      "subtitle": "地名の見え方と、都会から離れる不安を別々に見ます。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "d01_address_display",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "まったく当てはまらない"
+            },
+            {
+              "value": 25,
+              "label": "あまり当てはまらない"
+            },
+            {
+              "value": 50,
+              "label": "どちらともいえない"
+            },
+            {
+              "value": 75,
+              "label": "やや当てはまる"
+            },
+            {
+              "value": 100,
+              "label": "かなり当てはまる"
+            }
+          ],
+          "layer": "L5B",
+          "metric": "D01",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        },
+        {
+          "fieldId": "d02_urban_exit_anxiety",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "都心から離れても何も不安はない"
+            },
+            {
+              "value": 25,
+              "label": "少し不便そうとは思う"
+            },
+            {
+              "value": 50,
+              "label": "機会が減りそうで少し迷う"
+            },
+            {
+              "value": 75,
+              "label": "取り残されそうでかなり不安"
+            },
+            {
+              "value": 100,
+              "label": "都心圏外になると自分まで終わる気がする"
+            }
+          ],
+          "layer": "L5B",
+          "metric": "D02",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "Q29",
+      "section": "motive",
+      "title": "使わなくても『何でもある』方が安心ですか？",
+      "subtitle": "選択肢の保有と、安く住むこと自体への執着を見ます。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "d03_option_ownership",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "使わないものは近くになくていい"
+            },
+            {
+              "value": 25,
+              "label": "最低限で十分"
+            },
+            {
+              "value": 50,
+              "label": "選べる方が少し安心"
+            },
+            {
+              "value": 75,
+              "label": "使わなくても選択肢は多い方がいい"
+            },
+            {
+              "value": 100,
+              "label": "何でもある状態を手放したくない"
+            }
+          ],
+          "layer": "L5B",
+          "metric": "D03",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        },
+        {
+          "fieldId": "d04_cost_minimization",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "生活が良くなるなら住居費は使う"
+            },
+            {
+              "value": 25,
+              "label": "費用と快適さのバランス"
+            },
+            {
+              "value": 50,
+              "label": "少し不便でも安い方が嬉しい"
+            },
+            {
+              "value": 75,
+              "label": "かなり不便でも家賃を抑えたい"
+            },
+            {
+              "value": 100,
+              "label": "生活が削れても安く住めた事実が大事"
+            }
+          ],
+          "layer": "L5B",
+          "metric": "D04",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        }
+      ]
+    },
+    {
+      "stepId": "Q30",
+      "section": "motive",
+      "title": "今の家が合ってなくても、引っ越し面倒で放置しますか？",
+      "subtitle": "最後に、変化回避と理想の自分への寄せ方を見ます。",
+      "required": true,
+      "fields": [
+        {
+          "fieldId": "d05_status_quo",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "合わなければすぐ変える"
+            },
+            {
+              "value": 25,
+              "label": "比較的動ける"
+            },
+            {
+              "value": 50,
+              "label": "不満があってもしばらく様子を見る"
+            },
+            {
+              "value": 75,
+              "label": "かなり不満でも面倒で維持する"
+            },
+            {
+              "value": 100,
+              "label": "限界まで放置する"
+            }
+          ],
+          "layer": "L5B",
+          "metric": "D05",
+          "scoring": {
+            "mode": "direct_0_100"
+          }
+        },
+        {
+          "fieldId": "d06_ideal_projection",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "今の実生活だけで答えた"
+            },
+            {
+              "value": 25,
+              "label": "ほぼ今の自分で答えた"
+            },
+            {
+              "value": 50,
+              "label": "少し理想も混ざった"
+            },
+            {
+              "value": 75,
+              "label": "なりたい自分をかなり入れた"
+            },
+            {
+              "value": 100,
+              "label": "ほぼ理想の自分で答えた"
+            }
+          ],
+          "layer": "L5B",
+          "metric": "D06",
+          "scoring": {
+            "mode": "direct_plus_gap_evidence"
+          }
+        }
+      ]
+    }
+  ]
+}
