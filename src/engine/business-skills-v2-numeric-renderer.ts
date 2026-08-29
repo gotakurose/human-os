@@ -7,6 +7,7 @@ import {
 import type {
   BusinessSkillsV2Route,
   BusinessSkillsV2NumericTypeRule,
+  BusinessSkillsV2QuantitativeRouteTemplates,
 } from "@/schemas/business-skills-v2";
 import type { BusinessSkillsV2Confidence } from "@/engine/business-skills-v2-selector";
 
@@ -32,6 +33,7 @@ export interface BusinessSkillsV2NumericRenderInput {
   route: BusinessSkillsV2Route;
   typeNumericRules: BusinessSkillsV2NumericTypeRule;
   templates: Record<string, string>; // from numericRules.global.templates
+  quantitativeRouteTemplates: BusinessSkillsV2QuantitativeRouteTemplates;
   styleAxisScores: StyleAxisScores;
   abilityUScores: AbilityUScores;
   confidence: BusinessSkillsV2Confidence;
@@ -105,22 +107,267 @@ function sortedDesc<K extends string>(
   });
 }
 
+// ── Quantitative paragraph processing ────────────────────────────────────────
+
+type QuantParaType = "topAxis" | "central" | "topAbility" | "lag" | "other";
+
+function classifyQuantParagraph(p: string): QuantParaType {
+  if (p.startsWith("4軸では")) return "topAxis";
+  if (p.includes("中央に近")) return "central";
+  if (p.startsWith("5能力では")) return "topAbility";
+  if (
+    p.includes("低いという意味ではありません") ||
+    p.includes("低い能力ではありません") ||
+    p.includes("上位の能力と比べると")
+  )
+    return "lag";
+  return "other";
+}
+
+/** Extract ordered (label, axisKey) pairs from text containing label{{axis.key}} patterns */
+function extractAxisMentions(
+  text: string,
+): Array<{ label: string; key: string }> {
+  // Matches Japanese label text immediately before {{axis.key}}
+  const RE =
+    /([぀-ヿ一-鿿㐀-䶿＀-￯・ー]+)\{\{axis\.([a-z]+)\}\}/g;
+  const out: Array<{ label: string; key: string }> = [];
+  let m: RegExpExecArray | null;
+  while ((m = RE.exec(text)) !== null) {
+    out.push({ label: m[1].replace(/^と/, ""), key: m[2] });
+  }
+  return out;
+}
+
+/** Normalize undefined-threshold expressions to rank-only equivalents */
+function normalizeOrderingExpressions(s: string): string {
+  s = s.replace(/が非常に高く、/g, "が最も高く、");
+  s = s.replace(/が非常に高く出ています/g, "が最も高く出ています");
+  s = s.replace(/が特に高く、/g, "が高く、");
+  s = s.replace(/がほぼ同じ水準で続きます/g, "が続きます");
+  s = s.replace(/も近い水準です/g, "が続きます");
+  return s;
+}
+
+/**
+ * Return true when the ordering claim in the normalized first sentence
+ * matches runtime axis ranks (axisSorted[0] = rank1 = most type-side dominant).
+ */
+function isTopAxisOrderingConsistent(
+  normalizedSentence: string,
+  mentions: Array<{ label: string; key: string }>,
+  axisSorted: AxisPole[],
+  axisDisplayValues: BusinessSkillsV2AxisDisplayValues,
+): boolean {
+  const rank = (key: string) => axisSorted.indexOf(key as AxisPole) + 1;
+  const disp = (key: string) =>
+    (axisDisplayValues as Record<string, number>)[key] ?? 0;
+  const n = mentions.length;
+  if (n === 0) return true;
+
+  // "Xが最も高く出ています" (1 axis) → rank1
+  if (n === 1 && normalizedSentence.includes("が最も高く出ています")) {
+    return rank(mentions[0].key) === 1;
+  }
+
+  if (n === 2) {
+    // "Xが最も高く、Yが続きます" → rank(X)=1, rank(Y)=2
+    if (
+      normalizedSentence.includes("が最も高く") &&
+      normalizedSentence.includes("が続きます")
+    ) {
+      return rank(mentions[0].key) === 1 && rank(mentions[1].key) === 2;
+    }
+    // "Xが高く、Yが続きます" (normalized from 特に) → rank(X)=1, rank(Y)=2
+    if (
+      normalizedSentence.includes("が高く") &&
+      normalizedSentence.includes("が続きます")
+    ) {
+      return rank(mentions[0].key) === 1 && rank(mentions[1].key) === 2;
+    }
+    // "XとYが最も高く並びます" → rank(X)≤2 && rank(Y)≤2 && display values are exactly equal
+    if (normalizedSentence.includes("が最も高く並びます")) {
+      return (
+        rank(mentions[0].key) <= 2 &&
+        rank(mentions[1].key) <= 2 &&
+        disp(mentions[0].key) === disp(mentions[1].key)
+      );
+    }
+  }
+
+  if (n === 3) {
+    // "Xが最も高く、Y/Zが続きます" → rank(X)=1, rank(Y)≤3, rank(Z)≤3
+    if (normalizedSentence.includes("が最も高く")) {
+      return (
+        rank(mentions[0].key) === 1 &&
+        rank(mentions[1].key) <= 3 &&
+        rank(mentions[2].key) <= 3
+      );
+    }
+    // "XとYが高く、Zが続きます" (normalized from 特に) → rank(X/Y)≤2, rank(Z)≤3
+    if (normalizedSentence.includes("が高く")) {
+      return (
+        rank(mentions[0].key) <= 2 &&
+        rank(mentions[1].key) <= 2 &&
+        rank(mentions[2].key) <= 3
+      );
+    }
+  }
+
+  if (n === 4) {
+    // "Xが最も高く、Y/Z/Wが続きます" → rank(X)=1
+    if (normalizedSentence.includes("が最も高く")) {
+      return rank(mentions[0].key) === 1;
+    }
+    // "XとYが高く、ZとWが続きます" (normalized from 特に) → rank(X/Y)≤2
+    if (normalizedSentence.includes("が高く")) {
+      return rank(mentions[0].key) <= 2 && rank(mentions[1].key) <= 2;
+    }
+  }
+
+  return true; // Unknown pattern — keep as-is
+}
+
+/** Build neutral fallback: "4軸では、label1{val}、label2{val}という出方です。" */
+function buildNeutralAxisSentence(
+  mentions: Array<{ label: string; key: string }>,
+  axisDisplayValues: BusinessSkillsV2AxisDisplayValues,
+): string {
+  const parts = mentions.map(
+    (m) =>
+      `${m.label}${String((axisDisplayValues as Record<string, number>)[m.key] ?? "")}`,
+  );
+  return `4軸では、${parts.join("、")}という出方です。`;
+}
+
+/**
+ * Process a TopAxis paragraph:
+ * 1. Split at first sentence boundary
+ * 2. Normalize threshold expressions
+ * 3. Check ordering consistency against runtime ranks
+ * 4. If consistent: keep normalized first sentence, substitute all values
+ * 5. If inconsistent: neutral first sentence + weaken "強く出ています" in rest
+ */
+function processTopAxisParagraph(
+  raw: string,
+  axisSorted: AxisPole[],
+  axisDisplayValues: BusinessSkillsV2AxisDisplayValues,
+  abilityDisplayValues: BusinessSkillsV2AbilityDisplayValues,
+): string {
+  const dotIdx = raw.indexOf("。");
+  const firstRaw = dotIdx >= 0 ? raw.slice(0, dotIdx + 1) : raw;
+  const rest = dotIdx >= 0 ? raw.slice(dotIdx + 1) : "";
+
+  const mentions = extractAxisMentions(firstRaw);
+  const firstNorm = normalizeOrderingExpressions(firstRaw);
+  const consistent = isTopAxisOrderingConsistent(firstNorm, mentions, axisSorted, axisDisplayValues);
+
+  const substituteAll = (s: string): string => {
+    let r = s.replace(/\{\{axis\.([a-z]+)\}\}/g, (_m: string, key: string) => {
+      const val = (axisDisplayValues as Record<string, number>)[key];
+      if (val === undefined)
+        throw new Error(
+          `Unknown axis key in quantitative template: {{axis.${key}}}`,
+        );
+      return String(val);
+    });
+    r = r.replace(/\{\{ability\.([a-z]+)\}\}/g, (_m: string, key: string) => {
+      const val = (abilityDisplayValues as Record<string, number>)[key];
+      if (val === undefined)
+        throw new Error(
+          `Unknown ability key in quantitative template: {{ability.${key}}}`,
+        );
+      return String(val);
+    });
+    return r;
+  };
+
+  if (consistent) {
+    return substituteAll(firstNorm) + substituteAll(rest);
+  }
+
+  // Ordering inconsistent: use neutral first sentence
+  const neutralFirst = buildNeutralAxisSentence(mentions, axisDisplayValues);
+  // Weaken "〜傾向が強く出ています" in the rest to avoid false strength claims
+  const weakenedRest = rest.replace(/傾向が強く出ています/g, "傾向が表れています");
+  return neutralFirst + substituteAll(weakenedRest);
+}
+
+/**
+ * Return true when the Central axis qualifies for display at runtime.
+ * typeSideDisplay sorts descending: axisSorted[3] (rank4) = most central (closest to 50).
+ *
+ * Multi-axis: the N mentioned axes must be the N closest to 50 among all 4 type-side axes.
+ * Distance = typeSideDisplay - 50 (always ≥ 0); ties → show.
+ * typeSideDisplay[pole] === axisDisplayValues[pole] for every type-side pole.
+ */
+function isCentralParagraphShown(
+  centralKey: AxisPole,
+  paragraph: string,
+  axisSorted: AxisPole[],
+  axisDisplayValues: BusinessSkillsV2AxisDisplayValues,
+): boolean {
+  const centralRank = axisSorted.indexOf(centralKey) + 1; // 1-indexed; rank4 = most central
+  const mentions = extractAxisMentions(paragraph);
+
+  if (mentions.length > 1) {
+    const n = mentions.length;
+    const dist = (key: string) =>
+      Math.abs(((axisDisplayValues as Record<string, number>)[key] ?? 50) - 50);
+    // Sort type-side axes ascending by distance from 50 (closest first)
+    const sorted = [...axisSorted].sort((a, b) => dist(a) - dist(b));
+    const nthDist = dist(sorted[n - 1] ?? "");
+    // Each mentioned axis must be within the N closest (ties → show)
+    return mentions.every((m) => dist(m.key) <= nthDist);
+  }
+
+  // "最も中央に近い" → must be rank4 (sole most-central axis)
+  if (paragraph.includes("最も中央に近")) {
+    return centralRank === 4;
+  }
+  // "中央に近い" / "中央に比較的近い" → rank3 or rank4 (bottom 2 of 4)
+  if (paragraph.includes("中央に近")) {
+    return centralRank >= 3;
+  }
+
+  return true; // Unknown pattern — keep
+}
+
 // ── Public API ────────────────────────────────────────────────────────────────
 
-// Confidence-based paragraph limits (per section):
+// Confidence × paragraph rules:
 //
-//   high:   currentYou=[topAbilities, +lag?] ≤2  quant=[topAxes,centralAxis,topAbilities,+lag?]≤4  failure≤2
-//   medium: currentYou=[topAbilities]         =1  quant=[topAxes,centralAxis,topAbilities]          =3  failure≤1
-//   low:    currentYou=[topAbilities]         =1  quant=[topAxes,centralAxis,topAbilities]          =3  failure=0
+//   currentYouAppendParagraphs:
+//     high:         [topAbilities, +relativeLagAbility if showLag]
+//     medium / low: [topAbilities]
 //
-// relativeLag appears only in HIGH (when showLag=true).
-// LOW upper limits: currentYou ability=1, quant ability=1, quant topAxes=1, failure=0.
+//   quantitativeParagraphs (from per-subRoute template):
+//     TopAxis paragraph: ordering expression validated against runtime axis ranks;
+//       neutralized to "4軸では、X{val}、Y{val}という出方です。" when inconsistent.
+//       Undefined-threshold words (非常に/特に/ほぼ同じ) normalized before check.
+//     Central paragraph: shown only when centralAxis typeSideDisplay rank qualifies
+//       ("最も中央に近い" → rank4 only; "中央に近い" → rank3–4).
+//     Lag paragraph: shown only when confidence === "high" && showLag === true.
+//     All other paragraphs: included as-is (values substituted).
+//     No artificial paragraph count limit by confidence level.
+//
+//   failureCorrectionParagraphs:
+//     high:   up to 2 — lagImpact (if showLag), overuseRisk
+//     medium: up to 1 — lagImpact (if showLag), overuseRisk
+//     low:    [] always empty
 
 export function renderBusinessSkillsV2NumericCopy(
   input: BusinessSkillsV2NumericRenderInput,
 ): BusinessSkillsV2NumericRenderResult {
-  const { route, typeNumericRules, templates, styleAxisScores, abilityUScores, confidence } =
-    input;
+  const {
+    route,
+    typeNumericRules,
+    templates,
+    quantitativeRouteTemplates,
+    styleAxisScores,
+    abilityUScores,
+    confidence,
+  } = input;
 
   // 1. All-8-pole axis display values (positive-side formula, pairs sum to 100)
   const posTA = Math.max(0, Math.min(100, 50 + Math.round(styleAxisScores.thinking_action * 50)));
@@ -183,8 +430,6 @@ export function renderBusinessSkillsV2NumericCopy(
   });
 
   const top1AxisPole = axisSorted[0] as AxisPole;
-  const top2AxisPole = axisSorted[1] as AxisPole;
-  const centralAxisPole = axisSorted[3] as AxisPole; // rank-4 = closest to 50
 
   // 6. Lag ability eligibility (route specifies the candidate; conditions must hold)
   const lagKey = route.abilityProfile.relativeLag;
@@ -224,50 +469,78 @@ export function renderBusinessSkillsV2NumericCopy(
     );
   }
 
-  // 9. quantitativeParagraphs
-  //    high:         [topAxes, centralAxis, topAbilities, +lag?]  — relativeLag appears only here
-  //    medium / low: [topAxes, centralAxis, topAbilities]          — no lag
-  //    low limits:   topAxes=1 paragraph, topAbilities=1 paragraph (same structure as medium)
+  // 9. quantitativeParagraphs — per-subRoute template with classification-aware processing
   const quantitativeParagraphs: string[] = [];
+  const routeTemplate = quantitativeRouteTemplates[route.subRouteId];
+  if (!routeTemplate) {
+    throw new Error(`Missing quantitative template for subRouteId: ${route.subRouteId}`);
+  }
 
-  quantitativeParagraphs.push(
-    fillTemplate(tpl("quantTopAxes"), {
-      topAxis1Label: ar[top1AxisPole]?.label ?? top1AxisPole,
-      topAxis1Value: String(typeSideDisplay[top1AxisPole] ?? 50),
-      topAxis2Label: ar[top2AxisPole]?.label ?? top2AxisPole,
-      topAxis2Value: String(typeSideDisplay[top2AxisPole] ?? 50),
-      topAxis1Role:  ar[top1AxisPole]?.role ?? "",
-      topAxis2Role:  ar[top2AxisPole]?.role ?? "",
-    }),
-  );
+  const substituteValues = (s: string): string => {
+    let r = s.replace(/\{\{axis\.([a-z]+)\}\}/g, (_m: string, key: string) => {
+      const val = (axisDisplayValues as Record<string, number>)[key];
+      if (val === undefined)
+        throw new Error(
+          `Unknown axis key in quantitative template: {{axis.${key}}}`,
+        );
+      return String(val);
+    });
+    r = r.replace(/\{\{ability\.([a-z]+)\}\}/g, (_m: string, key: string) => {
+      const val = (abilityDisplayValues as Record<string, number>)[key];
+      if (val === undefined)
+        throw new Error(
+          `Unknown ability key in quantitative template: {{ability.${key}}}`,
+        );
+      return String(val);
+    });
+    if (/\{\{[^}]+\}\}/.test(r)) {
+      throw new Error(
+        `Unresolved placeholder in quantitative template for ${route.subRouteId}: ${r.slice(0, 80)}`,
+      );
+    }
+    return r;
+  };
 
-  quantitativeParagraphs.push(
-    fillTemplate(tpl("quantCentralAxis"), {
-      centralAxisLabel:   ar[centralAxisPole]?.label ?? centralAxisPole,
-      centralAxisValue:   String(typeSideDisplay[centralAxisPole] ?? 50),
-      centralAxisCentral: ar[centralAxisPole]?.central ?? "",
-    }),
-  );
+  for (const rawParagraph of routeTemplate.paragraphs) {
+    const paraType = classifyQuantParagraph(rawParagraph);
 
-  quantitativeParagraphs.push(
-    fillTemplate(tpl("quantTopAbilities"), {
-      topAbility1Label: ab[top1AbilKey].label,
-      topAbility1Value: String(abilityDisplayValues[top1AbilKey]),
-      topAbility2Label: ab[top2AbilKey].label,
-      topAbility2Value: String(abilityDisplayValues[top2AbilKey]),
-      topAbility1Role:  ab[top1AbilKey].role,
-      topAbility2Role:  ab[top2AbilKey].role,
-    }),
-  );
+    if (paraType === "lag") {
+      // Lag shown only for high confidence with showLag condition satisfied
+      if (confidence !== "high" || !showLag) continue;
+      quantitativeParagraphs.push(substituteValues(rawParagraph));
+      continue;
+    }
 
-  if (confidence === "high" && showLag) {
-    quantitativeParagraphs.push(
-      fillTemplate(tpl("quantLag"), {
-        lagAbilityLabel:  ab[lagKey].label,
-        lagAbilityValue:  String(abilityDisplayValues[lagKey]),
-        lagAbilityImpact: ab[lagKey].lagImpact,
-      }),
-    );
+    if (paraType === "central") {
+      // Central shown only when the central axis qualifies at runtime
+      if (
+        !isCentralParagraphShown(
+          route.axisProfile.central,
+          rawParagraph,
+          axisSorted,
+          axisDisplayValues,
+        )
+      )
+        continue;
+      quantitativeParagraphs.push(substituteValues(rawParagraph));
+      continue;
+    }
+
+    if (paraType === "topAxis") {
+      // Ordering validated and normalized; value substitution handled inside
+      quantitativeParagraphs.push(
+        processTopAxisParagraph(
+          rawParagraph,
+          axisSorted,
+          axisDisplayValues,
+          abilityDisplayValues,
+        ),
+      );
+      continue;
+    }
+
+    // topAbility / other — pass through with value substitution
+    quantitativeParagraphs.push(substituteValues(rawParagraph));
   }
 
   // 10. failureCorrectionParagraphs

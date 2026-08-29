@@ -306,11 +306,12 @@ export default async function ResultPage({ params, searchParams }: Props) {
         },
         routeCopy:     v2RouteCopy,
         numericResult: renderBusinessSkillsV2NumericCopy({
-          route:            v2Route,
-          typeNumericRules: v2NumericType,
-          templates:        v2NumericRules.global.templates,
+          route:                      v2Route,
+          typeNumericRules:           v2NumericType,
+          templates:                  v2NumericRules.global.templates,
+          quantitativeRouteTemplates: v2NumericRules.quantitativeRouteTemplates,
           styleAxisScores,
-          abilityUScores:   parsedAv,
+          abilityUScores:             parsedAv,
           confidence,
         }),
       };

@@ -396,6 +396,36 @@ const V2NumericTypeRuleSchema = z
   })
   .strict();
 
+// ── numeric-rules.json — internal schemas ────────────────────────────────────
+
+
+function validateQuantParagraphTokens(s: string): boolean {
+  // Strip valid tokens, then fail if any {{ or }} remain (catches invalid and malformed tokens)
+  const clean = s
+    .replace(
+      /\{\{axis\.(thinking|action|offensive|stable|individual|group|divergent|convergent)\}\}/g,
+      "",
+    )
+    .replace(/\{\{ability\.(logic|execution|sales|creativity|management)\}\}/g, "");
+  return !clean.includes("{{") && !clean.includes("}}");
+}
+
+const V2QuantRouteTemplateSchema = z
+  .object({
+    paragraphs: z
+      .array(
+        z
+          .string()
+          .min(1)
+          .refine(validateQuantParagraphTokens, {
+            message:
+              "paragraph contains invalid or unknown placeholder — valid tokens: axis.{thinking|action|offensive|stable|individual|group|divergent|convergent}, ability.{logic|execution|sales|creativity|management}",
+          }),
+      )
+      .min(1),
+  })
+  .strict();
+
 // ── numeric-rules.json — public schema ───────────────────────────────────────
 
 export const BusinessSkillsV2NumericRulesSchema = z
@@ -425,6 +455,7 @@ export const BusinessSkillsV2NumericRulesSchema = z
       })
       .strict(),
     types: z.array(V2NumericTypeRuleSchema).min(16).max(16),
+    quantitativeRouteTemplates: z.record(z.string(), V2QuantRouteTemplateSchema),
   })
   .strict();
 
@@ -485,6 +516,9 @@ export type BusinessSkillsV2ResultCopy = z.infer<
 export type BusinessSkillsV2NumericRules = z.infer<
   typeof BusinessSkillsV2NumericRulesSchema
 >;
+export type BusinessSkillsV2QuantitativeRouteTemplates = z.infer<
+  typeof BusinessSkillsV2NumericRulesSchema
+>["quantitativeRouteTemplates"];
 export type BusinessSkillsV2RepresentativeTests = z.infer<
   typeof BusinessSkillsV2RepresentativeTestsSchema
 >;
