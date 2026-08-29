@@ -107,6 +107,18 @@ function sortedDesc<K extends string>(
   });
 }
 
+/** Return true only when key's axisDisplayValue is strictly greater than every other type-side pole's. */
+function isStrictlyMaxAmong(
+  key: string,
+  axisSorted: AxisPole[],
+  axisDisplayValues: BusinessSkillsV2AxisDisplayValues,
+): boolean {
+  const v = (axisDisplayValues as Record<string, number>)[key] ?? 0;
+  return axisSorted.every(
+    (p) => p === key || ((axisDisplayValues as Record<string, number>)[p] ?? 0) < v,
+  );
+}
+
 // ── Quantitative paragraph processing ────────────────────────────────────────
 
 type QuantParaType = "topAxis" | "central" | "topAbility" | "lag" | "other";
@@ -167,7 +179,7 @@ function isTopAxisOrderingConsistent(
 
   // "Xが最も高く出ています" (1 axis) → rank1
   if (n === 1 && normalizedSentence.includes("が最も高く出ています")) {
-    return rank(mentions[0].key) === 1;
+    return rank(mentions[0].key) === 1 && isStrictlyMaxAmong(mentions[0].key, axisSorted, axisDisplayValues);
   }
 
   if (n === 2) {
@@ -176,7 +188,7 @@ function isTopAxisOrderingConsistent(
       normalizedSentence.includes("が最も高く") &&
       normalizedSentence.includes("が続きます")
     ) {
-      return rank(mentions[0].key) === 1 && rank(mentions[1].key) === 2;
+      return rank(mentions[0].key) === 1 && rank(mentions[1].key) === 2 && isStrictlyMaxAmong(mentions[0].key, axisSorted, axisDisplayValues);
     }
     // "Xが高く、Yが続きます" (normalized from 特に) → rank(X)=1, rank(Y)=2
     if (
@@ -187,21 +199,29 @@ function isTopAxisOrderingConsistent(
     }
     // "XとYが最も高く並びます" → rank(X)≤2 && rank(Y)≤2 && display values are exactly equal
     if (normalizedSentence.includes("が最も高く並びます")) {
+      const v0 = disp(mentions[0].key);
       return (
         rank(mentions[0].key) <= 2 &&
         rank(mentions[1].key) <= 2 &&
-        disp(mentions[0].key) === disp(mentions[1].key)
+        Math.abs(disp(mentions[0].key) - disp(mentions[1].key)) < EPSILON &&
+        axisSorted.every(
+          (p) =>
+            p === mentions[0].key ||
+            p === mentions[1].key ||
+            disp(p) < v0 - EPSILON,
+        )
       );
     }
   }
 
   if (n === 3) {
-    // "Xが最も高く、Y/Zが続きます" → rank(X)=1, rank(Y)≤3, rank(Z)≤3
+    // "Xが最も高く、Y/Zが続きます" → rank(X)=1, rank(Y)≤3, rank(Z)≤3, X strictly max
     if (normalizedSentence.includes("が最も高く")) {
       return (
         rank(mentions[0].key) === 1 &&
         rank(mentions[1].key) <= 3 &&
-        rank(mentions[2].key) <= 3
+        rank(mentions[2].key) <= 3 &&
+        isStrictlyMaxAmong(mentions[0].key, axisSorted, axisDisplayValues)
       );
     }
     // "XとYが高く、Zが続きます" (normalized from 特に) → rank(X/Y)≤2, rank(Z)≤3
@@ -215,9 +235,9 @@ function isTopAxisOrderingConsistent(
   }
 
   if (n === 4) {
-    // "Xが最も高く、Y/Z/Wが続きます" → rank(X)=1
+    // "Xが最も高く、Y/Z/Wが続きます" → rank(X)=1, X strictly max
     if (normalizedSentence.includes("が最も高く")) {
-      return rank(mentions[0].key) === 1;
+      return rank(mentions[0].key) === 1 && isStrictlyMaxAmong(mentions[0].key, axisSorted, axisDisplayValues);
     }
     // "XとYが高く、ZとWが続きます" (normalized from 特に) → rank(X/Y)≤2
     if (normalizedSentence.includes("が高く")) {
@@ -307,13 +327,12 @@ function isCentralParagraphShown(
   axisSorted: AxisPole[],
   axisDisplayValues: BusinessSkillsV2AxisDisplayValues,
 ): boolean {
-  const centralRank = axisSorted.indexOf(centralKey) + 1; // 1-indexed; rank4 = most central
+  const dist = (key: string) =>
+    Math.abs(((axisDisplayValues as Record<string, number>)[key] ?? 50) - 50);
   const mentions = extractAxisMentions(paragraph);
 
   if (mentions.length > 1) {
     const n = mentions.length;
-    const dist = (key: string) =>
-      Math.abs(((axisDisplayValues as Record<string, number>)[key] ?? 50) - 50);
     // Sort type-side axes ascending by distance from 50 (closest first)
     const sorted = [...axisSorted].sort((a, b) => dist(a) - dist(b));
     const nthDist = dist(sorted[n - 1] ?? "");
@@ -321,16 +340,134 @@ function isCentralParagraphShown(
     return mentions.every((m) => dist(m.key) <= nthDist);
   }
 
-  // "最も中央に近い" → must be rank4 (sole most-central axis)
+  // Single-axis: use the axis actually mentioned in the paragraph text
+  const paragraphKey = mentions.length === 1 ? mentions[0].key : centralKey;
+
+  // "最も中央に近い" → paragraph axis must have minimum |value−50| among all type-side poles
   if (paragraph.includes("最も中央に近")) {
-    return centralRank === 4;
+    const minDist = Math.min(...axisSorted.map((p) => dist(p)));
+    return dist(paragraphKey) <= minDist + EPSILON;
   }
-  // "中央に近い" / "中央に比較的近い" → rank3 or rank4 (bottom 2 of 4)
+  // "中央に近い" / "中央に比較的近い" → paragraph axis must be in bottom 2 closest to 50
   if (paragraph.includes("中央に近")) {
-    return centralRank >= 3;
+    const sortedAsc = [...axisSorted].sort((a, b) => dist(a) - dist(b));
+    const cutoffDist = dist(sortedAsc[1] ?? sortedAsc[0]);
+    return dist(paragraphKey) <= cutoffDist + EPSILON;
   }
 
   return true; // Unknown pattern — keep
+}
+
+/** Extract ordered (label, abilityKey) pairs from text containing label{{ability.key}} patterns */
+function extractAbilityMentions(
+  text: string,
+): Array<{ label: string; key: string }> {
+  const RE =
+    /([぀-ヿ一-鿿㐀-䶿＀-￯・ー]+)\{\{ability\.([a-z]+)\}\}/g;
+  const out: Array<{ label: string; key: string }> = [];
+  let m: RegExpExecArray | null;
+  while ((m = RE.exec(text)) !== null) {
+    out.push({ label: m[1].replace(/^[と、]+/, ""), key: m[2] });
+  }
+  return out;
+}
+
+/** Build neutral fallback: "5能力では、label1{val}[と/、]label2{val}という出方です。" */
+function buildNeutralAbilitySentence(
+  mentions: Array<{ label: string; key: string }>,
+  abilityDisplayValues: BusinessSkillsV2AbilityDisplayValues,
+): string {
+  const parts = mentions.map(
+    (m) =>
+      `${m.label}${String((abilityDisplayValues as Record<string, number>)[m.key] ?? "")}`,
+  );
+  if (parts.length === 1) return `5能力では、${parts[0]}という出方です。`;
+  if (parts.length === 2) return `5能力では、${parts[0]}と${parts[1]}という出方です。`;
+  return `5能力では、${parts.join("、")}という出方です。`;
+}
+
+/**
+ * Return true when the ordering claim in the first sentence matches runtime ability ranks.
+ * abilitySorted[0] = rank1 = highest ability.
+ */
+function isTopAbilityOrderingConsistent(
+  firstSentence: string,
+  mentions: Array<{ label: string; key: string }>,
+  abilitySorted: AbilityKey[],
+  abilityDisplayValues: BusinessSkillsV2AbilityDisplayValues,
+): boolean {
+  const rank = (key: string) => abilitySorted.indexOf(key as AbilityKey) + 1;
+  const disp = (key: string) =>
+    (abilityDisplayValues as Record<string, number>)[key] ?? 0;
+  const n = mentions.length;
+  if (n === 0) return true;
+
+  // "Xが最も高く" → X must be strictly rank 1 with no tie with rank 2
+  if (firstSentence.includes("が最も高く")) {
+    if (rank(mentions[0].key) !== 1) return false;
+    const rank2Key = abilitySorted[1];
+    if (rank2Key !== undefined && Math.abs(disp(mentions[0].key) - disp(rank2Key)) < EPSILON)
+      return false;
+    return true;
+  }
+
+  // "が上位" → all mentioned must exactly be the actual top-n
+  if (firstSentence.includes("が上位")) {
+    const topNKeys = new Set<string>(abilitySorted.slice(0, n));
+    return mentions.every((m) => topNKeys.has(m.key));
+  }
+
+  return true; // Unknown pattern — keep
+}
+
+/**
+ * Process a TopAbility paragraph:
+ * Validate ordering claim in first sentence; replace with neutral fallback if inconsistent.
+ * Subsequent sentences (ability roles etc.) are always kept unchanged.
+ */
+function processTopAbilityParagraph(
+  raw: string,
+  abilitySorted: AbilityKey[],
+  abilityDisplayValues: BusinessSkillsV2AbilityDisplayValues,
+  substituteValues: (s: string) => string,
+): string {
+  const dotIdx = raw.indexOf("。");
+  const firstRaw = dotIdx >= 0 ? raw.slice(0, dotIdx + 1) : raw;
+  const rest = dotIdx >= 0 ? raw.slice(dotIdx + 1) : "";
+
+  const mentions = extractAbilityMentions(firstRaw);
+  const consistent = isTopAbilityOrderingConsistent(
+    firstRaw,
+    mentions,
+    abilitySorted,
+    abilityDisplayValues,
+  );
+
+  if (consistent) {
+    return substituteValues(raw);
+  }
+
+  // Ordering inconsistent: neutral first sentence + rest intact
+  const neutralFirst = buildNeutralAbilitySentence(mentions, abilityDisplayValues);
+  return neutralFirst + substituteValues(rest);
+}
+
+/**
+ * In "other" paragraphs: replace "{{axis.key}}も高く、" with "{{axis.key}}は、"
+ * when the axis display value is exactly 50 (neutral midpoint — neither high nor low).
+ */
+function neutralizeAxisHighClaims(
+  raw: string,
+  axisDisplayValues: BusinessSkillsV2AxisDisplayValues,
+): string {
+  return raw.replace(
+    /\{\{axis\.([a-z]+)\}\}も高く、/g,
+    (_match: string, key: string) => {
+      const val = (axisDisplayValues as Record<string, number>)[key];
+      if (val === 50) return `{{axis.${key}}}は、`;
+      return _match;
+    },
+  );
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
@@ -539,8 +676,14 @@ export function renderBusinessSkillsV2NumericCopy(
       continue;
     }
 
-    // topAbility / other — pass through with value substitution
-    quantitativeParagraphs.push(substituteValues(rawParagraph));
+    if (paraType === "topAbility") {
+      quantitativeParagraphs.push(
+        processTopAbilityParagraph(rawParagraph, abilitySorted, abilityDisplayValues, substituteValues),
+      );
+      continue;
+    }
+    // other — neutralize axis=50 "も高く" before value substitution
+    quantitativeParagraphs.push(substituteValues(neutralizeAxisHighClaims(rawParagraph, axisDisplayValues)));
   }
 
   // 10. failureCorrectionParagraphs
@@ -555,7 +698,10 @@ export function renderBusinessSkillsV2NumericCopy(
 
     if (showLag) {
       const impact = ab[lagKey]?.lagImpact;
-      if (impact) candidates.push(impact);
+      if (impact) {
+        const trimmed = impact.trimEnd().replace(/。$/, "");
+        candidates.push(`${ab[lagKey].label}が相対的に遅い場合、${trimmed}。`);
+      }
     }
 
     const overuse = ar[top1AxisPole]?.overuseRisk;
