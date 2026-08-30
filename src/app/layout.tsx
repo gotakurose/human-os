@@ -96,6 +96,13 @@ export default function RootLayout({
         "h-full antialiased",
       ].join(" ")}
     >
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8046568622019006"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-white text-neutral-900">
         {children}
       </body>
