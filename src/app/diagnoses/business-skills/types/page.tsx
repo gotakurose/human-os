@@ -51,7 +51,11 @@ export default function TypesPage() {
         {/* Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14">
           {typeList.map((t) => (
-            <div key={t.id} className="flex flex-col">
+            <Link
+              key={t.id}
+              href={`/diagnoses/business-skills/types/${t.id}`}
+              className="flex flex-col group transition-opacity hover:opacity-80"
+            >
               {/* Character image */}
               <div
                 className="mb-3"
@@ -106,7 +110,7 @@ export default function TypesPage() {
                   {t.catchText}
                 </p>
               )}
-            </div>
+            </Link>
           ))}
         </div>
 
